@@ -1,0 +1,47 @@
+# Docker aliases
+
+if [ -f $ZSH_CUSTOM/workalias ]
+then
+    source $ZSH_CUSTOM/workalias
+fi
+
+dobash() {
+    docker run -i -t $1 /bin/bash
+}
+
+dosh() {
+    docker run -i -t $1 /bin/sh
+}
+
+doclean() {
+    docker images | awk '/none/ { print $3 }' | xargs docker rmi -f
+    docker ps -a | awk '/Exited/ { print $1 }' | xargs docker rm -f
+}
+
+alias doi="docker images"
+alias dops="docker ps"
+alias dormi="docker rmi -f"
+alias dorm="docker rm -f"
+
+# Emacs aliases
+alias ec="emacsclient -t"
+alias vi="emacsclient -t"
+alias vim="emacsclient -t"
+alias ed="emacs --daemon"
+alias killemacs="emacsclient -e '(kill-emacs)'"
+
+# system commands
+alias df="df -H"
+
+# git alias. Interactive
+alias gco='git checkout $(git branch | percol)'
+
+# aws show all ec2 instances
+alias ec2="aws ec2 describe-instances --output table --query 'Reservations[*].Instances[*].{ID:InstanceId,Type:InstanceType,State:State.Name,PrivateIp:NetworkInterfaces[0].PrivateIpAddress,PublicIp:NetworkInterfaces[0].Association.PublicIp,Tags:Tags[?Key==\`Name\`].Value | [0]}'"
+
+# aws start ec2 instances
+alias ec2-start="aws ec2 start-instances --instance-ids "
+
+# Changing Default programs
+alias cat=ccat
+
