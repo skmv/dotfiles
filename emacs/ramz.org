@@ -1,0 +1,836 @@
+#+TITLE: Ramz Emacs configuration
+#+OPTIONS: toc:4 h:4
+* About
+  I use emacs prelude as my starter kit. That provides most of my configuration.
+These are the additional configuration that i need.
+* Emacs Initialization
+** Install All Packages
+    #+BEGIN_SRC emacs-lisp
+      (prelude-require-packages '(
+                                  ag
+                                  bookmark+
+                                  color-identifiers-mode
+                                  esqlite
+                                  fixmee
+                                  flyspell
+                                  helm-dash
+                                  helm-flyspell
+                                  helm-projectile
+                                  helm-ag
+                                  hydra
+                                  markdown-mode
+                                  markdown-mode+
+                                  multiple-cursors
+                                  org-bullets
+                                  org-gcal
+                                  origami
+                                  paren-face
+                                  pcsv
+                                  perspective
+                                  persp-projectile
+                                  prodigy
+                                  pyvenv
+                                  restclient
+                                  ob-restclient
+                                  company-restclient
+                                  rtags
+                                  smartparens
+                                  solarized-theme
+                                  use-package
+                                  w3m
+                                  yasnippet
+                                  zoom-window
+                                  ))
+
+      (eval-when-compile
+        (require 'use-package))
+    #+END_SRC
+** Start Emacs Server
+   #+BEGIN_SRC emacs-lisp
+     (server-start)
+   #+END_SRC
+* Configuration
+** Personal Information
+    TODO: Need to update with mutiple profiles based on work or personal
+    #+BEGIN_SRC emacs-lisp
+    (setq user-full-name "Ramanathan Sivagurunathan"
+          user-mail-address "ramanathan.nit@gmail.com")
+    #+END_SRC
+
+** General Configuration
+*** Startup Screen
+    #+BEGIN_SRC emacs-lisp
+      (setq inhibit-startup-message t)
+    #+END_SRC
+*** Windows Configuration
+    I am trying to make emacs window as simple as possible.
+
+    #+BEGIN_SRC emacs-lisp
+      ;; Modeline info
+      (display-time-mode 1)
+
+      ;; Small fringes
+      (set-fringe-mode '(1 . 1))
+
+      ;; Explicitly show the end of a buffer
+      (set-default 'indicate-empty-lines t)
+
+      ;; Set max columns in row to be 120
+      (setq whitespace-line-column 120)
+
+      (when window-system
+        (tooltip-mode -1)
+        (tool-bar-mode -1)
+        (menu-bar-mode 1)
+        (scroll-bar-mode -1))
+
+      ;; Don't truncate lines
+      (setq truncate-lines t)
+
+      ;; Emacs Really quit
+      (global-set-key (kbd "C-x r q") 'save-buffers-kill-terminal)
+      (global-set-key (kbd "C-x C-c") 'delete-frame)
+
+      ;; Toggle full screen
+      ;; (toggle-frame-fullscreen)
+
+      ;; No Mode line
+      ;; (setq-default mode-line-format nil)
+
+      (when window-system (global-unset-key "\C-z"))
+
+    #+END_SRC
+
+*** Set Path
+    #+begin_src elisp
+      (if (not (getenv "TERM_PROGRAM"))
+          (setenv "PATH"
+                  (shell-command-to-string "source $HOME/.zshrc && printf $PATH")))
+    #+end_src
+*** Backup
+    All backups in one place
+    #+BEGIN_SRC emacs-lisp
+      (setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
+    #+END_SRC
+*** History
+    #+BEGIN_SRC emacs-lisp
+    (setq history-length t)
+    (setq history-delete-duplicates t)
+    (setq savehist-save-minibuffer-history 1)
+    (setq savehist-additional-variables
+      ;; search entries
+      '(kill-ring search-ring regexp-search-ring)
+      ;; save every minute
+      savehist-autosave-interval 60
+      ;; keep the home clean
+      savehist-file (expand-file-name "savehist" prelude-savefile-dir))
+
+      (savehist-mode +1)
+    #+END_SRC
+
+*** Winner Mode
+    This mode is by default builtin to emacs.
+
+*** Font
+    I prefer to use in consolata font, both in my mac and linux.
+
+    #+BEGIN_SRC emacs-lisp
+    (when (eq system-type 'darwin)
+      (set-frame-font "-*-Inconsolata-normal-normal-normal-*-16-*-*-*-m-0-iso10646-1")
+      (eq system-type 'gnu/linux)
+      (set-frame-font "-unknown-Inconsolata-normal-normal-normal-*-*-*-*-*-m-0-iso10646-1"))
+    #+END_SRC
+
+*** Sentences should end with single space
+    In my world, sentences end with a single space. This makes sentence navigation commands work for me.
+    #+BEGIN_SRC emacs-lisp
+    (setq sentence-end-double-space nil)
+    #+END_SRC
+
+*** Helm
+    Prelude provides most of my configurations.
+    #+BEGIN_SRC emacs-lisp
+    (defvar my/book-notes-directory "~/projects/common/notes/org/")
+    (defun my/helm-do-grep-book-notes ()
+    "Search my book notes."
+    (interactive)
+    (helm-grep-ag my/book-notes-directory nil))
+    #+END_SRC
+*** Tab
+    For me 4 spaces is the tab width by default.
+    #+BEGIN_SRC emacs-lisp
+      (setq-default tab-width 4)
+      (setq js-basic-offset 2)
+      (setq js2-basic-offset 2)
+
+    #+END_SRC
+*** Trash
+    Move things to trash.
+    #+BEGIN_SRC emacs-lisp
+      (setq delete-by-moving-to-trash t)
+    #+END_SRC
+*** Flyspell
+    Spell checking
+    #+BEGIN_SRC emacs-lisp
+      (use-package flyspell
+        :defer t
+        :diminish ""
+        :init
+        (progn
+          ;; Add skip regions
+          (add-to-list 'ispell-skip-region-alist '("#\\+BEGIN_SRC" . "#\\+END_SRC"))
+          (add-to-list 'ispell-skip-region-alist '("#\\+BEGIN_EXAMPLE" . "#\\+END_EXAMPLE"))
+          ;; Enable flyspell on comments and strings for programs
+          (defun my/enable-flyspell-prog-mode ()
+            (interactive)
+            (flyspell-prog-mode))
+          (add-hook 'prog-mode-hook #'my/enable-flyspell-prog-mode))
+        :config
+        (use-package helm-flyspell
+          :init
+          (progn
+            (define-key flyspell-mode-map (kbd "C-.") 'helm-flyspell-correct)
+            (define-key flyspell-mode-map (kbd "C-;") nil))))
+
+    #+END_SRC
+*** Tramp
+    #+begin_src elisp
+      (set-default 'tramp-default-proxies-alist (quote ((".*" "\\`root\\'" "/ssh:%h:"))))
+      (require 'tramp)
+      (defun sudo-edit-current-file ()
+        (interactive)
+        (let ((position (point)))
+          (find-alternate-file
+           (if (file-remote-p (buffer-file-name))
+               (let ((vec (tramp-dissect-file-name (buffer-file-name))))
+                 (tramp-make-tramp-file-name
+                  "sudo"
+                  (tramp-file-name-user vec)
+                  (tramp-file-name-host vec)
+                  (tramp-file-name-localname vec)))
+             (concat "/sudo:root@localhost:" (buffer-file-name))))
+          (goto-char position)))
+    #+end_src
+*** Help
+    #+begin_src elisp
+      (use-package which-key
+        :init
+        (which-key-setup-side-window-bottom))
+    #+end_src
+*** Editing
+    #+begin_src elisp
+    (use-package multifiles)
+    #+end_src
+** Navigation
+*** Bookmarks
+    Using Bookmark+. But have not configured it to my likings
+    #+BEGIN_SRC emacs-lisp
+      (use-package bookmark+
+        :config
+        (progn
+          (setq bookmark-version-control t
+                ;; auto-save bookmarks
+                bookmark-save-flag 1)))
+    #+END_SRC
+*** Copy/Paste
+    #+BEGIN_SRC emacs-lisp
+      (global-set-key (kbd "C-d") 'prelude-duplicate-current-line-or-region)
+    #+END_SRC
+*** Hippie Expand
+*** Key chord
+    Bunch of keychord customization for my needs
+    #+BEGIN_SRC emacs-lisp
+      (use-package key-chord
+        :ensure t
+        :init
+        (progn
+          (setq key-chord-one-key-delay 0.16)
+          (key-chord-mode 1)
+          ;; k can be bound too
+          (key-chord-define-global "jj"     'switch-window) ;; Highly used
+          (key-chord-define-global "jp"     'persp-switch)  ;; Highly used
+          (key-chord-define-global "jb"     'helm-mini)     ;; Highly used
+          (key-chord-define-global "yy"     'helm-show-kill-ring) ;; Highly used
+          (key-chord-define-global "jw"     'avy-goto-char-timer) ;; Highly used
+          (key-chord-define-global "FF"     'projectile-find-file) ;; Highly used
+
+          ;;(key-chord-define-global "  "     'rtags-imenu)
+          ;;(key-chord-define-global "//"     'rtags-find-references)
+
+          (key-chord-define-global "PP"     'hydra-project/body)))
+
+    #+END_SRC
+*** Multiple cursors
+    Hydra config for multiple cursors
+    #+BEGIN_SRC emacs-lisp
+      (defhydra my/multiple-cursors-hydra (:hint nil)
+        "
+           ^Up^            ^Down^        ^Other^
+      ----------------------------------------------
+      [_p_]   Next    [_n_]   Next    [_l_] Edit lines
+      [_P_]   Skip    [_N_]   Skip    [_a_] Mark all
+      [_M-p_] Unmark  [_M-n_] Unmark  [_r_] Mark by regexp
+      ^ ^             ^ ^             [_q_] Quit
+      "
+        ("l" mc/edit-lines :exit t)
+        ("a" mc/mark-all-like-this :exit t)
+        ("n" mc/mark-next-like-this)
+        ("N" mc/skip-to-next-like-this)
+        ("M-n" mc/unmark-next-like-this)
+        ("p" mc/mark-previous-like-this)
+        ("P" mc/skip-to-previous-like-this)
+        ("M-p" mc/unmark-previous-like-this)
+        ("r" mc/mark-all-in-region-regexp :exit t)
+        ("q" nil))
+
+      (use-package multiple-cursors
+        :bind (("C-;" . my/multiple-cursors-hydra/body)))
+
+    #+END_SRC
+*** Paren face
+    #+BEGIN_SRC emacs-lisp
+      (use-package paren-face
+        :init
+        (global-paren-face-mode))
+    #+END_SRC
+*** Perspective
+    I am using perspective mode for jumping between projects
+    #+BEGIN_SRC emacs-lisp
+      (use-package perspective
+        :init
+        (persp-mode 1)
+        :bind ("s-s" . projectile-persp-switch-project)
+        ("M-s" . projectile-ag))
+
+    #+END_SRC
+*** Search
+    #+begin_src emacs-lisp
+      (global-set-key (kbd "C-s") 'isearch-forward-regexp)
+      (global-set-key (kbd "\C-r") 'isearch-backward-regexp)
+    #+end_src
+*** Zoom Window
+    #+BEGIN_SRC emacs-lisp
+      (use-package zoom-window
+        :init
+        (setq zoom-window-mode-line-color "DarkGreen")
+        :bind ("C-x C-z" . zoom-window-zoom)
+        )
+    #+END_SRC
+
+*** Projectile
+    #+begin_src emacs-lisp
+            (defhydra hydra-project (:color blue :hint nil :idle 0.4)
+              "
+                                                                                  ╭────────────┐
+                  Files             Search          Buffer             Do         │ Projectile │
+                ╭─────────────────────────────────────────────────────────────────┴────────────╯
+                  [_f_] file          [_a_] ag          [_b_] switch         [_g_] magit
+                  [_l_] file dwim     [_A_] grep        [_v_] show all       [_p_] commander
+                  [_r_] recent file   [_s_] occur       [_V_] ibuffer        [_i_] info
+                  [_d_] dir           [_S_] replace     [_K_] kill all
+                  [_o_] other         [_t_] find tag
+                  [_u_] test file     [_T_] make tags
+                  [_h_] root
+                                                                                      ╭────────┐
+                  Other Window      Run             Cache              Do             │ Fixmee │
+                ╭──────────────────────────────────────────────────╯ ╭────────────────┴────────╯
+                  [_F_] file          [_U_] test        [_kc_] clear         [_x_] TODO & FIXME
+                  [_L_] dwim          [_m_] compile     [_kk_] add current   [_X_] toggle
+                  [_D_] dir           [_c_] shell       [_ks_] cleanup
+                  [_O_] other         [_C_] command     [_kd_] remove
+                  [_B_] buffer
+                --------------------------------------------------------------------------------
+                      "
+              ("<tab>" hydra-master/body "back")
+              ("<ESC>" nil "quit")
+              ("a"   projectile-ag)
+              ("A"   projectile-grep)
+              ("b"   projectile-switch-to-buffer)
+              ("B"   projectile-switch-to-buffer-other-window)
+              ("c"   projectile-run-async-shell-command-in-root)
+              ("C"   projectile-run-command-in-root)
+              ("d"   projectile-find-dir)
+              ("D"   projectile-find-dir-other-window)
+              ("f"   projectile-find-file)
+              ("F"   projectile-find-file-other-window)
+              ("g"   projectile-vc)
+              ("h"   projectile-dired)
+              ("i"   projectile-project-info)
+              ("kc"  projectile-invalidate-cache)
+              ("kd"  projectile-remove-known-project)
+              ("kk"  projectile-cache-current-file)
+              ("K"   projectile-kill-buffers)
+              ("ks"  projectile-cleanup-known-projects)
+              ("l"   projectile-find-file-dwim)
+              ("L"   projectile-find-file-dwim-other-window)
+              ("m"   projectile-compile-project)
+              ("o"   projectile-find-other-file)
+              ("O"   projectile-find-other-file-other-window)
+              ("p"   projectile-commander)
+              ("r"   projectile-recentf)
+              ("s"   projectile-multi-occur)
+              ("S"   projectile-replace)
+              ("t"   projectile-find-tag)
+              ("T"   projectile-regenerate-tags)
+              ("u"   projectile-find-test-file)
+              ("U"   projectile-test-project)
+              ("v"   projectile-display-buffer)
+              ("V"   projectile-ibuffer)
+              ("X"   fixmee-mode)
+              ("x"   fixmee-view-listing))
+
+    #+end_src
+** org
+*** Files
+    #+BEGIN_SRC emacs-lisp
+    (setq org-agenda-files (list "~/personal/todo"))
+    #+END_SRC
+*** Templates
+    #+BEGIN_SRC emacs-lisp
+      (setq org-structure-template-alist
+            '(("s" "#+begin_src ?\n\n#+end_src" "<src lang=\"?\">\n\n</src>")
+              ("e" "#+begin_example\n?\n#+end_example" "<example>\n?\n</example>")
+              ("q" "#+begin_quote\n?\n#+end_quote" "<quote>\n?\n</quote>")
+              ("v" "#+BEGIN_VERSE\n?\n#+END_VERSE" "<verse>\n?\n</verse>")
+              ("c" "#+BEGIN_COMMENT\n?\n#+END_COMMENT")
+              ("p" "#+begin_src python :results output \n?\n#+end_src" "<src lang=\"python\">\n?\n</src>")
+              ("l" "#+begin_src emacs-lisp\n?\n#+end_src" "<src lang=\"emacs-lisp\">\n?\n</src>")
+              ("L" "#+latex: " "<literal style=\"latex\">?</literal>")
+              ("h" "#+begin_html\n?\n#+end_html" "<literal style=\"html\">\n?\n</literal>")
+              ("H" "#+html: " "<literal style=\"html\">?</literal>")
+              ("a" "#+begin_ascii\n?\n#+end_ascii")
+              ("A" "#+ascii: ")
+              ("i" "#+index: ?" "#+index: ?")
+              ("I" "#+include %file ?" "<include file=%file markup=\"?\">")))
+    #+END_SRC
+
+*** Babel
+    #+BEGIN_SRC emacs-lisp
+      (org-babel-do-load-languages
+       'org-babel-load-languages
+       '((python . t)
+         (sh . t)
+         (sql . t)
+         (emacs-lisp . t)
+         ))
+
+      (org-babel-do-load-languages
+       'org-babel-load-languages
+       '((restclient . t)))
+    #+END_SRC
+*** Bullets
+    #+BEGIN_SRC emacs-lisp
+      (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+    #+END_SRC
+*** Habits
+    #+begin_src emacs-lisp
+    (setq org-habit-graph-column 60)
+    (setq org-habit-show-habits-only-for-today nil)
+    #+end_src
+*** Modules
+    A bunch of org modules.
+    #+BEGIN_SRC emacs-lisp
+      (setq org-modules '(org-bbdb
+                          org-bibtex
+                          org-docview
+                          org-gnus
+                          org-info
+                          org-habit
+                          org-irc
+                          org-mouse
+                          org-protocol
+                          org-mhe
+                          org-rmail
+                          org-w3m))
+      (eval-after-load 'org
+        '(org-load-modules-maybe t))
+      (setq org-expiry-inactive-timestamps t)
+    #+END_SRC
+
+*** Tasks
+**** TO-DO States
+     #+BEGIN_SRC emacs-lisp
+       ;; (setq org-todo-keywords
+       ;;      '((sequence "TODO(t)" "STARTED(s!)" "WAITING(w@)"  "|" "DONE(d)" "|" "DEFERRED(f@)" "|" "CANCELLED(c@)")))
+
+     #+END_SRC
+*** Capture
+**** Initialization
+     #+begin_src emacs-lisp
+       (define-key global-map "\C-cc" 'org-capture)
+       (setq org-export-coding-system 'utf-8)
+
+       (defadvice org-capture
+           (after make-full-window-frame activate)
+         "Advise capture to be the only window when used as a popup"
+         (if (equal "emacs-capture" (frame-parameter nil 'name))
+             (delete-other-windows)))
+
+       (defadvice org-capture-finalize
+           (after delete-capture-frame activate)
+         "Advise capture-finalize to close the frame"
+         (if (equal "emacs-capture" (frame-parameter nil 'name))
+             (delete-frame)))
+
+     #+end_src
+**** Templates
+     #+begin_src emacs-lisp
+              (setq org-capture-templates
+                    '(
+                      ("t" "Todo list" entry (file+headline "~/personal/todo/others.org" "Tasks")
+                       "* TODO %?\n %i\n %a")
+                      ("j" "Journal entry with date" plain (file+datetree+prompt "~/personal/personal-notes/journals/journal.org")
+                       "- [%^{time}] %?\n" :unnarrowed t)
+                      ("p" "Source With Link" entry (file+headline "~/projects/common/notes/org/links.org" "Unsorted")
+                       "* %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
+                      ("L" "Link" entry (file+headline "~/projects/common/notes/org/links.org" "Unsorted")
+                      "* %? [[%:link][%:description]] \nCaptured On: %U")
+                      ("v" "youtube" entry (file+headline "~/projects/common/notes/org/videos.org" "youtube")
+                      "* TODO [[%^{link}][%^{description}]] \n")
+                      ("Q" "Quotes" entry (file+headline "~/projects/common/notes/org/quotes_and_pics.org" "Unsorted")
+                       "* %^{Title}\n #+BEGIN_QUOTE\n%^{Quote}\n#+END_QUOTE\n\n\n%?")
+                      ("n" "Notes" entry (file+headline "~/projects/common/notes/org/unsorted.org" "Unsorted")
+                       "* %^{Title}\n #+BEGIN_QUOTE\n%^{Quote}\n#+END_QUOTE\n\n\n%?")
+                      ))
+     #+end_src
+** Coding
+*** Basics
+**** Prodigy
+     Use prodigy for all the services
+     #+BEGIN_SRC emacs-lisp
+       (use-package prodigy
+         :defer t
+         :bind ("C-x P" . prodigy)
+         )
+
+     #+END_SRC
+*** Code Folding
+    #+begin_src emacs-lisp
+      (use-package origami
+        :bind
+        (("C-\\" . origami-toggle-all-nodes)
+         ("M-\\" . origami-recursively-toggle-node))
+        :init
+        (progn
+          (dolist (hooks '(python-mode-hook
+                           emacs-lisp-mode-hook
+                           c-mode-hook
+                           c++-mode-hook
+                           ))
+            (add-hook hooks 'origami-mode))))
+    #+end_src
+*** Smart Parenthesis
+    Enable smart parenthesis mode where ever needed
+    #+BEGIN_SRC emacs-lisp
+      (use-package smartparens
+        :defer t
+        :diminish ""
+        :bind (("M-9" . sp-backward-sexp)
+               ("M-0" . sp-forward-sexp))
+        :init
+        (progn
+          (add-hook 'prog-mode-hook #'turn-on-smartparens-mode)
+          ;; turn on showing the match for clojure and elisp
+          (add-hook 'clojure-mode-hook #'turn-on-show-smartparens-mode)
+          (add-hook 'emacs-lisp-mode-hook #'turn-on-show-smartparens-mode)
+          (add-hook 'java-mode-hook #'turn-on-show-smartparens-mode)
+          (add-hook 'c-mode-hook #'turn-on-show-smartparens-mode))
+        :config
+        (progn
+          (add-to-list 'sp-sexp-suffix '(json-mode regex ""))
+          (add-to-list 'sp-sexp-suffix '(es-mode regex ""))
+
+          (use-package smartparens-config)
+          (add-hook 'sh-mode-hook
+                    (lambda ()
+                      ;; Remove when https://github.com/Fuco1/smartparens/issues/257
+                      ;; is fixed
+                      (setq sp-autoescape-string-quote nil)))
+
+          ;; Remove the M-<backspace> binding that smartparens adds
+          (let ((disabled '("M-<backspace>")))
+            (setq sp-smartparens-bindings
+                  (cl-remove-if (lambda (key-command)
+                                  (member (car key-command) disabled))
+                                sp-smartparens-bindings)))
+
+          (define-key sp-keymap (kbd "C-(") 'sp-backward-barf-sexp)
+          (define-key sp-keymap (kbd "C-)") 'sp-backward-slurp-sexp)
+          (define-key sp-keymap (kbd "M-(") 'sp-forward-barf-sexp)
+          (define-key sp-keymap (kbd "M-)") 'sp-forward-slurp-sexp)
+          (define-key sp-keymap (kbd "C-M-f") 'sp-forward-sexp)
+          (define-key sp-keymap (kbd "C-M-b") 'sp-backward-sexp)
+          (define-key sp-keymap (kbd "C-M-d") 'sp-down-sexp)
+          (define-key sp-keymap (kbd "C-M-u") 'sp-backward-up-sexp)
+          (define-key sp-keymap (kbd "C-M-a") 'sp-backward-down-sexp)
+          (define-key sp-keymap (kbd "C-S-a") 'sp-beginning-of-sexp)
+          (define-key sp-keymap (kbd "C-S-d") 'sp-end-of-sexp)
+          (define-key sp-keymap (kbd "C-M-e") 'sp-up-sexp)
+          (define-key emacs-lisp-mode-map (kbd ")") 'sp-up-sexp)
+          (define-key sp-keymap (kbd "C-M-t") 'sp-transpose-sexp)
+          ;; (define-key sp-keymap (kbd "C-M-n") 'sp-next-sexp)
+          ;; (define-key sp-keymap (kbd "C-M-p") 'sp-previous-sexp)
+          (define-key sp-keymap (kbd "C-M-k") 'sp-kill-sexp)
+          (define-key sp-keymap (kbd "C-M-w") 'sp-copy-sexp)
+          (define-key sp-keymap (kbd "M-D") 'sp-splice-sexp)
+          (define-key sp-keymap (kbd "C-]") 'sp-select-next-thing-exchange)
+          (define-key sp-keymap (kbd "C-<left_bracket>") 'sp-select-previous-thing)
+          (define-key sp-keymap (kbd "C-M-]") 'sp-select-next-thing)
+          (define-key sp-keymap (kbd "M-F") 'sp-forward-symbol)
+          (define-key sp-keymap (kbd "M-B") 'sp-backward-symbol)
+          (define-key sp-keymap (kbd "H-t") 'sp-prefix-tag-object)
+          (define-key sp-keymap (kbd "H-p") 'sp-prefix-pair-object)
+          (define-key sp-keymap (kbd "H-s c") 'sp-convolute-sexp)
+          (define-key sp-keymap (kbd "H-s a") 'sp-absorb-sexp)
+          (define-key sp-keymap (kbd "H-s e") 'sp-emit-sexp)
+          (define-key sp-keymap (kbd "H-s p") 'sp-add-to-previous-sexp)
+          (define-key sp-keymap (kbd "H-s n") 'sp-add-to-next-sexp)
+          (define-key sp-keymap (kbd "H-s j") 'sp-join-sexp)
+          (define-key sp-keymap (kbd "H-s s") 'sp-split-sexp)
+
+          (sp-local-pair 'minibuffer-inactive-mode "'" nil :actions nil)
+          ;; Remove '' pairing in elisp because quoting is used a ton
+          (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil)
+
+          (sp-with-modes '(html-mode sgml-mode)
+            (sp-local-pair "<" ">"))
+
+          (sp-with-modes sp--lisp-modes
+            (sp-local-pair "(" nil :bind "C-("))))
+
+    #+END_SRC
+*** Colorify Variables
+    #+BEGIN_SRC emacs-lisp
+    (use-package color-identifiers-mode
+    :init
+    (progn (add-hook 'python-mode-hook 'color-identifiers-mode)))
+    #+END_SRC
+***
+*** Python
+**** Virtual Environment
+     #+BEGIN_SRC emacs-lisp
+       (use-package pyvenv
+         :config
+         (progn
+           (setenv "WORKON_HOME" (concat (getenv "HOME") "/.pyenv/versions"))
+           (pyvenv-workon "default")))
+     #+END_SRC
+**** Services
+     Some default python services
+***** Jupyter
+      #+BEGIN_SRC emacs-lisp
+        (prodigy-define-service
+          :name "jupyter"
+          :cwd "~/personal/notes/pynotebooks"
+          :command "jupyter-notebook"
+          :args '("-y")
+          :stop-signal 'kill
+          :tags '(notes )
+          :port 8888)
+      #+END_SRC
+*** C/C++
+**** Autocompletion(Irony)
+     #+begin_src emacs-lisp
+       ;; (use-package irony
+       ;;   :ensure t
+       ;;   :defer t
+       ;;   :init
+       ;;   (add-hook 'c++-mode-hook 'irony-mode)
+       ;;   (add-hook 'c-mode-hook 'irony-mode)
+       ;;   (add-hook 'objc-mode-hook 'irony-mode)
+       ;;   :config
+       ;;   ;; replace the `completion-at-point' and `complete-symbol' bindings in
+       ;;   ;; irony-mode's buffers by irony-mode's function
+       ;;   (defun my-irony-mode-hook ()
+       ;;     (define-key irony-mode-map [remap completion-at-point]
+       ;;       'irony-completion-at-point-async)
+       ;;     (define-key irony-mode-map [remap complete-symbol]
+       ;;       'irony-completion-at-point-async))
+       ;;   (add-hook 'irony-mode-hook 'my-irony-mode-hook)
+       ;;   (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+       ;;   )
+     #+end_src
+**** Autocomplete(Rtags)
+     #+begin_src emacs-lisp
+       (defun use-rtags (&optional useFileManager)
+         (and (rtags-executable-find "rc")
+              (cond ((not (gtags-get-rootpath)) t)
+                    ((and (not (eq major-mode 'c++-mode))
+                          (not (eq major-mode 'c-mode))) (rtags-has-filemanager))
+                    (useFileManager (rtags-has-filemanager))
+                    (t (rtags-is-indexed)))))
+
+       (defun tags-find-symbol-at-point (&optional prefix)
+         (interactive "P")
+         (if (and (not (rtags-find-symbol-at-point prefix)) rtags-last-request-not-indexed)
+             (gtags-find-tag)))
+       (defun tags-find-references-at-point (&optional prefix)
+         (interactive "P")
+         (if (and (not (rtags-find-references-at-point prefix)) rtags-last-request-not-indexed)
+             (gtags-find-rtag)))
+       (defun tags-find-symbol ()
+         (interactive)
+         (call-interactively (if (use-rtags) 'rtags-find-symbol 'gtags-find-symbol)))
+       (defun tags-find-references ()
+         (interactive)
+         (call-interactively (if (use-rtags) 'rtags-find-references 'gtags-find-rtag)))
+       (defun tags-find-file ()
+         (interactive)
+         (call-interactively (if (use-rtags t) 'rtags-find-file 'gtags-find-file)))
+       (defun tags-imenu ()
+         (interactive)
+         (call-interactively (if (use-rtags t) 'rtags-imenu 'idomenu)))
+
+       (setq rtags-path "/Users/ramz.sivagurunathan/projects/sw/opensource/repos/rtags/bin")
+       (define-key c-mode-base-map (kbd "M-.") (function tags-find-symbol-at-point))
+       (define-key c-mode-base-map (kbd "M-,") (function rtags-location-stack-back))
+       ;;(define-key c-mode-base-map (kbd "M-,") (function tags-find-references-at-point))
+       ;;(define-key c-mode-base-map (kbd "M-;") (function tags-find-file))
+       ;; (define-key c-mode-base-map (kbd "C-.") (function tags-find-symbol))
+       ;; (define-key c-mode-base-map (kbd "C-,") (function tags-find-references))
+       ;; (define-key c-mode-base-map (kbd "C-<") (function rtags-find-virtuals-at-point))
+       ;; (define-key c-mode-base-map (kbd "M-i") (function tags-imenu))
+
+       ;;(define-key global-map (kbd "M-.") (function tags-find-symbol-at-point))
+       ;;(define-key global-map (kbd "M-,") (function tags-find-references-at-point))
+       ;;(define-key global-map (kbd "M-;") (function tags-find-file))
+       ;;(define-key global-map (kbd "C-.") (function tags-find-symbol))
+       ;;(define-key global-map (kbd "C-,") (function tags-find-references))
+       ;;(define-key global-map (kbd "C-<") (function rtags-find-virtuals-at-point))
+       ;;(define-key global-map (kbd "M-i") (function tags-imenu))
+
+       ;; (setq rtags-autostart-diagnostics t)
+       ;; (rtags-diagnostics)
+       ;; (setq rtags-completion-enabled t)
+       ;; (push 'company-rtags company-backends)
+     #+end_src
+
+     #+RESULTS:
+     : tags-find-symbol-at-point
+*** Golang
+   #+begin_src emacs-lisp
+   (setenv "GOPATH" "/Users/ramz.sivagurunathan/projects/sw/sandbox/gospace")
+   #+end_src
+*** snippets
+    #+begin_src emacs-lisp
+            (use-package yasnippet
+              :defer t
+              :diminish yas-minor-mode
+              :init (progn
+                      (setq yas-snippet-dirs '("~/.emacs.d/personal/snippets"))
+                      (yas-global-mode 1)
+                      (yas-reload-all)))
+
+            (use-package helm-config
+              :defer t
+              :config
+              (use-package yasnippet
+                :bind ("M-=" . yas-insert-snippet)
+                :config
+                (progn
+                  (defun my-yas/prompt (prompt choices &optional display-fn)
+                    (let* ((names (loop for choice in choices
+                                        collect (or (and display-fn
+                                                         (funcall display-fn choice))
+                                                    choice)))
+                           (selected (helm-other-buffer
+                                      `(((name . ,(format "%s" prompt))
+                                         (candidates . names)
+                                         (action . (("Insert snippet" . (lambda (arg)
+                                                                          arg))))))
+                                      "*helm yas/prompt*")))
+                      (if selected
+                          (let ((n (position selected names :test 'equal)))
+                            (nth n choices))
+                        (signal 'quit "user quit!"))))
+                  (custom-set-variables '(yas/prompt-functions '(my-yas/prompt))))))
+
+    #+end_src
+*** Web
+    #+begin_src emacs-lisp
+      (setq web-mode-markup-indent-offset 2)
+      (use-package js2-mode
+        :config
+        (bind-key "C-c C-c" 'compile js2-mode-map)
+        (add-to-list 'auto-mode-alist '("\\.js$" . js2-jsx-mode))
+        (add-to-list 'auto-mode-alist '("\\.json$" . js2-mode))
+        (setq js-indent-level 2)
+        (setq js2-indent-level 2)
+        (setq js2-basic-offset 2)
+        (add-hook 'js2-mode-hook 'jasminejs-mode)
+        (add-hook 'js-mode-hook (lambda () (tern-mode t)))
+        (add-hook 'js2-mode-hook (lambda () (tern-mode t)))
+        (eval-after-load 'tern
+          '(progn
+             (require 'tern-auto-complete)
+             (tern-ac-setup))))
+
+      (use-package js2-refactor)
+      (use-package flycheck
+        :ensure t
+        :init (global-flycheck-mode))
+    #+end_src
+*** Notes
+    #+begin_src emacs-lisp
+      (setq deft-extensions '("txt" "tex" "org"))
+      (setq deft-directory "~/projects/common/notes")
+      (setq deft-recursive t)
+      (setq deft-use-filename-as-title t)
+      (global-set-key (kbd "C-x C-g") 'deft-find-file)
+      (global-set-key [f8] 'deft)
+    #+end_src
+** Chat
+*** IRC
+    #+begin_src emacs-lisp
+      (use-package erc
+        :ensure t :defer t
+        :config
+        (setq erc-hide-list '("PART" "QUIT" "JOIN"))
+        (setq erc-autojoin-channels-alist '(("#python-dev"))
+              erc-server "decodewith.me"
+              erc-port 9999
+              erc-nick "ramz"
+              erc-user-full-name "Ramanathan Sivagurunathan")
+
+        (defun erc-cmd-OPME ()
+          "Request chanserv to op me."
+          (erc-message "PRIVMSG"
+                       (format "chanserv op %s %s"
+                               (erc-default-target)
+                               (erc-current-nick)) nil))
+
+        (defun erc-cmd-DEOPME ()
+          "Deop myself from current channel."
+          (erc-cmd-DEOP (format "%s" (erc-current-nick)))))
+    #+end_src
+** elisp
+   #+begin_src emacs-lisp
+     (defun youtube-download-all (filePath)
+       "Return filePath's file content."
+       (with-temp-buffer
+         (insert-file-contents filePath)
+         (org-mode)
+         (setq mylist  (list
+                        (org-element-map (org-element-parse-buffer) 'headline
+                          (lambda (elem) (when (org-element-property :todo-keyword elem)
+                                           (org-element-property :title elem))))))
+
+         (dolist (elem mylist) (org-element-map elem 'link
+                                 (lambda (link)
+                                   (progn
+                                     (setq dl-link (org-element-property :raw-link link))
+                                     (setq dl-desc (substring-no-properties (nth 2 link)))
+                                     (setq default-directory "/home/chaos/Videos")
+                                     (start-process dl-desc dl-desc
+                                     "/home/chaos/.pyvirtenvs/default/bin/youtube-dl"
+                                      "-f mp4" dl-link)
+                                     ))))
+
+         ))
+
+     (youtube-download-all "~/projects/common/notes/org/videos.org")
+   #+end_src
+** Browser
+   #+begin_src emacs-lisp
+   (setq w3m-default-display-inline-images t)
+   #+end_src
