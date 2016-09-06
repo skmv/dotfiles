@@ -236,7 +236,6 @@ These are the additional configuration that i need.
     #+BEGIN_SRC emacs-lisp
       (global-set-key (kbd "C-d") 'prelude-duplicate-current-line-or-region)
     #+END_SRC
-*** Hippie Expand
 *** Key chord
     Bunch of keychord customization for my needs
     #+BEGIN_SRC emacs-lisp
