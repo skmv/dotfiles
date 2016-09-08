@@ -24,6 +24,7 @@ These are the additional configuration that i need.
                                   org-bullets
                                   org-gcal
                                   origami
+                                  ox-reveal
                                   paren-face
                                   pcsv
                                   perspective
