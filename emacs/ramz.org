@@ -381,9 +381,10 @@ These are the additional configuration that i need.
 
     #+end_src
 ** org
-*** Files
+*** General
     #+BEGIN_SRC emacs-lisp
-    (setq org-agenda-files (list "~/personal/todo"))
+      (setq org-agenda-files (list "~/personal/todo"))
+      (setq org-reveal-root "file:///Users/ramz.sivagurunathan/projects/sw/opensource/repos/github/reveal.js")
     #+END_SRC
 *** Templates
     #+BEGIN_SRC emacs-lisp
