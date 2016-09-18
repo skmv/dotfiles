@@ -145,9 +145,6 @@
       (savehist-mode +1)
     #+END_SRC
 
-*** Winner Mode
-    This mode is by default builtin to emacs.
-
 *** Font
     I prefer to use in consolata font, both in my mac and linux.
 
