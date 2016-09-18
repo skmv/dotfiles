@@ -49,6 +49,7 @@ alias 3-rightbottom move screenOriginX+screenSizeX/2;screenOriginY+screenSizeY/2
 layout 3monitors 'iTerm2':MAIN_FIRST                       ${2-full}
 layout 3monitors 'Google Chrome':REPEAT                          ${3-full}
 layout 3monitors 'Emacs':REPEAT              		  	${2-full}
+layout 3monitors 'Franz':REPEAT                         ${2-full}
 
 # Default LayoutsJ
 default 3monitors resolutions:${mon-laptop};${mon-external-1};${mon-external-2}

@@ -2,14 +2,15 @@
 #+OPTIONS: toc:4 h:4
 * About
   I use emacs prelude as my starter kit. That provides most of my configuration.
-These are the additional configuration that i need.
+  These are the additional configuration that i need.
 * Emacs Initialization
 ** Install All Packages
-    #+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp
       (prelude-require-packages '(
                                   ag
                                   bookmark+
                                   color-identifiers-mode
+                                  counsel
                                   esqlite
                                   fixmee
                                   flyspell
@@ -18,6 +19,7 @@ These are the additional configuration that i need.
                                   helm-projectile
                                   helm-ag
                                   hydra
+                                  ivy
                                   markdown-mode
                                   markdown-mode+
                                   multiple-cursors
@@ -37,6 +39,8 @@ These are the additional configuration that i need.
                                   rtags
                                   smartparens
                                   solarized-theme
+                                  swiper
+                                  swiper-helm
                                   use-package
                                   w3m
                                   yasnippet
@@ -45,18 +49,30 @@ These are the additional configuration that i need.
 
       (eval-when-compile
         (require 'use-package))
-    #+END_SRC
+   #+END_SRC
 ** Start Emacs Server
    #+BEGIN_SRC emacs-lisp
      (server-start)
    #+END_SRC
 * Configuration
 ** Personal Information
-    TODO: Need to update with mutiple profiles based on work or personal
-    #+BEGIN_SRC emacs-lisp
-    (setq user-full-name "Ramanathan Sivagurunathan"
-          user-mail-address "ramanathan.nit@gmail.com")
-    #+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (setq user-full-name "Ramanathan Sivagurunathan"
+           user-mail-address "ramzthecoder@gmail.com")
+
+     (defun set-git-user()
+       "Sets the git username and mail address for the environment"
+       (interactive)
+       (setq userinfo (make-hash-table :test 'equal))
+       (puthash "github" ["Ramz" "ramzthecoder@gmail.com"] userinfo)
+       (puthash "iit" ["Ramz" "ramz.sivagurunathan@industrieit.com"] userinfo)
+       (puthash "iag" ["Ramz" "ram.sivagurunathan@iag.com.au"] userinfo)
+       (let ((profile-name  (helm-read-string "Which profile do you want to use: " "github" )))
+         (setq user-full-name (elt (gethash profile-name userinfo) 0))
+         (setq user-mail-address (elt (gethash profile-name userinfo) 1))
+         )
+       )
+   #+END_SRC
 
 ** General Configuration
 *** Startup Screen
@@ -216,7 +232,8 @@ These are the additional configuration that i need.
     #+begin_src elisp
       (use-package which-key
         :init
-        (which-key-setup-side-window-bottom))
+        (which-key-setup-side-window-bottom)
+        (which-key-mode 1))
     #+end_src
 *** Editing
     #+begin_src elisp
@@ -305,8 +322,12 @@ These are the additional configuration that i need.
     #+END_SRC
 *** Search
     #+begin_src emacs-lisp
-      (global-set-key (kbd "C-s") 'isearch-forward-regexp)
-      (global-set-key (kbd "\C-r") 'isearch-backward-regexp)
+      (ivy-mode 1)
+      (setq ivy-use-virtual-buffers t)
+      (global-set-key "\C-s" 'swiper)
+      (global-set-key (kbd "\C-r") 'ivy-resume)
+      ;;(global-set-key (kbd "C-s") 'isearch-forward-regexp)
+      ;;(global-set-key (kbd "\C-r") 'isearch-backward-regexp)
     #+end_src
 *** Zoom Window
     #+BEGIN_SRC emacs-lisp
@@ -606,7 +627,7 @@ These are the additional configuration that i need.
     :init
     (progn (add-hook 'python-mode-hook 'color-identifiers-mode)))
     #+END_SRC
-***
+    ***
 *** Python
 **** Virtual Environment
      #+BEGIN_SRC emacs-lisp
@@ -614,7 +635,7 @@ These are the additional configuration that i need.
          :config
          (progn
            (setenv "WORKON_HOME" (concat (getenv "HOME") "/.pyenv/versions"))
-           (pyvenv-workon "default")))
+           (pyvenv-workon "default3")))
      #+END_SRC
 **** Services
      Some default python services
@@ -709,9 +730,9 @@ These are the additional configuration that i need.
      #+RESULTS:
      : tags-find-symbol-at-point
 *** Golang
-   #+begin_src emacs-lisp
+    #+begin_src emacs-lisp
    (setenv "GOPATH" "/Users/ramz.sivagurunathan/projects/sw/sandbox/gospace")
-   #+end_src
+    #+end_src
 *** snippets
     #+begin_src emacs-lisp
             (use-package yasnippet
@@ -834,4 +855,28 @@ These are the additional configuration that i need.
 ** Browser
    #+begin_src emacs-lisp
    (setq w3m-default-display-inline-images t)
+   #+end_src
+** network
+   Add a keystroke to quit the buffer after ping
+   #+begin_src elisp
+     (defun net-utils-restore-windows ()
+       "Restore windows and clean up after ping."
+       (interactive)
+       (kill-buffer (current-buffer))
+       (jump-to-register :net-utils-fullscreen))
+
+     (defadvice net-utils-run-program (around net-utils-big-page activate)
+       (window-configuration-to-register :net-utils-fullscreen)
+       (let ((buf ad-do-it))
+         (switch-to-buffer buf)
+         (delete-other-windows)
+         (set-temporary-overlay-map
+          (let ((map (make-sparse-keymap)))
+            (define-key map (kbd "q") 'net-utils-restore-windows)
+            map))
+         (message "Type \"q\" to restore other windows.")))
+   #+end_src
+   Configure Number of pings to 4 rather than for ever
+   #+begin_src elisp
+   (setq ping-program-options '("-c" "4"))
    #+end_src
