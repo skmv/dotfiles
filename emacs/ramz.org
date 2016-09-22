@@ -119,7 +119,7 @@
     #+END_SRC
 
 *** Set Path
-    #+begin_src elisp
+    #+begin_src emacs-lisp
       (if (not (getenv "TERM_PROGRAM"))
           (setenv "PATH"
                   (shell-command-to-string "source $HOME/.zshrc && printf $PATH")))
@@ -208,9 +208,17 @@
 
     #+END_SRC
 *** Tramp
-    #+begin_src elisp
+
+    If i set ssh as a default method then i can /10.100.100.10:somefile
+
+    #+begin_src emacs-lisp
+      (setq tramp-default-method "ssh")
+    #+end_src
+
+
+
+    #+begin_src emacs-lisp
       (set-default 'tramp-default-proxies-alist (quote ((".*" "\\`root\\'" "/ssh:%h:"))))
-      (require 'tramp)
       (defun sudo-edit-current-file ()
         (interactive)
         (let ((position (point)))
@@ -225,15 +233,62 @@
              (concat "/sudo:root@localhost:" (buffer-file-name))))
           (goto-char position)))
     #+end_src
+
+    #+begin_src emacs-lisp
+      (set-default 'tramp-default-proxies-alist (quote ((".*" "\\`root\\'" "/ssh:%h:"))))
+      (eval-after-load "tramp"
+        '(progn
+           (defvar sudo-tramp-prefix
+             "/sudo:"
+             (concat "Prefix to be used by sudo commands when building tramp path "))
+           (defun sudo-file-name (filename)
+             (set 'splitname (split-string filename ":"))
+             (if (> (length splitname) 1)
+               (progn (set 'final-split (cdr splitname))
+                      (set 'sudo-tramp-prefix "/sudo:")
+                      )
+               (progn (set 'final-split splitname)
+                      (set 'sudo-tramp-prefix (concat sudo-tramp-prefix "root@localhost:")))
+               )
+             (set 'final-fn (concat sudo-tramp-prefix (mapconcat (lambda (e) e) final-split ":")))
+             (message "splitname is %s" splitname)
+             (message "sudo-tramp-prefix is %s" sudo-tramp-prefix)
+             (message "final-split is %s" final-split)
+             (message "final-fn is %s" final-fn)
+             (message "%s" final-fn)
+             )
+
+           (defun sudo-find-file (filename &optional wildcards)
+             "Calls find-file with filename with sudo-tramp-prefix prepended"
+             (interactive "fFind file with sudo ")
+             (let ((sudo-name (sudo-file-name filename)))
+               (apply 'find-file
+                      (cons sudo-name (if (boundp 'wildcards) '(wildcards))))))
+
+           (defun sudo-reopen-file ()
+             "Reopen file as root by prefixing its name with sudo-tramp-prefix and by clearing buffer-read-only"
+             (interactive)
+             (let*
+                 ((file-name (expand-file-name buffer-file-name))
+                  (sudo-name (sudo-file-name file-name)))
+               (progn
+                 (setq buffer-file-name sudo-name)
+                 (rename-buffer sudo-name)
+                 (setq buffer-read-only nil)
+                 (message (concat "File name set to " sudo-name)))))
+
+           ;;(global-set-key (kbd "C-c o") 'sudo-find-file)
+           (global-set-key (kbd "C-c o s") 'sudo-reopen-file)))
+    #+end_src
 *** Help
-    #+begin_src elisp
+    #+begin_src emacs-lisp
       (use-package which-key
         :init
         (which-key-setup-side-window-bottom)
         (which-key-mode 1))
     #+end_src
 *** Editing
-    #+begin_src elisp
+    #+begin_src emacs-lisp
     (use-package multifiles)
     #+end_src
 ** Navigation
@@ -549,7 +604,7 @@
         :init
         (progn
           (add-hook 'prog-mode-hook #'turn-on-smartparens-mode)
-          ;; turn on showing the match for clojure and elisp
+          ;; turn on showing the match for clojure and emacs-lisp
           (add-hook 'clojure-mode-hook #'turn-on-show-smartparens-mode)
           (add-hook 'emacs-lisp-mode-hook #'turn-on-show-smartparens-mode)
           (add-hook 'java-mode-hook #'turn-on-show-smartparens-mode)
@@ -608,7 +663,7 @@
           (define-key sp-keymap (kbd "H-s s") 'sp-split-sexp)
 
           (sp-local-pair 'minibuffer-inactive-mode "'" nil :actions nil)
-          ;; Remove '' pairing in elisp because quoting is used a ton
+          ;; Remove '' pairing in emacs-lisp because quoting is used a ton
           (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil)
 
           (sp-with-modes '(html-mode sgml-mode)
@@ -822,7 +877,7 @@
           "Deop myself from current channel."
           (erc-cmd-DEOP (format "%s" (erc-current-nick)))))
     #+end_src
-** elisp
+** emacs-lisp
    #+begin_src emacs-lisp
      (defun youtube-download-all (filePath)
        "Return filePath's file content."
@@ -855,7 +910,7 @@
    #+end_src
 ** network
    Add a keystroke to quit the buffer after ping
-   #+begin_src elisp
+   #+begin_src emacs-lisp
      (defun net-utils-restore-windows ()
        "Restore windows and clean up after ping."
        (interactive)
@@ -874,6 +929,13 @@
          (message "Type \"q\" to restore other windows.")))
    #+end_src
    Configure Number of pings to 4 rather than for ever
-   #+begin_src elisp
+   #+begin_src emacs-lisp
    (setq ping-program-options '("-c" "4"))
    #+end_src
+*** Shell
+    #+begin_src emacs-lisp
+      (defun eshell-there (host)
+        (interactive "sHost: ")
+        (let ((default-directory (format "/%s:" host)))
+          (eshell host)))
+    #+end_src

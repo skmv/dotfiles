@@ -112,6 +112,9 @@ export NVM_DIR="$HOME/.nvm"
 
 eval "$(direnv hook zsh)"
 
+export LIQUIBASE_HOME=$(find /usr/local/homebrew/Cellar/liquibase -name libexec)
+# export JAVA_HOME=$(/usr/libexec/java_home -v 1.7)
+
 # Configure virtualenv and pyenv
 if which pyenv > /dev/null;
 then
