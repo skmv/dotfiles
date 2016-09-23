@@ -102,10 +102,12 @@ fi
 # Set the path
 export PATH=$PATH:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/TeX/texbin
 
+# Set golang path and add to path
+export GOPATH="$HOME/projects/sw/opensource/gospace"
+export PATH="$PATH:$GOPATH/bin"
+
 export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
 export PATH="$PATH:/usr/local/opt/llvm/bin"
-export ANDROID_HOME=/usr/local/opt/android-sdk
-export GOPATH="$HOME/projects/common/go"
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm

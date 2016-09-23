@@ -49,7 +49,7 @@ alias 3-rightbottom move screenOriginX+screenSizeX/2;screenOriginY+screenSizeY/2
 layout 3monitors 'iTerm2':MAIN_FIRST                       ${2-full}
 layout 3monitors 'Google Chrome':REPEAT                          ${3-full}
 layout 3monitors 'Emacs':REPEAT              		  	${2-full}
-layout 3monitors 'Franz':REPEAT                         ${2-full}
+layout 3monitors 'Franz':REPEAT                         ${3-full}
 
 # Default LayoutsJ
 default 3monitors resolutions:${mon-laptop};${mon-external-1};${mon-external-2}
@@ -73,7 +73,7 @@ bind 2:ctrl;alt         throw 1 resize
 bind 3:ctrl;alt         throw 2 resize
 
 # Location bindings
-bind padEnter:${hyper} chain ${lefthalf} | ${righthalf} | ${full}
+bind return:${hyper} chain ${full} | ${lefthalf} | ${righthalf}
 
 # Focus Bindings
 bind right:cmd    focus right
