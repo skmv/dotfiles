@@ -98,7 +98,7 @@
       (when window-system
         (tooltip-mode -1)
         (tool-bar-mode -1)
-        (menu-bar-mode 1)
+        (menu-bar-mode -1)
         (scroll-bar-mode -1))
 
       ;; Don't truncate lines
@@ -109,12 +109,15 @@
       (global-set-key (kbd "C-x C-c") 'delete-frame)
 
       ;; Toggle full screen
-      ;; (toggle-frame-fullscreen)
+      (toggle-frame-fullscreen)
 
       ;; No Mode line
-      ;; (setq-default mode-line-format nil)
+      (setq-default mode-line-format nil)
 
       (when window-system (global-unset-key "\C-z"))
+
+      ;; Donot highlight the current line
+      (global-hl-line-mode -1)
 
     #+END_SRC
 
@@ -360,12 +363,10 @@
           (key-chord-define-global "yy"     'helm-show-kill-ring) ;; Highly used
           (key-chord-define-global "jw"     'avy-goto-char-timer) ;; Highly used
           (key-chord-define-global "FF"     'projectile-find-file) ;; Highly used
-
+          (key-chord-define-global "js"     'projectile-persp-switch-project)
           ;;(key-chord-define-global "  "     'rtags-imenu)
           ;;(key-chord-define-global "//"     'rtags-find-references)
-
           (key-chord-define-global "PP"     'hydra-project/body)))
-
     #+END_SRC
 *** Multiple cursors
     Hydra config for multiple cursors
@@ -406,9 +407,8 @@
       (use-package perspective
         :init
         (persp-mode 1)
-        :bind ("s-s" . projectile-persp-switch-project)
+        :bind
         ("M-s" . projectile-ag))
-
     #+END_SRC
 *** Search
     #+begin_src emacs-lisp

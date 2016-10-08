@@ -323,15 +323,15 @@ definitions = {
   ["'"] = function() alert.show(serializeTable(grid.get(window.focusedWindow())), 30) end,
   g = applyLayout(layout2),
 
-  s = grid.pushWindowPrevScreen,
-  d = grid.pushWindowNextScreen,
-  q = function() appfinder.appFromName("Hammerspoon"):kill() end,
+  -- s = grid.pushWindowPrevScreen,
+  -- d = grid.pushWindowNextScreen,
+  -- q = function() appfinder.appFromName("Hammerspoon"):kill() end,
 
   -- TODO app focused window hints
   -- k = function() hints.windowHints(appfinder.appFromName("Sublime Text"):allWindows()) end,
   -- j = function() hints.windowHints(window.focusedWindow():application():allWindows()) end,
   -- ll = function() hyper, hyper2 = hyper2,hyper; rebindHotkeys() end,
-  ["e"] = function() hints.windowHints(nil) end,
+  -- ["e"] = function() hints.windowHints(nil) end,
 
   o = function() hs.execute(os.getenv("HOME") .. "/bin/subl ".. os.getenv("HOME") .."/.hammerspoon/init.lua") end,
   --
@@ -339,10 +339,10 @@ definitions = {
   --
 
   -- move windows
-  H = grid.pushWindowLeft,
-  J = grid.pushWindowDown,
-  L = grid.pushWindowRight,
-  K = grid.pushWindowUp,
+  -- H = grid.pushWindowLeft,
+  -- J = grid.pushWindowDown,
+  -- L = grid.pushWindowRight,
+  -- K = grid.pushWindowUp,
 
   -- resize windows
   ["="] = grid.resizeWindowTaller,
