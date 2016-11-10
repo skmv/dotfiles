@@ -14,6 +14,7 @@
                                   esqlite
                                   fixmee
                                   flyspell
+                                  helm
                                   helm-dash
                                   helm-flyspell
                                   helm-projectile
@@ -111,7 +112,7 @@
       (global-set-key (kbd "C-x C-c") 'delete-frame)
 
       ;; Toggle full screen
-      (toggle-frame-fullscreen)
+      ;;(toggle-frame-fullscreen)
 
       ;; No Mode line
       (setq-default mode-line-format nil)
@@ -433,12 +434,17 @@
       ;;(global-set-key (kbd "C-s") 'isearch-forward-regexp)
       ;;(global-set-key (kbd "\C-r") 'isearch-backward-regexp)
       ;; Move up and down like isearch
-      (define-key helm-swoop-map (kbd "C-r") 'helm-previous-line)
-      (define-key helm-swoop-map (kbd "C-s") 'helm-next-line)
-      (define-key helm-multi-swoop-map (kbd "C-r") 'helm-previous-line)
-      (define-key helm-multi-swoop-map (kbd "C-s") 'helm-next-line)
-      (global-set-key (kbd "C-s") 'helm-swoop)
+      (use-package helm-swoop
+        :no-require t
+        :config
+        (define-key helm-swoop-map (kbd "C-r") 'helm-previous-line)
+        (define-key helm-swoop-map (kbd "C-s") 'helm-next-line)
+        (define-key helm-multi-swoop-map (kbd "C-r") 'helm-previous-line)
+        (define-key helm-multi-swoop-map (kbd "C-s") 'helm-next-line)
+        (global-set-key (kbd "C-s") 'helm-swoop)
+        )
     #+end_src
+
 *** Zoom Window
     #+BEGIN_SRC emacs-lisp
       (use-package zoom-window
