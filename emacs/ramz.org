@@ -27,6 +27,7 @@
                                   multiple-cursors
                                   org-bullets
                                   org-gcal
+                                  org-pomodoro
                                   origami
                                   ox-reveal
                                   paren-face
