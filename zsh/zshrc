@@ -128,3 +128,4 @@ if which pyenv-virtualenv-init > /dev/null; then
 fi
 
 source ~/.tmuxinator/bin/tmuxinator.zsh
+export PATH="/usr/local/bin/Sencha/Cmd:$PATH"
