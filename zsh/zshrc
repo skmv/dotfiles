@@ -99,6 +99,9 @@ if [ -f "/Users/ramz.sivagurunathan/.enhancd/zsh/enhancd.zsh" ]; then
     source "/Users/ramz.sivagurunathan/.enhancd/zsh/enhancd.zsh"
 fi
 
+# Do not record duplicate in your history
+export HISTCONTROL=ignoreboth:erasedups
+
 # Set the path
 export PATH=$PATH:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/TeX/texbin
 
