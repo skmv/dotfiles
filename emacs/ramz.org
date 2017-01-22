@@ -11,7 +11,9 @@
                                   bookmark+
                                   color-identifiers-mode
                                   counsel
+                                  direnv
                                   esqlite
+                                  evil
                                   fixmee
                                   flyspell
                                   helm
