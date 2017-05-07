@@ -33,9 +33,6 @@ alias killemacs="emacsclient -e '(kill-emacs)'"
 # system commands
 alias df="df -H"
 
-# git alias. Interactive
-alias gco='git checkout $(git branch | percol)'
-
 # aws show all ec2 instances
 alias ec2="aws ec2 describe-instances --output table --query 'Reservations[*].Instances[*].{ID:InstanceId,Type:InstanceType,State:State.Name,PrivateIp:NetworkInterfaces[0].PrivateIpAddress,PublicIp:NetworkInterfaces[0].Association.PublicIp,Tags:Tags[?Key==\`Name\`].Value | [0]}'"
 
@@ -44,4 +41,8 @@ alias ec2-start="aws ec2 start-instances --instance-ids "
 
 # Changing Default programs
 alias cat=ccat
+alias wget=aria2c
 
+# fasd
+alias j='fasd_cd -d'
+alias vi='fasd -f -e "emacsclient -t"'

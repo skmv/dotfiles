@@ -93,12 +93,6 @@ then
     source /home/$USERNAME/.rvm/scripts/rvm
 fi
 
-[[ -s "$HOME/.qfc/bin/qfc.sh" ]] && source "$HOME/.qfc/bin/qfc.sh"
-# enhancd
-if [ -f "/Users/ramz.sivagurunathan/.enhancd/zsh/enhancd.zsh" ]; then
-    source "/Users/ramz.sivagurunathan/.enhancd/zsh/enhancd.zsh"
-fi
-
 # Do not record duplicate in your history
 export HISTCONTROL=ignoreboth:erasedups
 
@@ -132,3 +126,13 @@ fi
 
 source ~/.tmuxinator/bin/tmuxinator.zsh
 export PATH="/usr/local/bin/Sencha/Cmd:$PATH"
+export ANDROID_HOME=~/Library/Android/sdk
+export PATH=${PATH}:${ANDROID_HOME}/tools
+export PATH=${PATH}:${ANDROID_HOME}/platform-tools
+
+eval "$(fasd --init auto)"
+
+_fzf_compgen_path() {
+  ag -g "" "$1"
+} 
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
