@@ -40,7 +40,7 @@ end
 
 hs.window.switcher.ui.showSelectedThumbnail = false
 hs.window.switcher.ui.showTitles = false
-switcher = hs.window.switcher.new{'Emacs', 'Google Chrome', 'Franz'} -- default windowfilter: only visible windows, all Spaces
+switcher = hs.window.switcher.new{'Emacs', 'Google Chrome', 'Rambox'} -- default windowfilter: only visible windows, all Spaces
 
 hs.hotkey.bind('alt','tab',nil,function()switcher:next()end)
 -- hs.hotkey.bind('alt','tab','Next window',function()
