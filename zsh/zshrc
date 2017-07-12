@@ -20,7 +20,7 @@ fi
 # Look in ~/.oh-my-zsh/themes/
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
-ZSH_THEME="ys"
+ZSH_THEME="dracula"
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
@@ -111,7 +111,7 @@ export NVM_DIR="$HOME/.nvm"
 
 eval "$(direnv hook zsh)"
 
-export LIQUIBASE_HOME=$(find /usr/local/homebrew/Cellar/liquibase -name libexec)
+#export LIQUIBASE_HOME=$(find /usr/local/homebrew/Cellar/liquibase -name libexec)
 # export JAVA_HOME=$(/usr/libexec/java_home -v 1.7)
 
 # Configure virtualenv and pyenv
@@ -134,5 +134,6 @@ eval "$(fasd --init auto)"
 
 _fzf_compgen_path() {
   ag -g "" "$1"
-} 
+}
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+export PATH="/usr/local/sbin:$PATH"
