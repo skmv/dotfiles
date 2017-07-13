@@ -15,7 +15,11 @@ ssh:: ## Configure SSH Settings
 	@chmod 700 ${HOME}/.ssh
 	@touch ${HOME}/.ssh/authorized_keys
 	@chmod 600 ${HOME}/.ssh/authorized_keys
-	@echo symlinking ssh configuration
+	@echo ssh configuration completed
+
+tmux:: ## Configure tmux Settings
+	@ln $(LN_FLAGS) $(CONFIG_ROOT)/tmux/tmux.conf ${HOME}/.tmux.conf
+	@echo tmux configuration completed
 
 # Help text
 define HELP_TEXT
