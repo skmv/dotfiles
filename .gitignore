@@ -1,1 +1,10 @@
 ramz.el
+
+# Ignore all pem and ppk files to be accidentally checked in
+*.pem
+*.ppk
+
+# Ignore all id_rsa
+id_rsa*
+id_dsa*
+ssh/id_*
