@@ -10,6 +10,10 @@ install: ## Installs all the config files on a osx
 
 install-linux: ## Installs all the config files on a linux
 
+git:: ## Configure git Settings
+	@ln $(LN_FLAGS) $(CONFIG_ROOT)/git/gitignore ${HOME}/.gitignore
+	@echo git configuration completed
+
 ssh:: ## Configure SSH Settings
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/ssh ${HOME}/.ssh
 	@chmod 700 ${HOME}/.ssh
