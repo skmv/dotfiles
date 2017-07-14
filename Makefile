@@ -12,6 +12,7 @@ install-linux: ## Installs all the config files on a linux
 
 git:: ## Configure git Settings
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/git/gitignore ${HOME}/.gitignore
+	@ln $(LN_FLAGS) $(CONFIG_ROOT)/git/gitconfig ${HOME}/.gitconfig
 	@echo git configuration completed
 
 ssh:: ## Configure SSH Settings
