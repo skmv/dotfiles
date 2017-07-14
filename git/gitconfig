@@ -2,7 +2,7 @@
 	name = Ramz
 	email = ramzthecoder@gmail.com
   useConfigOnly = true
-  signingkey = 970B1D9B
+  signingkey = 25FFA652
 
 [core]
  	excludesfile = ~/.gitignore
