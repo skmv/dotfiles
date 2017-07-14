@@ -1,5 +1,5 @@
 [user]
-	name = Ramz
+	name = ageekymonk
 	email = ramzthecoder@gmail.com
   useConfigOnly = true
   signingkey = 25FFA652
@@ -139,9 +139,9 @@
 
 [pager]
 	color = true
-	log = diff-highlight | less
-	show = diff-highlight | less
-	diff = diff-highlight | less
+	#log = diff-highlight | less
+	#show = diff-highlight | less
+	#diff = diff-highlight | less
 
 
 [branch]
