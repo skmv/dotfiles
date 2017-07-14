@@ -2,6 +2,7 @@
 	name = Ramz
 	email = ramzthecoder@gmail.com
   useConfigOnly = true
+  signingkey = 970B1D9B
 
 [core]
  	excludesfile = ~/.gitignore
@@ -14,6 +15,12 @@
 [http]
   sslverify = true
   postBuffer = 524288000
+
+[commit]
+	gpgsign = true
+
+[gpg]
+	program = /usr/local/MacGPG2/bin/gpg2
 
 [alias]
   # Profiles
