@@ -6,9 +6,7 @@ LN_FLAGS = -sfn
 
 .PHONY: help install
 
-install: ## Installs all the config files on a osx
-
-install-linux: ## Installs all the config files on a linux
+install: emacs git ssh tmux zsh ## Installs all the config files on a osx
 
 emacs:: ## Configure emacs Settings
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/emacs/spacemacs ${HOME}/.spacemacs
