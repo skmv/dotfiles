@@ -10,10 +10,20 @@ install: ## Installs all the config files on a osx
 
 install-linux: ## Installs all the config files on a linux
 
+emacs:: ## Configure emacs Settings
+	@ln $(LN_FLAGS) $(CONFIG_ROOT)/emacs/spacemacs ${HOME}/.spacemacs
+	@echo emacs configuration completed
+
 git:: ## Configure git Settings
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/git/gitignore ${HOME}/.gitignore
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/git/gitconfig ${HOME}/.gitconfig
 	@echo git configuration completed
+
+hammerspoon:: ## Configure hammerspoon
+	@echo Hammerspoon configuration completed
+
+install-bin:: ## Install all Binaries needed
+	@echo Installing
 
 ssh:: ## Configure SSH Settings
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/ssh ${HOME}/.ssh
