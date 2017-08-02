@@ -15,6 +15,7 @@ emacs:: ## Configure emacs Settings
 git:: ## Configure git Settings
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/git/gitignore ${HOME}/.gitignore
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/git/gitconfig ${HOME}/.gitconfig
+	@mkdir -p ~/.git-template
 	@echo git configuration completed
 
 hammerspoon:: ## Configure hammerspoon
