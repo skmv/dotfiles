@@ -1,12 +1,13 @@
-.DEFAULT_GOAL:=help
-SHELL:=/bin/bash
-
-CONFIG_ROOT := $(shell pwd)
-LN_FLAGS = -sfn
+.DEFAULT_GOAL := help
+SHELL				  :=	/bin/bash
+GIT					  := $(shell which git)
+CONFIG_ROOT   := $(shell pwd)
+PRIVATE_CONFIG_ROOT := $(shell pwd)/private
+LN_FLAGS 			= -sfn
 
 .PHONY: help install
 
-install: emacs git ssh tmux zsh ## Installs all the config files on a osx
+all: emacs git ssh tmux zsh ## Installs all the config files on a osx
 
 emacs:: ## Configure emacs Settings
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/emacs/spacemacs ${HOME}/.spacemacs
@@ -29,11 +30,19 @@ ssh:: ## Configure SSH Settings
 	@chmod 700 ${HOME}/.ssh
 	@touch ${HOME}/.ssh/authorized_keys
 	@chmod 600 ${HOME}/.ssh/authorized_keys
+ifneq ("$(wildcard $(PRIVATE_CONFIG_ROOT))","")
+	@ln $(LN_FLAGS) $(PRIVATE_CONFIG_ROOT)/ssh/config ${HOME}/.ssh/config
+else
+	@ln $(LN_FLAGS) $(CONFIG_ROOT)/ssh/default/config ${HOME}/.ssh/config
+endif
 	@echo ssh configuration completed
 
 tmux:: ## Configure tmux Settings
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/tmux/tmux.conf ${HOME}/.tmux.conf
 	@echo tmux configuration completed
+
+update:: ## Update the config repository
+	$(GIT) pull && $(GIT) submodule foreach git checkout master && $(GIT) submodule foreach git pull
 
 # Help text
 define HELP_TEXT
