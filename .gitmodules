@@ -1,3 +1,6 @@
 [submodule "emacs/snippets"]
 	path = emacs/snippets
 	url = git@github.com:ageekymonk/yasnippet-snippets.git
+[submodule "private"]
+	path = private
+	url = git@github.com:ageekymonk/private-dotfiles.git
