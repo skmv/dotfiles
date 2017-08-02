@@ -8,3 +8,6 @@ ramz.el
 id_rsa*
 id_dsa*
 ssh/id_*
+
+# Ignore symlinks
+ssh/config
