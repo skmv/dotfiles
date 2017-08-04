@@ -46,3 +46,6 @@ alias wget=aria2c
 # fasd
 alias j='fasd_cd -d'
 alias vi='fasd -f -e "emacsclient -t"'
+
+# exa
+alias ls='exa'
