@@ -25,7 +25,6 @@
 [alias]
   # Profiles
 	ghprofile = !git config user.name 'ageekymonk' && git config user.email 'ramzthecoder@gmail.com'
-	iagprofile = !git config user.name 's86526' && git config user.email \"ram.sivagurunathan@iag.com.au\"
 
 	aa = add --all --intent-to-add
 	ae = add --edit
