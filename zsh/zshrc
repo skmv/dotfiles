@@ -4,7 +4,10 @@ then
     USERNAME=`whoami`
     export ZSH=/Users/$USERNAME/.oh-my-zsh
     # Would you like to use another custom folder than $ZSH/custom?
-    ZSH_CUSTOM=/Users/$USERNAME/projects/sw/common/configs/zsh
+    ZSH_CONFIG_FILE=`greadlink -f ~/.zshrc`
+    ZSH_CONFIG_DIR=`dirname $ZSH_CONFIG_FILE`
+    ZSH_PRIVATE_CONFIG_DIR=$ZSH_CONFIG_DIR/../private/zsh
+    ZSH_CUSTOM=$ZSH_CONFIG_DIR
     source /Users/$USERNAME/.iterm2_shell_integration.zsh
 
 elif [[ "$(uname)" == "Linux" ]]
@@ -12,7 +15,9 @@ then
     USERNAME=`whoami`
     export ZSH=/home/$USERNAME/.oh-my-zsh
     # Would you like to use another custom folder than $ZSH/custom?
-    ZSH_CUSTOM=/Users/$USERNAME/projects/sw/common/configs/zsh
+    ZSH_CONFIG_FILE=`readlink -f ~/.zshrc`
+    ZSH_CONFIG_DIR=`dirname $ZSH_CONFIG_FILE`
+    ZSH_CUSTOM=$ZSH_CONFIG_DIR
     export SHELL=/bin/zsh
 fi
 
