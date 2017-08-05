@@ -56,6 +56,12 @@ else
 endif
 	@echo weechat configuration completed
 
+zsh:: ## Configure zsh Settings
+	@ln $(LN_FLAGS) $(CONFIG_ROOT)/zsh/zshrc ${HOME}/.zshrc
+ifeq ("$(wildcard $(PRIVATE_CONFIG_ROOT))","")
+	@git clone https://github.com/bhilburn/powerlevel9k.git ~/.oh-my-zsh/themes/powerlevel9k
+endif
+
 # Help text
 define HELP_TEXT
 Usage: make [TARGET]... [MAKEVAR1=SOMETHING]...
