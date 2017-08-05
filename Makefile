@@ -44,6 +44,18 @@ tmux:: ## Configure tmux Settings
 update:: ## Update the config repository
 	$(GIT) pull && $(GIT) submodule foreach git checkout master && $(GIT) submodule foreach git pull
 
+weechat:: ## Configure weechat settings
+	@ln $(LN_FLAGS) $(CONFIG_ROOT)/weechat ${HOME}/.weechat
+ifneq ("$(wildcard $(PRIVATE_CONFIG_ROOT))","")
+	@ln $(LN_FLAGS) $(PRIVATE_CONFIG_ROOT)/weechat/irc.conf ${HOME}/.weechat/irc.conf
+	@ln $(LN_FLAGS) $(PRIVATE_CONFIG_ROOT)/weechat/plugins.conf ${HOME}/.weechat/plugins.conf
+	@ln $(LN_FLAGS) $(PRIVATE_CONFIG_ROOT)/weechat/weechat.conf ${HOME}/.weechat/weechat.conf
+
+else
+	@echo "TODO Need to copy the default file."
+endif
+	@echo weechat configuration completed
+
 # Help text
 define HELP_TEXT
 Usage: make [TARGET]... [MAKEVAR1=SOMETHING]...
