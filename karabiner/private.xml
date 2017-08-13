@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<root>
+	<item>
+    <name>Remap F19 to Hyper</name>
+    <appendix>OS X doesn't have a Hyper. This maps F19 to Control + Shift + Option + Command.</appendix>
+
+    <identifier>usercustom.f19_to_hyper</identifier>
+
+    <autogen>
+        --KeyToKey--
+        KeyCode::F19,
+
+        KeyCode::COMMAND_R,
+        ModifierFlag::OPTION_R | ModifierFlag::SHIFT_R | ModifierFlag::CONTROL_R
+    </autogen>
+</item>
+
+<item>
+    <name>Shifts to curly braces</name>
+    <appendix>Shifts, when pressed alone, type curly braces.  When used with other keys they're normal shifts.</appendix>
+
+    <identifier>private.shifts_to_parens</identifier>
+
+    <!-- This is the basic mapping. -->
+    <autogen>--KeyOverlaidModifier-- KeyCode::SHIFT_R, ModifierFlag::SHIFT_R | ModifierFlag::NONE, KeyCode::SHIFT_R, KeyCode::BRACKET_RIGHT, ModifierFlag::SHIFT_L</autogen>
+    <autogen>--KeyOverlaidModifier-- KeyCode::SHIFT_L, ModifierFlag::SHIFT_L | ModifierFlag::NONE, KeyCode::SHIFT_L, KeyCode::BRACKET_LEFT, ModifierFlag::SHIFT_R</autogen>
+
+    <!--
+        Remap the "rolls" of () and )( because it's too easy to hit one
+        before finishing the other, and there's no other reason to be
+        pressing both shift keys at once anyway
+    -->
+    <autogen>--KeyToKey-- KeyCode::SHIFT_L, ModifierFlag::SHIFT_R, KeyCode::BRACKET_RIGHT, ModifierFlag::SHIFT_L, KeyCode::BRACKET_RIGHT, ModifierFlag::SHIFT_L</autogen>
+    <autogen>--KeyToKey-- KeyCode::SHIFT_R, ModifierFlag::SHIFT_L, KeyCode::BRACKET_LEFT, ModifierFlag::SHIFT_L, KeyCode::BRACKET_LEFT, ModifierFlag::SHIFT_L</autogen>
+
+    <!--
+        Remap Rshift+Space to ') ', because when typing an end paren and
+        then a space I tend to hit space before I let go of rshift.
+    -->
+    <autogen>--KeyToKey-- KeyCode::SPACE, ModifierFlag::SHIFT_R, KeyCode::BRACKET_RIGHT, ModifierFlag::SHIFT_L, KeyCode::SPACE</autogen>
+</item>
+
+  <item>
+    <name>Disable Arrow keys on google chrome.</name>
+    <identifier>private.app_google_chrome_disable_arrow</identifier>
+    <only>GOOGLE_CHROME</only>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::CURSOR_UP | ModifierFlag::NONE, KeyCode::VK_NONE,
+    </autogen>
+    <autogen>
+      __KeyToKey__
+      KeyCode::CURSOR_DOWN | ModifierFlag::NONE, KeyCode::VK_NONE,
+    </autogen>
+    <autogen>
+      __KeyToKey__
+      KeyCode::CURSOR_LEFT | ModifierFlag::NONE, KeyCode::VK_NONE,
+    </autogen>
+    <autogen>
+      __KeyToKey__
+      KeyCode::CURSOR_RIGHT | ModifierFlag::NONE, KeyCode::VK_NONE,
+    </autogen>
+  </item>
+
+</root>
