@@ -27,7 +27,7 @@ install-bin:: ## Install all Binaries needed
 	@echo Installing
 
 karabiner:: ## Install karabiner configs
-	@ln $(LN_FLAGS) $(CONFIG_ROOT)/karabiner/private.xml "/Users/ramz.sivagurunathan/Library/Application Support/Karabiner/private.xml"
+	@ln $(LN_FLAGS) $(CONFIG_ROOT)/karabiner/private.xml "${HOME}/Library/Application Support/Karabiner/private.xml"
 	@echo karabiner configuration completed
 
 ssh:: ## Configure SSH Settings
