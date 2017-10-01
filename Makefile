@@ -11,7 +11,7 @@ all: emacs git ssh tmux zsh ## Installs all the config files on a osx
 
 emacs:: ## Configure emacs Settings
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/emacs/spacemacs ${HOME}/.spacemacs
-	@ln $(LN_FLAGS) $(CONFIG_ROOT)/emacs/private ${HOME}/.emacs.d/private
+	@ln $(LN_FLAGS) $(CONFIG_ROOT)/emacs/layers/org-trello ${HOME}/.emacs.d/private/org-trello
 	@echo emacs configuration completed
 
 git:: ## Configure git Settings
