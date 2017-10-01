@@ -48,6 +48,8 @@ tmux:: ## Configure tmux Settings
 
 update:: ## Update the config repository
 	$(GIT) pull && $(GIT) submodule foreach git checkout master && $(GIT) submodule foreach git pull
+	@wget https://raw.githubusercontent.com/wee-slack/wee-slack/master/wee_slack.py
+	@mv wee_slack.py $(CONFIG_ROOT)/weechat/plugins/autoload/wee_slack.py
 
 weechat:: ## Configure weechat settings
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/weechat ${HOME}/.weechat

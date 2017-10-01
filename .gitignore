@@ -3,14 +3,20 @@ ramz.el
 # Ignore all pem and ppk files to be accidentally checked in
 *.pem
 *.ppk
+*.pub
 
 # Ignore all id_rsa
 id_rsa*
 id_dsa*
 ssh/id_*
+ssh/authorized_keys
+ssh/known_hosts
 
 # Ignore symlinks
 ssh/config
 weechat/irc.conf
 weechat/weechat.conf
 weechat/plugins.conf
+
+wee_slack.py
+passwords
