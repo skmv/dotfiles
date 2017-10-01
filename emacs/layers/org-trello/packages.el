@@ -33,11 +33,27 @@
   '(org-trello)
   "The list of Lisp packages required by the org-trello layer.")
 
+(defun org-trello/init-org-trello()
+  (use-package org-trello)
+  )
+
+(defun org-trello-sync-from-trello (&optional from)
+  (interactive "P")
+  (org-trello-sync-buffer t)
+  )
+
+(defun org-trello-sync-to-trello (&optional from)
+  (interactive "P")
+  (org-trello-sync-buffer nil)
+  )
+
+
 (defun org-trello/post-init-org-trello()
   (print "org-mode-trello-done")
   (progn
     (evil-leader/set-key
-      "ots" 'org-trello/sync-buffer
+      "ots" 'org-trello-sync-from-trello
       "otc" 'org-trello/sync-card
+      "otS" 'org-trello-sync-to-trello
       )))
 ;;; packages.el ends here
