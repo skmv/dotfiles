@@ -70,7 +70,7 @@ export UPDATE_ZSH_DAYS=15
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git docker zsh-autosuggestions zsh-syntax-highlighting history-substring-search)
+plugins=(git docker zsh-autosuggestions zsh-syntax-highlighting zsh-history-substring-search zsh-completions)
 
 # User configuration
 
@@ -81,11 +81,14 @@ export LANG=en_AU.UTF-8
 
 # Enable Ctrl-x-e to edit command line
 autoload -U edit-command-line
+autoload -U compinit && compinit
 
 # Emacs style
 zle -N edit-command-line
 bindkey '^xe' edit-command-line
 bindkey '^x^e' edit-command-line
+bindkey -M emacs '^P' history-substring-search-up
+bindkey -M emacs '^N' history-substring-search-down
 
 source $ZSH_CUSTOM/zshalias
 
