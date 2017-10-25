@@ -71,7 +71,7 @@ endif
 
 brew:: ## Configure brew Settings
 ifeq ("$(wildcard /usr/local/bin/brew)","")
-	@/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+	@/usr/bin/ruby -e "$(shell curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 else
 	@cd brew
 	@brew tap homebrew/bundle
