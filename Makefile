@@ -7,7 +7,13 @@ LN_FLAGS 			= -sfn
 
 .PHONY: help install brew
 
-all: brew git zsh emacs ssh tmux ## Installs all the config files on a osx
+all: base brew git zsh emacs ssh tmux ## Installs all the config files on a osx
+
+base:: ## Configure the base settings
+	@mkdir -p ~/projects/sw/repos/opensource
+	@mkdir -p ~/projects/sw/repos/personal
+	@mkdir -p ~/projects/sw/sandbox
+	@mkdir -p ~/projects/sw/gospace
 
 emacs:: ## Configure emacs Settings
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/emacs/spacemacs ${HOME}/.spacemacs
