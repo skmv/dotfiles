@@ -75,7 +75,7 @@ ifeq ("$(wildcard /usr/local/bin/brew)","")
 	@/usr/bin/ruby /tmp/install
 else
 	@brew tap homebrew/bundle
-	@brew bundle --file brew/Brewfile
+	@brew bundle --file=brew/Brewfile
 endif
 
 # Help text
