@@ -7,7 +7,7 @@ LN_FLAGS 			= -sfn
 
 .PHONY: help install brew
 
-all: base brew git zsh emacs ssh tmux ## Installs all the config files on a osx
+all: brew git zsh emacs ssh tmux ## Installs all the config files on a osx
 
 base:: ## Configure the base settings
 	@mkdir -p ~/projects/sw/repos/opensource
@@ -16,6 +16,8 @@ base:: ## Configure the base settings
 	@mkdir -p ~/projects/sw/gospace
 ifeq ("$(wildcard $(HOME)/projects/sw/repos/personal/configs)","")
 	@git clone git@github.com:ageekymonk/dotfiles.git $(HOME)/projects/sw/repos/personal/configs
+
+	@echo "Jump to $(HOME)/projects/sw/repos/personal/configs and run make all"
 endif
 
 emacs:: ## Configure emacs Settings
