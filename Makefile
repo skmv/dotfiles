@@ -30,10 +30,21 @@ endif
 
 	@make git
 	@make brew
+	@make zsh-setup
 	@make zsh
+	@make emacs-setup
 	@make emacs
 
 	@echo "Remember to import your gpg keys"
+
+emacs-setup:: ## Configure emacs for fresh laptop
+	@echo "Setting up emacs"
+ifneq ("$(wildcard $(HOME)/.emacs.d)","")
+	@echo "Backing up existing emacs configs"
+	@mv $(HOME)/.emacs.d $(HOME)/.emacs.d_bkup
+endif
+	@echo "Installing spacemacs"
+	@git clone https://github.com/syl20bnr/spacemacs ~/.emacs.d
 
 emacs:: ## Configure emacs Settings
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/emacs/spacemacs ${HOME}/.spacemacs
