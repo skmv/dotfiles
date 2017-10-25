@@ -58,4 +58,5 @@ cask "caskroom/fonts/font-hack"
 cask "caskroom/fonts/font-hack-nerd-font"
 cask "caskroom/fonts/font-inconsolata-nerd-font"
 
+linkapps
 brew "atlassian/tap/atlassian-plugin-sdk"
