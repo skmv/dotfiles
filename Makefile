@@ -5,9 +5,9 @@ CONFIG_ROOT   := $(shell pwd)
 PRIVATE_CONFIG_ROOT := $(shell pwd)/private
 LN_FLAGS 			= -sfn
 
-.PHONY: help install
+.PHONY: help install brew
 
-all: emacs git ssh tmux zsh ## Installs all the config files on a osx
+all: emacs git ssh tmux zsh brew ## Installs all the config files on a osx
 
 emacs:: ## Configure emacs Settings
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/emacs/spacemacs ${HOME}/.spacemacs
