@@ -5,7 +5,7 @@ CONFIG_ROOT   := $(shell pwd)
 PRIVATE_CONFIG_ROOT := $(shell pwd)/private
 LN_FLAGS 			= -sfn
 
-.PHONY: help install brew
+.PHONY: help brew emacs git ssh tmux zsh zsh-setup
 
 all: brew git zsh emacs ssh tmux ## Installs all the config files on a osx
 
@@ -15,20 +15,25 @@ setup:: ## Configure the laptop for fresh installation
 	@mkdir -p ~/projects/sw/repos/personal
 	@mkdir -p ~/projects/sw/sandbox
 	@mkdir -p ~/projects/sw/gospace
+
 ifeq ("$(wildcard $(HOME)/projects/sw/repos/personal/configs)","")
 	@echo "Downloading the config repository"
 	@git clone git@github.com:ageekymonk/dotfiles.git $(HOME)/projects/sw/repos/personal/configs
 
 	@echo "Jump to $(HOME)/projects/sw/repos/personal/configs and run make all"
 endif
+
 	@cd $(HOME)/projects/sw/repos/personal/configs
 	@echo "Pulling in other submodules"
 	@git submodule init
 	@git submodule update
+
 	@make git
 	@make brew
 	@make zsh
 	@make emacs
+
+	@echo "Remember to import your gpg keys"
 
 emacs:: ## Configure emacs Settings
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/emacs/spacemacs ${HOME}/.spacemacs
@@ -40,6 +45,8 @@ git:: ## Configure git Settings
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/git/gitignore ${HOME}/.gitignore
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/git/gitconfig ${HOME}/.gitconfig
 	@mkdir -p ~/.git-template
+	@git config user.name "ageekymonk"
+	@git config user.email "ramzthecoder@gmail.com"
 	@echo git configuration completed
 
 hammerspoon:: ## Configure hammerspoon
@@ -96,8 +103,8 @@ zsh:: ## Configure zsh Settings
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/zsh/zshrc ${HOME}/.zshrc
 
 brew:: ## Configure brew Settings
-	@echo "Installing brew"
 ifeq ("$(wildcard /usr/local/bin/brew)","")
+	@echo "Installing brew"
 	@curl -fsSL -o /tmp/install https://raw.githubusercontent.com/Homebrew/install/master/install
 	@/usr/bin/ruby /tmp/install
 endif
