@@ -69,6 +69,15 @@ ifeq ("$(wildcard $(PRIVATE_CONFIG_ROOT))","")
 	@git clone https://github.com/bhilburn/powerlevel9k.git ~/.oh-my-zsh/themes/powerlevel9k
 endif
 
+brew:: ## Configure brew Settings
+ifeq ("$(wildcard /usr/local/bin/brew)","")
+	@/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+else
+	@cd brew
+	@brew tap homebrew/bundle
+	@brew bundle
+endif
+
 # Help text
 define HELP_TEXT
 Usage: make [TARGET]... [MAKEVAR1=SOMETHING]...
