@@ -45,7 +45,6 @@ brew "weechat", args: ["with-aspell", "with-curl", "with-lua", "with-perl", "wit
 brew "xmlstarlet"
 brew "youtube-dl"
 brew "zsh"
-brew "atlassian/tap/atlassian-plugin-sdk"
 brew "d12frosted/emacs-plus/emacs-plus", args: ["HEAD"]
 brew "yudai/gotty/gotty"
 cask "amethyst"
@@ -58,3 +57,5 @@ cask "mattr-slate"
 cask "caskroom/fonts/font-hack"
 cask "caskroom/fonts/font-hack-nerd-font"
 cask "caskroom/fonts/font-inconsolata-nerd-font"
+
+brew "atlassian/tap/atlassian-plugin-sdk"
