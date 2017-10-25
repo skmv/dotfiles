@@ -42,6 +42,7 @@ brew "tmux"
 brew "weechat", args: ["with-aspell", "with-curl", "with-lua", "with-perl", "with-python"]
 brew "xmlstarlet"
 brew "youtube-dl"
+brew "zsh"
 brew "atlassian/tap/atlassian-plugin-sdk"
 brew "d12frosted/emacs-plus/emacs-plus", args: ["HEAD"]
 brew "yudai/gotty/gotty"
