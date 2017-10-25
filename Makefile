@@ -14,6 +14,9 @@ base:: ## Configure the base settings
 	@mkdir -p ~/projects/sw/repos/personal
 	@mkdir -p ~/projects/sw/sandbox
 	@mkdir -p ~/projects/sw/gospace
+ifeq ("$(wildcard $(HOME)/projects/sw/repos/personal/configs)","")
+	@git clone git@github.com:ageekymonk/dotfiles.git $(HOME)/projects/sw/repos/personal/configs
+endif
 
 emacs:: ## Configure emacs Settings
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/emacs/spacemacs ${HOME}/.spacemacs
