@@ -23,9 +23,6 @@ git:: ## Configure git Settings
 hammerspoon:: ## Configure hammerspoon
 	@echo Hammerspoon configuration completed
 
-install-bin:: ## Install all Binaries needed
-	@echo Installing
-
 karabiner:: ## Install karabiner configs
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/karabiner/private.xml "${HOME}/Library/Application Support/Karabiner/private.xml"
 	@echo karabiner configuration completed
