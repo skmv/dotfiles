@@ -39,6 +39,7 @@ endif
 	@make osx
 	@echo "Remember to import your gpg keys"
 	@echo "Load the iterm settings from the file iterm/com.googlecode.iterm2.plist"
+	@echo "Install Intellij Idea manually"
 
 controlplane:: ## Configure control plane
 	@echo "Setting up controlplane"
