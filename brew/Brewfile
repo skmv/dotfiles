@@ -58,6 +58,11 @@ cask "keycastr"
 cask "mattr-slate"
 cask "caskroom/fonts/font-hack"
 cask "caskroom/fonts/font-hack-nerd-font"
+cask "caskroom/fonts/font-inconsolata"
+cask "caskroom/fonts/font-inconsolata-for-powerline"
 cask "caskroom/fonts/font-inconsolata-nerd-font"
+cask "caskroom/fonts/font-source-code-pro"
+cask "caskroom/fonts/font-source-code-pro-for-powerline"
+
 
 brew "atlassian/tap/atlassian-plugin-sdk"
