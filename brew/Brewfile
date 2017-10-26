@@ -68,6 +68,6 @@ cask "caskroom/fonts/font-inconsolata-for-powerline"
 cask "caskroom/fonts/font-inconsolata-nerd-font"
 cask "caskroom/fonts/font-source-code-pro"
 cask "caskroom/fonts/font-source-code-pro-for-powerline"
-
+cask "caskroom/versions/alfred2"
 
 brew "atlassian/tap/atlassian-plugin-sdk"
