@@ -32,7 +32,7 @@ POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=()
 POWERLEVEL9K_PROMPT_ON_NEWLINE=true
 POWERLEVEL9K_PROMPT_ADD_NEWLINE=true
 POWERLEVEL9K_RPROMPT_ON_NEWLINE=true
-DEFAULT_USER=ramz.sivagurunathan
+DEFAULT_USER=${USER}
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
@@ -70,8 +70,7 @@ export UPDATE_ZSH_DAYS=15
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git docker zsh-autosuggestions zsh-syntax-highlighting zsh-history-substring-search zsh-completions)
-
+plugins=(git docker zsh-autosuggestions zsh-history-substring-search zsh-completions zsh-syntax-highlighting)
 # User configuration
 
 source $ZSH/oh-my-zsh.sh
