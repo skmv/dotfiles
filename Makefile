@@ -127,6 +127,8 @@ zsh-setup:: ## Configure zsh for the fresh laptop
 	@rm /tmp/install_zsh.sh
 	@echo "Installing powerlevel9 theme"
 	@git clone https://github.com/bhilburn/powerlevel9k.git ~/.oh-my-zsh/themes/powerlevel9k
+	@echo "Setting up iterm2 Shell Integrations"
+	@curl -L -o $(HOME)/.iterm2_shell_integration.zsh https://iterm2.com/shell_integration/zsh
 
 zsh:: ## Configure zsh Settings
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/zsh/zshrc ${HOME}/.zshrc
