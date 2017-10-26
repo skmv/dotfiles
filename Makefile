@@ -34,6 +34,7 @@ endif
 	@make zsh
 	@make emacs-setup
 	@make emacs
+	@make hammerspoon
 
 	@echo "Remember to import your gpg keys"
 	@echo "Load the iterm settings from the file iterm/com.googlecode.iterm2.plist"
@@ -62,7 +63,8 @@ git:: ## Configure git Settings
 	@echo git configuration completed
 
 hammerspoon:: ## Configure hammerspoon
-	@echo Hammerspoon configuration completed
+	@echo "Setting up Hammerspoon"
+	@ln $(LN_FLAGS) $(CONFIG_ROOT)/hammerspoon ${HOME}/.hammerspoon
 
 karabiner:: ## Install karabiner configs
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/karabiner/private.xml "${HOME}/Library/Application Support/Karabiner/private.xml"
