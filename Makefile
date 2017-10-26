@@ -36,6 +36,7 @@ endif
 	@make emacs
 
 	@echo "Remember to import your gpg keys"
+	@echo "Load the iterm settings from the file iterm/com.googlecode.iterm2.plist"
 
 emacs-setup:: ## Configure emacs for fresh laptop
 	@echo "Setting up emacs"
