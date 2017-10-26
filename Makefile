@@ -76,6 +76,11 @@ karabiner:: ## Install karabiner configs
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/karabiner/private.xml "${HOME}/Library/Application Support/Karabiner/private.xml"
 	@echo karabiner configuration completed
 
+osx:: ## Configure osx settings
+	@echo "Configure osx dock settings"
+	@cp osx/com.apple.dock.plist $(HOME)/Library/Preferences/com.apple.dock.plist
+	@echo "osx configuration is completed"
+
 ssh:: ## Configure SSH Settings
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/ssh ${HOME}/.ssh
 	@chmod 700 ${HOME}/.ssh
