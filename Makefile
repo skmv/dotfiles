@@ -42,6 +42,16 @@ endif
 	@echo "Install Intellij Idea manually"
 	@echo "Updated the Alfred license manually"
 
+brew:: ## Configure brew Settings
+ifeq ("$(wildcard /usr/local/bin/brew)","")
+	@echo "Installing brew"
+	@curl -fsSL -o /tmp/install https://raw.githubusercontent.com/Homebrew/install/master/install
+	@/usr/bin/ruby /tmp/install
+endif
+	@echo "Installing all sw via brew"
+	@brew tap homebrew/bundle
+	@brew bundle --file=brew/Brewfile
+
 controlplane:: ## Configure control plane
 	@echo "Setting up controlplane"
 	@cp controlplane/com.dustinrue.ControlPlane.plist ~/Library/Preferences/com.dustinrue.ControlPlane.plist
@@ -133,16 +143,6 @@ zsh-setup:: ## Configure zsh for the fresh laptop
 
 zsh:: ## Configure zsh Settings
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/zsh/zshrc ${HOME}/.zshrc
-
-brew:: ## Configure brew Settings
-ifeq ("$(wildcard /usr/local/bin/brew)","")
-	@echo "Installing brew"
-	@curl -fsSL -o /tmp/install https://raw.githubusercontent.com/Homebrew/install/master/install
-	@/usr/bin/ruby /tmp/install
-endif
-	@echo "Installing all sw via brew"
-	@brew tap homebrew/bundle
-	@brew bundle --file=brew/Brewfile
 
 # Help text
 define HELP_TEXT
