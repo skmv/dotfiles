@@ -49,6 +49,7 @@ brew "zsh"
 brew "d12frosted/emacs-plus/emacs-plus", args: ["HEAD"]
 brew "yudai/gotty/gotty"
 cask "amethyst"
+cask "controlplane"
 cask "dropbox"
 cask "google-chrome"
 cask "gpgtools"

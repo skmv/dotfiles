@@ -35,9 +35,15 @@ endif
 	@make emacs-setup
 	@make emacs
 	@make hammerspoon
+	@make controlplane
 
 	@echo "Remember to import your gpg keys"
 	@echo "Load the iterm settings from the file iterm/com.googlecode.iterm2.plist"
+
+controlplane:: ## Configure control plane
+	@echo "Setting up controlplane"
+	@cp controlplane/com.dustinrue.ControlPlane.plist ~/Library/Preferences/com.dustinrue.ControlPlane.plist
+	@echo "Controlplane setup is done"
 
 emacs-setup:: ## Configure emacs for fresh laptop
 	@echo "Setting up emacs"
