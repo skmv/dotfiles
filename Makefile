@@ -36,7 +36,7 @@ endif
 	@make emacs
 	@make hammerspoon
 	@make controlplane
-
+	@make osx
 	@echo "Remember to import your gpg keys"
 	@echo "Load the iterm settings from the file iterm/com.googlecode.iterm2.plist"
 
@@ -73,8 +73,11 @@ hammerspoon:: ## Configure hammerspoon
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/hammerspoon ${HOME}/.hammerspoon
 
 karabiner:: ## Install karabiner configs
+	@echo "You might need to install karabiner manually. Since brew for karabiner is broken"
+	@echo "Setting up karabiner"
+	@mkdir -p "${HOME}/Library/Application Support/Karabiner"
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/karabiner/private.xml "${HOME}/Library/Application Support/Karabiner/private.xml"
-	@echo karabiner configuration completed
+	@echo "karabiner configuration completed"
 
 osx:: ## Configure osx settings
 	@echo "Configure osx dock settings"
