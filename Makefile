@@ -141,6 +141,9 @@ endif
 tmux-setup:: ## Setting up tmux for th first time
 	@echo "Setting up tmux"
 	@gem install tmuxinator
+	@ln $(LN_FLAGS) $(CONFIG_ROOT)/tmux/tmuxinator ${HOME}/.tmuxinator
+	@mkdir -p $(HOME)/.tmuxinator/bin
+	@curl -sSL -o $(HOME)/.tmuxinator/bin/tmuxinator.zsh https://raw.githubusercontent.com/tmuxinator/tmuxinator/master/completion/tmuxinator.zsh
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/tmux/tmux.conf ${HOME}/.tmux.conf
 	@echo "tmux configuration completed"
 
