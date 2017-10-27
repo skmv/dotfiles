@@ -20,3 +20,5 @@ weechat/plugins.conf
 
 wee_slack.py
 passwords
+
+tmux/tmuxinator/bin
