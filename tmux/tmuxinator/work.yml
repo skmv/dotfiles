@@ -1,7 +1,7 @@
 # ~/.tmuxinator/default.yml
 
 name: work
-root: ~/projects/sw/work
+root: ~/projects/sw/repos/iag
 
 # Optional tmux socket
 # socket_name: foo
@@ -21,10 +21,6 @@ root: ~/projects/sw/work
 # startup_window: logs
 
 windows:
-  - chat: weechat
-  - Emacs:
-      panes:
-        - #empty
   - DevLabs:
       layout: da4d,236x56,0,0[236x44,0,0,1,236x11,0,45,3]
       panes:

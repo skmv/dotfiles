@@ -103,6 +103,9 @@ node-setup:: ## Setting up node in a fresh laptop
 osx:: ## Configure osx settings
 	@echo "Configure osx dock settings"
 	@cp osx/com.apple.dock.plist $(HOME)/Library/Preferences/com.apple.dock.plist
+	@echo "Configuring finder to quit"
+	@defaults write com.apple.finder QuitMenuItem -bool YES
+	@killall Finder
 	@echo "osx configuration is completed"
 
 python-setup:: ##Setting up python in a fresh laptop
