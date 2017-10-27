@@ -5,9 +5,9 @@ CONFIG_ROOT   := $(shell pwd)
 PRIVATE_CONFIG_ROOT := $(shell pwd)/private
 LN_FLAGS 			= -sfn
 
-.PHONY: help brew emacs git ssh tmux zsh zsh-setup
+.PHONY: help brew emacs git ssh zsh zsh-setup
 
-all: brew git zsh emacs ssh tmux ## Installs all the config files on a osx
+all: brew git zsh emacs ssh ## Installs all the config files on a osx
 
 setup:: ## Configure the laptop for fresh installation
 	@echo "Setting up directory structure"
@@ -37,10 +37,16 @@ endif
 	@make hammerspoon
 	@make controlplane
 	@make osx
+	@make ssh-setup
+	@make ruby-setup
+	@make python-setup
+	@make node-setup
+	@make tmux-setup
 	@echo "Remember to import your gpg keys"
 	@echo "Load the iterm settings from the file iterm/com.googlecode.iterm2.plist"
 	@echo "Install Intellij Idea manually"
 	@echo "Updated the Alfred license manually"
+	@echo "Install docker for mac manually"
 
 brew:: ## Configure brew Settings
 ifeq ("$(wildcard /usr/local/bin/brew)","")
@@ -91,26 +97,49 @@ karabiner:: ## Install karabiner configs
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/karabiner/private.xml "${HOME}/Library/Application Support/Karabiner/private.xml"
 	@echo "karabiner configuration completed"
 
+node-setup:: ## Setting up node in a fresh laptop
+	@echo "Configuring node"
+
 osx:: ## Configure osx settings
 	@echo "Configure osx dock settings"
 	@cp osx/com.apple.dock.plist $(HOME)/Library/Preferences/com.apple.dock.plist
 	@echo "osx configuration is completed"
 
-ssh:: ## Configure SSH Settings
+python-setup:: ##Setting up python in a fresh laptop
+	@echo "Configuring python"
+	@pyenv install 3.6.3
+	@pyenv global 3.6.3
+
+ruby-setup:: ## Setting up ruby in a fresh laptop
+	@echo "Configuring ruby"
+	@echo "Installing RVM"
+	@curl -sSL -o install_ruby.sh https://get.rvm.io
+	@bash install_ruby.sh
+	@source $(HOME)/.rvm/scripts/rvm
+	@rvm install 2.4
+	@rvm use 2.4 --default
+
+ssh-setup:: ## Setting up ssh for the first time
+	@echo "Setting up ssh"
+	@cp $(HOME)/.ssh/* $(CONFIG_ROOT)/ssh/
+	@rm -Rf ${HOME}/.ssh
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/ssh ${HOME}/.ssh
 	@chmod 700 ${HOME}/.ssh
 	@touch ${HOME}/.ssh/authorized_keys
 	@chmod 600 ${HOME}/.ssh/authorized_keys
+
 ifneq ("$(wildcard $(PRIVATE_CONFIG_ROOT))","")
 	@ln $(LN_FLAGS) $(PRIVATE_CONFIG_ROOT)/ssh/config ${HOME}/.ssh/config
 else
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/ssh/default/config ${HOME}/.ssh/config
 endif
-	@echo ssh configuration completed
+	@echo "ssh configuration completed"
 
-tmux:: ## Configure tmux Settings
+tmux-setup:: ## Setting up tmux for th first time
+	@echo "Setting up tmux"
+	@gem install tmuxinator
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/tmux/tmux.conf ${HOME}/.tmux.conf
-	@echo tmux configuration completed
+	@echo "tmux configuration completed"
 
 update:: ## Update the config repository
 	$(GIT) pull && $(GIT) submodule foreach git checkout master && $(GIT) submodule foreach git pull

@@ -149,3 +149,5 @@ _fzf_compgen_path() {
 }
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 export PATH="/usr/local/sbin:$PATH"
+
+source ${HOME}/.rvm/scripts/rvm
