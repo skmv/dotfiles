@@ -7,8 +7,6 @@ LN_FLAGS 			= -sfn
 
 .PHONY: help brew emacs git ssh zsh zsh-setup
 
-all: brew git zsh emacs ssh ## Installs all the config files on a osx
-
 setup:: ## Configure the laptop for fresh installation
 	@echo "Setting up directory structure"
 	@mkdir -p ~/projects/sw/repos/opensource
