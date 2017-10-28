@@ -42,7 +42,7 @@ endif
 	@make tmux-setup
 	@echo "Remember to import your gpg keys"
 	@echo "Load the iterm settings from the file iterm/com.googlecode.iterm2.plist"
-	@echo "Install Intellij Idea manually"
+	@echo "Install Intellij Idea
 	@echo "Updated the Alfred license manually"
 	@echo "Install docker for mac manually"
 
@@ -69,6 +69,8 @@ ifneq ("$(wildcard $(HOME)/.emacs.d)","")
 endif
 	@echo "Installing spacemacs"
 	@git clone https://github.com/syl20bnr/spacemacs ~/.emacs.d
+	@echo "Setting up org capture"
+	@cp $(CONFIG_ROOT)/emacs/Info.plist /Applications/Emacsclient.app/Contents/Info.plist
 
 emacs:: ## Configure emacs Settings
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/emacs/spacemacs ${HOME}/.spacemacs
