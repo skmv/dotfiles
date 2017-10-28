@@ -75,6 +75,10 @@ emacs:: ## Configure emacs Settings
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/emacs/layers/org-trello ${HOME}/.emacs.d/private/org-trello
 	@echo emacs configuration completed
 
+gcloud:: ## Install gcloud
+	@echo "Installing google cloud sdk"
+	@curl https://sdk.cloud.google.com | bash
+
 git:: ## Configure git Settings
 	@echo "Setting up git"
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/git/gitignore ${HOME}/.gitignore
