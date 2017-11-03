@@ -116,7 +116,7 @@ python-setup:: ##Setting up python in a fresh laptop
 	@echo "Configuring python"
 	@pyenv install 3.6.3
 	@pyenv global 3.6.3
-	@pip install awscli
+	@pip install awscli Pygments
 
 ruby-setup:: ## Setting up ruby in a fresh laptop
 	@echo "Configuring ruby"
