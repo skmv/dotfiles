@@ -40,6 +40,7 @@ endif
 	@make python-setup
 	@make node-setup
 	@make tmux-setup
+	@make nvm-setup
 	@echo "Remember to import your gpg keys"
 	@echo "Load the iterm settings from the file iterm/com.googlecode.iterm2.plist"
 	@echo "Install Intellij Idea
@@ -156,6 +157,10 @@ tmux-setup:: ## Setting up tmux for th first time
 	@mkdir -p ${HOME}/.tmux/plugins
 	@git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 	@echo "tmux configuration completed"
+
+nvm-setup:: ## nvm setup
+	@echo "Setting up nvm"
+	@mkdir -p ${HOME}/.nvm
 
 update:: ## Update the config repository
 	$(GIT) pull && $(GIT) submodule foreach git checkout master && $(GIT) submodule foreach git pull
