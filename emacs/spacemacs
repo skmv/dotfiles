@@ -88,6 +88,9 @@
         switch-window            ; Switch window faster
         virtualenvwrapper        ; Python environment management
 
+        ;; docs
+        tldr
+
         ;; Visual Enhancements
         all-the-icons-ivy        ; Ivy prompts use file icons
         pretty-mode              ; Adds onto prettify-mode
@@ -419,6 +422,7 @@ you should place your code here."
 
   (module/configuration)
   (module/display)
+  (module/docs)
   (module/eshell)
   (module/golang)
 
@@ -686,6 +690,16 @@ FONT-LOCK-HOOKS-ALIST is an alist of a font-lock-alist and its desired hooks."
     ;; self does not work as a prettify symbol for hy, unlike python
     ("\\(self\\)"   ?⊙)))
 
+
+;;; Documentation
+
+(defun module/docs ()
+  (module/docs/tldr)
+  )
+
+(defun module/docs/tldr ()
+  (setq tldr-enabled-categories '("common" "osx"))
+  )
 
 ;;; Eshell
 (defun module/eshell ()
