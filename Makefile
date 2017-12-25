@@ -161,6 +161,7 @@ tmux-setup:: ## Setting up tmux for th first time
 nvm-setup:: ## nvm setup
 	@echo "Setting up nvm"
 	@mkdir -p ${HOME}/.nvm
+	@npm install -g tern js-beautify eslint
 
 update:: ## Update the config repository
 	$(GIT) pull && $(GIT) submodule foreach git checkout master && $(GIT) submodule foreach git pull

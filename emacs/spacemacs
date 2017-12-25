@@ -54,7 +54,8 @@
         (python :variables
                 python-sort-imports-on-save t
                 python-test-runner 'pytest)
-        (javascript :variables tern-command '("node" (concat (getenv "HOME") "/.nvm/versions/node/v8.9.3/bin/tern"))))
+        (javascript :variables tern-command '("node" (concat (getenv "HOME") "/.nvm/versions/node/v8.9.3/bin/tern")))
+        react)
 
       dotspacemacs/layers/rare
       '(
@@ -75,6 +76,8 @@
       '(
         ;; Evil Cursor changer
         evil-terminal-cursor-changer
+        ;; helpful
+        helpful
         ;; Outline mode base package enhancements
         outshine                 ; Required for navi-mode
         navi-mode                ; Navbar on buffer outlines
@@ -90,6 +93,9 @@
 
         ;; docs
         tldr
+
+        ;; javascript
+        xref-js2
 
         ;; Visual Enhancements
         all-the-icons-ivy        ; Ivy prompts use file icons
@@ -369,7 +375,12 @@ values."
    ;; delete only whitespace for changed lines or `nil' to disable cleanup.
    ;; (default nil)
    dotspacemacs-whitespace-cleanup 'trailing
-   ))
+   )
+
+  (when (and (display-graphic-p) (eq system-type 'darwin))
+    (with-eval-after-load 'exec-path-from-shell
+      (exec-path-from-shell-setenv "SHELL" "/bin/zsh")))
+  )
 
 (defun dotspacemacs/user-init ()
   "Initialization function for user code.
