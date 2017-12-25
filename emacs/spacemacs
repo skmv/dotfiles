@@ -22,7 +22,7 @@
         git
         gnus
         helm
-        org
+        (org :variables org-enable-reveal-js-support t)
         org-trello
         osx
         ranger
