@@ -54,13 +54,13 @@
         (python :variables
                 python-sort-imports-on-save t
                 python-test-runner 'pytest)
-        (javascript :variables tern-command '("node" (concat (getenv "HOME") "/.nvm/versions/node/v7.4.0/bin/tern"))))
+        (javascript :variables tern-command '("node" (concat (getenv "HOME") "/.nvm/versions/node/v8.9.3/bin/tern"))))
 
       dotspacemacs/layers/rare
       '(
-        ; pandoc      ; Pandoc for more export options, used for blogging
+                                        ; pandoc      ; Pandoc for more export options, used for blogging
         markdown    ; Markdown mode for viewing outside documentation
-        ; graphviz    ; Graphviz mode for usage with org-babel
+                                        ; graphviz    ; Graphviz mode for usage with org-babel
         restclient  ; REST client for usage with org-babel
         )
 
