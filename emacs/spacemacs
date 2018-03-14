@@ -854,11 +854,12 @@ more-helpful local prompt."
 ;;; GoLang
 (defun module/golang ()
 
+  (setenv "GOPATH" (concat (getenv "HOME") "/projects/sw/gospace"))
+  (setenv "PATH" (concat (getenv "PATH") ":" (getenv "GOPATH") "/bin"))
   (defun my-go-mode-hook ()
     (local-set-key (kbd "M-*") 'pop-tag-mark)
     )
   (add-hook 'go-mode-hook 'my-go-mode-hook)
-
   )
 
 ;;; Misc
