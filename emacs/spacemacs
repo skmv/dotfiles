@@ -108,6 +108,10 @@
         ;; Themes
         solarized-theme
         dracula-theme
+
+        ;; Navigation
+        ztree
+
         ))
 
 (defun dotspacemacs/layers ()
