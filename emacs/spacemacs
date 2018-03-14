@@ -54,7 +54,6 @@
         (python :variables
                 python-sort-imports-on-save t
                 python-test-runner 'pytest)
-        (javascript :variables tern-command '("node" (concat (getenv "HOME") "/.nvm/versions/node/v8.9.3/bin/tern")))
         react)
 
       dotspacemacs/layers/rare
