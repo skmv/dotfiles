@@ -871,7 +871,8 @@ more-helpful local prompt."
   (module/misc/neotree)
   (module/misc/projectile)
   (module/misc/windows)
-  (module/misc/yassnippet))
+  (module/misc/yassnippet)
+  (module/misc/kubernetes))
 
 ;;;; Aspell
 
@@ -949,6 +950,15 @@ more-helpful local prompt."
 
   (global-set-key (kbd "M-/") 'hippie-expand))
 
+;;;; Kubernetes
+(defun module/misc/kubernetes ()
+  "Kubernetes"
+  (add-to-load-path (concat (getenv "HOME") "/projects/sw/repos/personal/kubernetes-el/"))
+  (load (concat (getenv "HOME") "/projects/sw/repos/personal/kubernetes-el/kubernetes.el"))
+  (require 'kubernetes)
+  (load (concat (getenv "HOME") "/projects/sw/repos/personal/kubernetes-el/kubernetes-evil.el"))
+  (require 'kubernetes-evil)
+  )
 ;;; Navigation
 
 (defun module/navigation ()
