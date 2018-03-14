@@ -2,17 +2,17 @@
 // mapkey('<Ctrl-y>', 'Show me the money', function() {
 //     Front.showPopup('a well-known phrase uttered by characters in the 1996 film Jerry Maguire (Escape to close).');
 // });
-mapkey('<Space>', 'Choose a tab with omnibar', function() {
-  Front.openOmnibar({type: "Tabs"});
-});
-// // an example to replace `u` with `?`, click `Default mappings` to see how `u` works.
-// map('?', 'u');
+
+// Omnibar Settings
+settings.focusFirstCandidate = true;
+
+// Keymappings to be similar as spacemacs
+map('<Space><Space>', 'v');
 
 // // an example to remove mapkey `Ctrl-i`
 // unmap('<Ctrl-i>');
 
-// click `Save` button to make above settings to take effect.
-// set theme
+// Theme
 settings.theme = `
 .sk_theme {
     background: #fff;
@@ -34,5 +34,3 @@ settings.theme = `
 .sk_theme .focused {
     background: #00f;
 }`;
-
-settings.focusFirstCandidate = true;
