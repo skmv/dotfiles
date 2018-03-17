@@ -1061,6 +1061,7 @@ more-helpful local prompt."
 (defun module/org ()
   (with-eval-after-load 'org
     (when-linux-call 'module/org/linux-file-apps)
+    (module/org/agenda)
     (module/org/babel)
     (module/org/capture)
     (module/org/exports)
@@ -1068,7 +1069,15 @@ more-helpful local prompt."
     (module/org/misc)
     (module/org/templates)
     (module/org/theming)))
-
+;;;; org agenda
+(defun module/org/agenda ()
+  "Setup org mode agenda"
+  (with-eval-after-load 'org
+    (add-to-list 'org-modules 'org-habit))
+  (setq org-agenda-files (list (concat (getenv "HOME") "/projects/sw/repos/personal/journal/journals/habit.org")))
+  (setq org-habit-graph-column 80)
+  (setq org-habit-show-habits-only-for-today nil)
+  )
 ;;;; Linux-file-apps
 
 (defun module/org/linux-file-apps ()
