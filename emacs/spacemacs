@@ -20,6 +20,7 @@
       '(better-defaults
         fasd
         git
+        github
         gnus
         helm
         (org :variables org-enable-reveal-js-support t)
