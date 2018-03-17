@@ -111,7 +111,8 @@
 
         ;; Navigation
         ztree
-
+        kubernetes
+        kubernetes-evil
         ))
 
 (defun dotspacemacs/layers ()
@@ -956,12 +957,15 @@ more-helpful local prompt."
 ;;;; Kubernetes
 (defun module/misc/kubernetes ()
   "Kubernetes"
-  (add-to-load-path (concat (getenv "HOME") "/projects/sw/repos/personal/kubernetes-el/"))
-  (load (concat (getenv "HOME") "/projects/sw/repos/personal/kubernetes-el/kubernetes.el"))
-  (require 'kubernetes)
-  (load (concat (getenv "HOME") "/projects/sw/repos/personal/kubernetes-el/kubernetes-evil.el"))
-  (require 'kubernetes-evil)
-  )
+  (use-package kubernetes
+    :ensure t
+    :commands (kubernetes-overview))
+
+  ;; If you want to pull in the Evil compatibility package.
+  (use-package kubernetes-evil
+    :ensure t
+    :after kubernetes))
+
 ;;; Navigation
 
 (defun module/navigation ()
