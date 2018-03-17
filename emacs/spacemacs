@@ -475,21 +475,6 @@ you should place your code here."
   (spacemacs/toggle-aggressive-indent-globally-on)      ; auto-indentation
   (add-hook 'org-mode-hook (lambda () (auto-fill-mode 1))) ; SPC splits past 80
 
-
-  (defun my-autosave ()
-    (interactive)
-    (if (buffer-file-name)
-        (progn
-          (save-buffer)
-          (message "file saved")
-          )
-      (message "no file is associated to this buffer: do nothing")
-      )
-    )
-
-  (add-hook 'evil-insert-state-exit-hook 'my-autosave)
-  (add-hook 'auto-save-hook 'my-autosave)
-
   (defun delete-word (arg)
     "Delete characters forward until encountering the end of a word.
 With argument, do this that many times."
