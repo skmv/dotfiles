@@ -46,7 +46,8 @@
 
       dotspacemacs/layers/langs
       '(emacs-lisp
-        (go :variables go-use-gometalinter t)
+        (go :variables go-use-gometalinter t
+            go-packages-function 'go-find-external)
         html
         lua
         rust  ; I only use atm for .toml configuration files
@@ -865,7 +866,8 @@ more-helpful local prompt."
   (module/misc/projectile)
   (module/misc/windows)
   (module/misc/yassnippet)
-  (module/misc/kubernetes))
+  (module/misc/kubernetes)
+  (module/misc/magithub))
 
 ;;;; Aspell
 
