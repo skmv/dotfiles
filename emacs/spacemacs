@@ -1075,10 +1075,10 @@ more-helpful local prompt."
   "Setup org mode agenda"
   (with-eval-after-load 'org
     (add-to-list 'org-modules 'org-habit))
-  (setq org-agenda-files (list (concat (getenv "HOME") "/projects/sw/repos/personal/journal/journals/habit.org")))
+  (setq org-agenda-files (list (concat (getenv "HOME") "/projects/sw/repos/personal/journal/journals/habit.org") (concat (getenv "HOME") "/projects/sw/repos/personal/journal/journals/dailyplan.org")))
   (setq org-habit-graph-column 80)
-  (setq org-habit-show-habits-only-for-today nil)
-  )
+  (setq org-habit-show-habits-only-for-today nil))
+
 ;;;; Linux-file-apps
 
 (defun module/org/linux-file-apps ()
