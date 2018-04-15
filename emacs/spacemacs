@@ -94,6 +94,9 @@
         ;; docs
         tldr
 
+        ;; git
+        magithub
+
         ;; javascript
         xref-js2
 
@@ -951,6 +954,14 @@ more-helpful local prompt."
     :ensure t
     :after kubernetes))
 
+;;;; Magithub
+(defun module/misc/magithub ()
+  (use-package magithub
+    :after magit
+    :config
+    (magithub-feature-autoinject t)
+    (setq magithub-clone-default-directory "~/projects/sw/repos/opensource"))
+  )
 ;;; Navigation
 
 (defun module/navigation ()
