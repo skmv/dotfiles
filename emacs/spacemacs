@@ -1231,16 +1231,11 @@ more-helpful local prompt."
   "Org Capture Templates"
   (setq org-directory "~/projects/sw/repos/personal/notes/org/sw/")
   (setq org-capture-templates `(
-	                              ("p" "Protocol" entry (file+headline ,(concat org-directory "unsorted.org") "Others")
-                                 "* %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
-                                ("L" "Protocol Link" entry (file+headline ,(concat org-directory "unsorted.org") "Others")
-                                 "* %? [[%:link][%:description]] %(progn (setq kk/delete-frame-after-capture 2) \"\")\nCaptured On: %U"
-                                 :empty-lines 1)
                                 ("t" "Todo" entry (file+headline "~/projects/sw/repos/personal/journal/todo/projects.org" "Tasks")
                                  "* TODO %?\n  %i\n  %a")
                                 ("e" "Engineering Journal" entry (file+olp+datetree "~/projects/sw/repos/personal/journal/journals/engineering.org")
                                  "* %?\n")
-                                ("m" "Mind Journal" entry (file+olp+datetree "~/projects/sw/repos/personal/journal/journals/mind.org")
+                                ("j" "Daily Journal" entry (file+olp+datetree "~/projects/sw/repos/personal/journal/journals/mind.org")
                                  "* %?\n")
                                 ("D" "Daily Plan" entry (file+olp+datetree "~/projects/sw/repos/personal/journal/journals/dailyplan.org")
                                  "* %?\n")
