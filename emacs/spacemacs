@@ -401,7 +401,7 @@ executes.
  This function is mostly useful for variables that need to be set
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
-(setq custom-file (concat (getenv "HOME") "/projects/sw/common/configs/emacs/elisp/.custom-settings.el")))
+  (setq custom-file (concat (getenv "HOME") "/projects/sw/common/configs/emacs/elisp/.custom-settings.el")))
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
@@ -424,7 +424,6 @@ you should place your code here."
     (interactive)
     (let ((buffer-modified-p nil))
       (kill-buffer (current-buffer))))
-
 
   (global-set-key (kbd "C-x k") 'volatile-kill-buffer)
   (setq-default
@@ -942,6 +941,9 @@ more-helpful local prompt."
 
 (defun module/misc/yassnippet ()
   "Yassnippet bindings and config."
+
+  (use-package auto-yasnippet
+    :ensure t)
 
   (global-set-key (kbd "M-/") 'hippie-expand))
 
