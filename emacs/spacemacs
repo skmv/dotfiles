@@ -1100,7 +1100,8 @@ more-helpful local prompt."
         org-src-preserve-indentation t  ; Otherwise python is painful
         org-src-window-setup 'current-window)  ; `, ,` opens in same window
   (org-babel-do-load-languages
-   'org-babel-load-languages '((python .  t)
+   'org-babel-load-languages '((calc . t)
+                               (python .  t)
                                (haskell . t)
                                (clojure . t)
                                (dot .     t)  ; Graphviz
