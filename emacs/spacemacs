@@ -23,6 +23,7 @@
         github
         gnus
         helm
+        (ibuffer :variables ibuffer-group-buffers-by 'projects)
         (org :variables org-enable-reveal-js-support t)
         org-trello
         osx
