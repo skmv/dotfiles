@@ -1052,6 +1052,7 @@ more-helpful local prompt."
 (defun module/navigation/searching ()
   "Evil searching scrolls to center of match."
   (global-set-key (kbd "C-s") 'helm-swoop)
+  ;; (define-key helm-swoop-map (kbd "C-s") 'helm-swoop-back-to-last-point)
   (advice-add 'evil-ex-search-next :after
               (lambda (&rest x) (evil-scroll-line-to-center (line-number-at-pos))))
   (advice-add 'evil-ex-search-previous :after
