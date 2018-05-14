@@ -1,4 +1,3 @@
-tap "atlassian/tap"
 tap "caskroom/cask"
 tap "caskroom/fonts"
 tap "caskroom/versions"
@@ -63,7 +62,6 @@ brew "xmlstarlet"
 brew "yarn"
 brew "youtube-dl"
 brew "zsh"
-brew "atlassian/tap/atlassian-plugin-sdk"
 brew "d12frosted/emacs-plus/emacs-plus", args: ["HEAD"]
 brew "yudai/gotty/gotty"
 cask "apache-directory-studio"
