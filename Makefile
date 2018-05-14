@@ -14,14 +14,14 @@ setup:: ## Configure the laptop for fresh installation
 	@mkdir -p ~/projects/sw/sandbox
 	@mkdir -p ~/projects/sw/gospace
 
-ifeq ("$(wildcard $(HOME)/projects/sw/repos/personal/configs)","")
+ifeq ("$(wildcard $(HOME)/projects/sw/repos/personal/dotfiles)","")
 	@echo "Downloading the config repository"
-	@git clone git@github.com:ageekymonk/dotfiles.git $(HOME)/projects/sw/repos/personal/configs
+	@git clone git@github.com:ageekymonk/dotfiles.git $(HOME)/projects/sw/repos/personal/dotfiles
 
-	@echo "Jump to $(HOME)/projects/sw/repos/personal/configs and run make all"
+	@echo "Jump to $(HOME)/projects/sw/repos/personal/dotfile and run make all"
 endif
 
-	@cd $(HOME)/projects/sw/repos/personal/configs
+	@cd $(HOME)/projects/sw/repos/personal/dotfiles
 	@echo "Pulling in other submodules"
 	@git submodule init
 	@git submodule update
@@ -70,8 +70,6 @@ ifneq ("$(wildcard $(HOME)/.emacs.d)","")
 endif
 	@echo "Installing spacemacs"
 	@git clone https://github.com/syl20bnr/spacemacs ~/.emacs.d
-	@echo "Setting up org capture"
-	@cp $(CONFIG_ROOT)/emacs/Info.plist /Applications/Emacsclient.app/Contents/Info.plist
 
 emacs:: ## Configure emacs Settings
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/emacs/spacemacs ${HOME}/.spacemacs
