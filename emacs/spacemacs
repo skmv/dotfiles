@@ -655,7 +655,7 @@ FONT-LOCK-HOOKS-ALIST is an alist of a font-lock-alist and its desired hooks."
     ("[^\\+<>]\\(\\+\\)[^\\+<>]"   #Xe16d)
     ("[^:=]\\(:\\)[^:=]"           #Xe16c)
     ("\\(<=\\)"                    #Xe157)
-  ))
+    ))
 
 ;;;;; Language-font-locks
 
@@ -796,46 +796,46 @@ PWD is not in a git repo (or the git command is not found)."
            (pyenv-mode-version))))))
 
   (defun eshell/eshell-local-prompt-function ()
-  "A prompt for eshell that works locally (in that is assumes
+    "A prompt for eshell that works locally (in that is assumes
 that it could run certain commands) in order to make a prettier,
 more-helpful local prompt."
-  (interactive)
-  (let* ((pwd        (eshell/pwd))
-         (directory (split-directory-prompt
-                     (pwd-shorten-dirs
-                      (pwd-replace-home pwd))))
-         (parent (car directory))
-         (name   (cadr directory))
-         (branch (curr-dir-git-branch-string pwd))
-         (ruby   (when (not (file-remote-p pwd)) (ruby-prompt)))
-         (python (when (not (file-remote-p pwd)) (python-prompt)))
+    (interactive)
+    (let* ((pwd        (eshell/pwd))
+           (directory (split-directory-prompt
+                       (pwd-shorten-dirs
+                        (pwd-replace-home pwd))))
+           (parent (car directory))
+           (name   (cadr directory))
+           (branch (curr-dir-git-branch-string pwd))
+           (ruby   (when (not (file-remote-p pwd)) (ruby-prompt)))
+           (python (when (not (file-remote-p pwd)) (python-prompt)))
 
-         (dark-env (eq 'dark (frame-parameter nil 'background-mode)))
-         (for-bars                 `(:weight bold))
-         (for-parent  (if dark-env `(:foreground "dark orange") `(:foreground "blue")))
-         (for-dir     (if dark-env `(:foreground "orange" :weight bold)
-                        `(:foreground "blue" :weight bold)))
-         (for-git                  `(:foreground "green"))
-         (for-ruby                 `(:foreground "red"))
-         (for-python               `(:foreground "#5555FF")))
+           (dark-env (eq 'dark (frame-parameter nil 'background-mode)))
+           (for-bars                 `(:weight bold))
+           (for-parent  (if dark-env `(:foreground "dark orange") `(:foreground "blue")))
+           (for-dir     (if dark-env `(:foreground "orange" :weight bold)
+                          `(:foreground "blue" :weight bold)))
+           (for-git                  `(:foreground "green"))
+           (for-ruby                 `(:foreground "red"))
+           (for-python               `(:foreground "#5555FF")))
 
-    (concat
-     (propertize "⟣─ "    'face for-bars)
-     (propertize parent   'face for-parent)
-     (propertize name     'face for-dir)
-     (when branch
-       (concat (propertize " ── "    'face for-bars)
-               (propertize branch   'face for-git)))
-     (when ruby
-       (concat (propertize " ── " 'face for-bars)
-               (propertize ruby   'face for-ruby)))
-     (when python
-       (concat (propertize " ── " 'face for-bars)
-               (propertize python 'face for-python)))
-     (propertize "\n"     'face for-bars)
-     (propertize (if (= (user-uid) 0) " #" " $") 'face `(:weight ultra-bold))
-     ;; (propertize " └→" 'face (if (= (user-uid) 0) `(:weight ultra-bold :foreground "red") `(:weight ultra-bold)))
-     (propertize " "    'face `(:weight bold)))))
+      (concat
+       (propertize "⟣─ "    'face for-bars)
+       (propertize parent   'face for-parent)
+       (propertize name     'face for-dir)
+       (when branch
+         (concat (propertize " ── "    'face for-bars)
+                 (propertize branch   'face for-git)))
+       (when ruby
+         (concat (propertize " ── " 'face for-bars)
+                 (propertize ruby   'face for-ruby)))
+       (when python
+         (concat (propertize " ── " 'face for-bars)
+                 (propertize python 'face for-python)))
+       (propertize "\n"     'face for-bars)
+       (propertize (if (= (user-uid) 0) " #" " $") 'face `(:weight ultra-bold))
+       ;; (propertize " └→" 'face (if (= (user-uid) 0) `(:weight ultra-bold :foreground "red") `(:weight ultra-bold)))
+       (propertize " "    'face `(:weight bold)))))
 
   (setq-default eshell-prompt-function #'eshell/eshell-local-prompt-function)
 
@@ -866,7 +866,8 @@ more-helpful local prompt."
   (module/misc/windows)
   (module/misc/yassnippet)
   (module/misc/kubernetes)
-  (module/misc/magithub))
+  (module/misc/magithub)
+  (module/misc/hydra))
 
 ;;;; Aspell
 
@@ -967,6 +968,83 @@ more-helpful local prompt."
     (magithub-feature-autoinject t)
     (setq magithub-clone-default-directory "~/projects/sw/repos/opensource"))
   )
+;;;; Hydra
+(defun module/misc/hydra ()
+  (defhydra help/hydra/timestamp (:color blue :hint nil)
+    "
+  Timestamps: (_q_uit)
+    Date: _I_SO, _U_S, US With _Y_ear and _D_ashes, US In _W_ords
+    Date/Time: _N_o Colons or _w_ith
+      Org-Mode: _R_ight Now or _c_hoose
+  "
+    ("q" nil)
+
+    ("I" help/insert-datestamp)
+    ("U" help/insert-datestamp-us)
+    ("Y" help/insert-datestamp-us-full-year)
+    ("D" help/insert-datestamp-us-full-year-and-dashes)
+    ("W" help/insert-datestamp-us-words)
+
+    ("N" help/insert-timestamp-no-colons)
+    ("w" help/insert-timestamp)
+
+    ("R" help/org-time-stamp-with-seconds-now)
+    ("c" org-time-stamp))
+  (global-set-key (kbd "C-t") #'help/hydra/timestamp/body)
+  (defun help/insert-datestamp ()
+    "Produces and inserts a partial ISO 8601 format timestamp."
+    (interactive)
+    (insert (format-time-string "%F")))
+  (defun help/insert-datestamp-us ()
+    "Produces and inserts a US datestamp."
+    (interactive)
+    (insert (format-time-string "%m/%d/%y")))
+  (defun help/insert-datestamp-us-full-year-and-dashes ()
+    "Produces and inserts a US datestamp with full year and dashes."
+    (interactive)
+    (insert (format-time-string "%m-%d-%Y")))
+  (defun help/insert-datestamp-us-full-year ()
+    "Produces and inserts a US datestamp with full year."
+    (interactive)
+    (insert (format-time-string "%m/%d/%Y")))
+  (defun help/insert-datestamp-us-words ()
+    "Produces and inserts a US datestamp using words."
+    (interactive)
+    (insert (format-time-string "%A %B %d, %Y")))
+  (defun help/insert-timestamp-no-colons ()
+    "Inserts a full ISO 8601 format timestamp with colons replaced by hyphens."
+    (interactive)
+    (insert (help/get-timestamp-no-colons)))
+  (defun help/insert-datestamp ()
+    "Produces and inserts a partial ISO 8601 format timestamp."
+    (interactive)
+    (insert (format-time-string "%F")))
+  (defun help/get-timestamp-no-colons ()
+    "Produces a full ISO 8601 format timestamp with colons replaced by hyphens."
+    (interactive)
+    (let* ((timestamp (help/get-timestamp))
+           (timestamp-no-colons (replace-regexp-in-string ":" "-" timestamp)))
+      timestamp-no-colons))
+  (defun help/get-timestamp ()
+    "Produces a full ISO 8601 format timestamp."
+    (interactive)
+    (let* ((timestamp-without-timezone (format-time-string "%Y-%m-%dT%T"))
+           (timezone-name-in-numeric-form (format-time-string "%z"))
+           (timezone-utf-offset
+            (concat (substring timezone-name-in-numeric-form 0 3)
+                    ":"
+                    (substring timezone-name-in-numeric-form 3 5)))
+           (timestamp (concat timestamp-without-timezone
+                              timezone-utf-offset)))
+      timestamp))
+  (defun help/insert-timestamp ()
+    "Inserts a full ISO 8601 format timestamp."
+    (interactive)
+    (insert (help/get-timestamp)))
+  (defun help/org-time-stamp-with-seconds-now ()
+    (interactive)
+    (let ((current-prefix-arg '(16)))
+      (call-interactively 'org-time-stamp))))
 ;;; Navigation
 
 (defun module/navigation ()
@@ -1487,50 +1565,50 @@ more-helpful local prompt."
        (define-key gnus-group-mode-map "y" 'hydra-gnus-group/body)))
 
   ;; gnus-summary-mode
-(eval-after-load 'gnus-sum
-  '(progn
-     (defhydra hydra-gnus-summary (:color blue)
-       "Do?"
-       ("s" gnus-summary-show-thread "Show thread")
-       ("h" gnus-summary-hide-thread "Hide thread")
-       ("n" gnus-summary-insert-new-articles "Refresh / N")
-       ("f" gnus-summary-mail-forward "Forward C-c C-f")
-       ("!" gnus-summary-tick-article-forward "Mail -> disk !")
-       ("p" gnus-summary-put-mark-as-read "Mail <- disk")
-       ("c" gnus-summary-catchup-and-exit "Read all c")
-       ("e" gnus-summary-resend-message-edit "Resend S D e")
-       ("R" gnus-summary-reply-with-original "Reply with original R")
-       ("r" gnus-summary-reply "Reply r")
-       ("W" gnus-summary-wide-reply-with-original "Reply all with original S W")
-       ("w" gnus-summary-wide-reply "Reply all S w")
-       ("#" gnus-topic-mark-topic "mark #")
-       ("q" nil "cancel"))
-     ;; y is not used by default
-     (define-key gnus-summary-mode-map "y" 'hydra-gnus-summary/body)))
+  (eval-after-load 'gnus-sum
+    '(progn
+       (defhydra hydra-gnus-summary (:color blue)
+         "Do?"
+         ("s" gnus-summary-show-thread "Show thread")
+         ("h" gnus-summary-hide-thread "Hide thread")
+         ("n" gnus-summary-insert-new-articles "Refresh / N")
+         ("f" gnus-summary-mail-forward "Forward C-c C-f")
+         ("!" gnus-summary-tick-article-forward "Mail -> disk !")
+         ("p" gnus-summary-put-mark-as-read "Mail <- disk")
+         ("c" gnus-summary-catchup-and-exit "Read all c")
+         ("e" gnus-summary-resend-message-edit "Resend S D e")
+         ("R" gnus-summary-reply-with-original "Reply with original R")
+         ("r" gnus-summary-reply "Reply r")
+         ("W" gnus-summary-wide-reply-with-original "Reply all with original S W")
+         ("w" gnus-summary-wide-reply "Reply all S w")
+         ("#" gnus-topic-mark-topic "mark #")
+         ("q" nil "cancel"))
+       ;; y is not used by default
+       (define-key gnus-summary-mode-map "y" 'hydra-gnus-summary/body)))
 
-;; gnus-article-mode
-(eval-after-load 'gnus-art
-  '(progn
-     (defhydra hydra-gnus-article (:color blue)
-       "Do?"
-       ("f" gnus-summary-mail-forward "Forward")
-       ("R" gnus-article-reply-with-original "Reply with original R")
-       ("r" gnus-article-reply "Reply r")
-       ("W" gnus-article-wide-reply-with-original "Reply all with original S W")
-       ("o" gnus-mime-save-part "Save attachment at point o")
-       ("w" gnus-article-wide-reply "Reply all S w")
-       ("q" nil "cancel"))
-     ;; y is not used by default
-     (define-key gnus-article-mode-map "y" 'hydra-gnus-article/body)))
+  ;; gnus-article-mode
+  (eval-after-load 'gnus-art
+    '(progn
+       (defhydra hydra-gnus-article (:color blue)
+         "Do?"
+         ("f" gnus-summary-mail-forward "Forward")
+         ("R" gnus-article-reply-with-original "Reply with original R")
+         ("r" gnus-article-reply "Reply r")
+         ("W" gnus-article-wide-reply-with-original "Reply all with original S W")
+         ("o" gnus-mime-save-part "Save attachment at point o")
+         ("w" gnus-article-wide-reply "Reply all S w")
+         ("q" nil "cancel"))
+       ;; y is not used by default
+       (define-key gnus-article-mode-map "y" 'hydra-gnus-article/body)))
 
-(eval-after-load 'message
-  '(progn
-     (defhydra hydra-message (:color blue)
-       "Do?"
-       ("ca" mml-attach-file "Attach C-c C-a")
-       ("cc" message-send-and-exit "Send C-c C-c")
-       ("q" nil "cancel"))
-     (global-set-key (kbd "C-c C-y") 'hydra-message/body)))
+  (eval-after-load 'message
+    '(progn
+       (defhydra hydra-message (:color blue)
+         "Do?"
+         ("ca" mml-attach-file "Attach C-c C-a")
+         ("cc" message-send-and-exit "Send C-c C-c")
+         ("q" nil "cancel"))
+       (global-set-key (kbd "C-c C-y") 'hydra-message/body)))
 
   )
 
@@ -1554,7 +1632,7 @@ more-helpful local prompt."
   (defun unset-work-proxy ()
     "Kill current buffer unconditionally."
     (interactive)
-    ; Set the proxy to nil
+                                        ; Set the proxy to nil
     (setq url-proxy-services nil)
     (setenv "no_proxy" "")              ; Set the environment to null as some emacs library relies on this.
     (setenv "http_proxy" "")
@@ -1580,10 +1658,10 @@ more-helpful local prompt."
                        "--proxy" (concat "http://" (getenv "https_proxy"))
                        "http://54.66.213.101:8080" "6664"
                        )
-        (start-process chisel-process nil "chisel" "client" "-v"
-                       "http://54.66.213.101:8080" "6664"
-                       )
-        )
+      (start-process chisel-process nil "chisel" "client" "-v"
+                     "http://54.66.213.101:8080" "6664"
+                     )
+      )
     )
 
   (defun end-chisel-connection ()
@@ -1601,7 +1679,7 @@ more-helpful local prompt."
 ;;;; Emacs server
 (defun module/emacs-server()
   (server-start)
-    )
+  )
 ;;; Python
 
 (defun module/python ()
@@ -1695,38 +1773,38 @@ more-helpful local prompt."
 This is an auto-generated function, do not modify its content directly, use
 Emacs customize menu instead.
 This function is called at the very end of Spacemacs initialization."
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   (quote
-    (define-word yapfify yaml-mode xterm-color ws-butler winum which-key web-mode web-beautify volatile-highlights virtualenvwrapper vi-tilde-fringe uuidgen use-package unfill toml-mode toc-org terraform-mode tagedit symon switch-window string-inflection spaceline-all-the-icons solarized-theme smeargle slim-mode slack shell-pop scss-mode sass-mode reveal-in-osx-finder restclient-helm restart-emacs ranger rainbow-delimiters racer pyvenv pytest pyenv-mode py-isort pug-mode pretty-mode prettify-utils popwin pip-requirements persp-mode pcre2el pbcopy password-generator paradox osx-trash osx-dictionary orgit org-vcard org-trello org-projectile org-present org-pomodoro org-gcal org-download org-bullets org-brain open-junk-file ob-restclient ob-http neotree navi-mode mwim multi-term move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum livid-mode live-py-mode linum-relative link-hint less-css-mode launchctl key-chord json-mode js2-refactor js-doc info+ indent-guide impatient-mode hy-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-pydoc helm-purpose helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag google-translate golden-ratio godoctor go-rename go-guru go-eldoc gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md fuzzy flyspell-correct-helm flycheck-rust flycheck-pos-tip flx-ido fill-column-indicator fasd fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-terminal-cursor-changer evil-surround evil-snipe evil-search-highlight-persist evil-org evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help emoji-cheat-sheet-plus emmet-mode elisp-slime-nav editorconfig dumb-jump dracula-theme diff-hl cython-mode company-web company-tern company-statistics company-restclient company-lua company-go company-emoji company-anaconda column-enforce-mode coffee-mode clean-aindent-mode cargo browse-at-remote auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile all-the-icons-ivy aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
-)
+  (custom-set-variables
+   ;; custom-set-variables was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   '(package-selected-packages
+     (quote
+      (define-word yapfify yaml-mode xterm-color ws-butler winum which-key web-mode web-beautify volatile-highlights virtualenvwrapper vi-tilde-fringe uuidgen use-package unfill toml-mode toc-org terraform-mode tagedit symon switch-window string-inflection spaceline-all-the-icons solarized-theme smeargle slim-mode slack shell-pop scss-mode sass-mode reveal-in-osx-finder restclient-helm restart-emacs ranger rainbow-delimiters racer pyvenv pytest pyenv-mode py-isort pug-mode pretty-mode prettify-utils popwin pip-requirements persp-mode pcre2el pbcopy password-generator paradox osx-trash osx-dictionary orgit org-vcard org-trello org-projectile org-present org-pomodoro org-gcal org-download org-bullets org-brain open-junk-file ob-restclient ob-http neotree navi-mode mwim multi-term move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum livid-mode live-py-mode linum-relative link-hint less-css-mode launchctl key-chord json-mode js2-refactor js-doc info+ indent-guide impatient-mode hy-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-pydoc helm-purpose helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag google-translate golden-ratio godoctor go-rename go-guru go-eldoc gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md fuzzy flyspell-correct-helm flycheck-rust flycheck-pos-tip flx-ido fill-column-indicator fasd fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-terminal-cursor-changer evil-surround evil-snipe evil-search-highlight-persist evil-org evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help emoji-cheat-sheet-plus emmet-mode elisp-slime-nav editorconfig dumb-jump dracula-theme diff-hl cython-mode company-web company-tern company-statistics company-restclient company-lua company-go company-emoji company-anaconda column-enforce-mode coffee-mode clean-aindent-mode cargo browse-at-remote auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile all-the-icons-ivy aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell))))
+  (custom-set-faces
+   ;; custom-set-faces was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   )
+  )
 (defun dotspacemacs/emacs-custom-settings ()
   "Emacs custom settings.
 This is an auto-generated function, do not modify its content directly, use
 Emacs customize menu instead.
 This function is called at the very end of Spacemacs initialization."
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   (quote
-    (define-word yapfify yaml-mode xterm-color ws-butler winum which-key web-mode web-beautify volatile-highlights virtualenvwrapper vi-tilde-fringe uuidgen use-package unfill toml-mode toc-org terraform-mode tagedit symon switch-window string-inflection spaceline-all-the-icons solarized-theme smeargle slim-mode slack shell-pop scss-mode sass-mode reveal-in-osx-finder restclient-helm restart-emacs ranger rainbow-delimiters racer pyvenv pytest pyenv-mode py-isort pug-mode pretty-mode prettify-utils popwin pip-requirements persp-mode pcre2el pbcopy password-generator paradox osx-trash osx-dictionary orgit org-vcard org-trello org-projectile org-present org-pomodoro org-gcal org-download org-bullets org-brain open-junk-file ob-restclient ob-http neotree navi-mode mwim multi-term move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum livid-mode live-py-mode linum-relative link-hint less-css-mode launchctl key-chord json-mode js2-refactor js-doc info+ indent-guide impatient-mode hy-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-pydoc helm-purpose helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag google-translate golden-ratio godoctor go-rename go-guru go-eldoc gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md fuzzy flyspell-correct-helm flycheck-rust flycheck-pos-tip flx-ido fill-column-indicator fasd fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-terminal-cursor-changer evil-surround evil-snipe evil-search-highlight-persist evil-org evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help emoji-cheat-sheet-plus emmet-mode elisp-slime-nav editorconfig dumb-jump dracula-theme diff-hl cython-mode company-web company-tern company-statistics company-restclient company-lua company-go company-emoji company-anaconda column-enforce-mode coffee-mode clean-aindent-mode cargo browse-at-remote auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile all-the-icons-ivy aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
-)
+  (custom-set-variables
+   ;; custom-set-variables was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   '(package-selected-packages
+     (quote
+      (define-word yapfify yaml-mode xterm-color ws-butler winum which-key web-mode web-beautify volatile-highlights virtualenvwrapper vi-tilde-fringe uuidgen use-package unfill toml-mode toc-org terraform-mode tagedit symon switch-window string-inflection spaceline-all-the-icons solarized-theme smeargle slim-mode slack shell-pop scss-mode sass-mode reveal-in-osx-finder restclient-helm restart-emacs ranger rainbow-delimiters racer pyvenv pytest pyenv-mode py-isort pug-mode pretty-mode prettify-utils popwin pip-requirements persp-mode pcre2el pbcopy password-generator paradox osx-trash osx-dictionary orgit org-vcard org-trello org-projectile org-present org-pomodoro org-gcal org-download org-bullets org-brain open-junk-file ob-restclient ob-http neotree navi-mode mwim multi-term move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum livid-mode live-py-mode linum-relative link-hint less-css-mode launchctl key-chord json-mode js2-refactor js-doc info+ indent-guide impatient-mode hy-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-pydoc helm-purpose helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag google-translate golden-ratio godoctor go-rename go-guru go-eldoc gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md fuzzy flyspell-correct-helm flycheck-rust flycheck-pos-tip flx-ido fill-column-indicator fasd fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-terminal-cursor-changer evil-surround evil-snipe evil-search-highlight-persist evil-org evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help emoji-cheat-sheet-plus emmet-mode elisp-slime-nav editorconfig dumb-jump dracula-theme diff-hl cython-mode company-web company-tern company-statistics company-restclient company-lua company-go company-emoji company-anaconda column-enforce-mode coffee-mode clean-aindent-mode cargo browse-at-remote auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile all-the-icons-ivy aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell))))
+  (custom-set-faces
+   ;; custom-set-faces was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   )
+  )
