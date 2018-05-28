@@ -27,6 +27,7 @@
         (org :variables org-enable-reveal-js-support t)
         org-trello
         osx
+        prodigy
         ranger
         spell-checking
         syntax-checking
@@ -720,7 +721,7 @@ FONT-LOCK-HOOKS-ALIST is an alist of a font-lock-alist and its desired hooks."
       (evil-escape)))
 
   (global-set-key (kbd "M-e") 'my-spacemacs/shell-pop-eshell)
-  (setq eshell-aliases-file "eshell-alias")
+  (setq eshell-aliases-file (concat (getenv "HOME") "/projects/sw/repos/personal/dotfiles/emacs/eshell-alias"))
 
   ;; Few eshell alias functions
   (defun eshell/gst (&rest args)
@@ -867,7 +868,8 @@ more-helpful local prompt."
   (module/misc/yassnippet)
   (module/misc/kubernetes)
   (module/misc/magithub)
-  (module/misc/hydra))
+  (module/misc/hydra)
+  (module/misc/prodigy))
 
 ;;;; Aspell
 
@@ -1045,6 +1047,22 @@ more-helpful local prompt."
     (interactive)
     (let ((current-prefix-arg '(16)))
       (call-interactively 'org-time-stamp))))
+;;;; Prodigy
+(defun module/misc/prodigy ()
+  (use-package prodigy
+    :defer t
+    :bind ("C-x P" . prodigy)
+    :config
+    (progn
+      (prodigy-define-service
+        :name "jupyter"
+        :cwd "~/projects/sw/sandbox/python"
+        :command "/Users/sivagura/.pyenv/shims/jupyter"
+        :args '("notebook")
+        :tags '(python jupyter)
+        )))
+  )
+
 ;;; Navigation
 
 (defun module/navigation ()
