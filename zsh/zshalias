@@ -32,6 +32,7 @@ alias killemacs="emacsclient -e '(kill-emacs)'"
 
 # system commands
 alias df="df -H"
+alias curl="gpg --batch -q -d ~/.authinfo.gpg | curl --netrc-file /dev/stdin"
 
 # aws show all ec2 instances
 alias ec2="aws ec2 describe-instances --output table --query 'Reservations[*].Instances[*].{ID:InstanceId,Type:InstanceType,State:State.Name,PrivateIp:NetworkInterfaces[0].PrivateIpAddress,PublicIp:NetworkInterfaces[0].Association.PublicIp,Tags:Tags[?Key==\`Name\`].Value | [0]}'"
