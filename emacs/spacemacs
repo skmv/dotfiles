@@ -87,6 +87,10 @@
 
         ;; Org
         org-gcal                 ; google calendar syncing
+        calfw
+        calfw-org
+        calfw-cal
+        calfw-gcal
         org-vcard                ; Import/export google contacts
         org-trello               ; org trello
 
@@ -1174,7 +1178,7 @@ more-helpful local prompt."
   "Setup org mode agenda"
   (with-eval-after-load 'org
     (add-to-list 'org-modules 'org-habit))
-  (setq org-agenda-files (list (concat (getenv "HOME") "/projects/sw/repos/personal/journal/journals/habit.org") (concat (getenv "HOME") "/projects/sw/repos/personal/journal/journals/dailyplan.org")))
+  (setq org-agenda-files (list (concat (getenv "HOME") "/projects/sw/repos/personal/journal/journals/habit.org") (concat (getenv "HOME") "/projects/sw/repos/personal/journal/journals/gcal.org") (concat (getenv "HOME") "/projects/sw/repos/personal/journal/journals/dailyplan.org")))
   (setq org-habit-graph-column 80)
   (setq org-habit-show-habits-only-for-today nil))
 
@@ -1231,17 +1235,41 @@ more-helpful local prompt."
 
 (defun module/org/gcal ()
   "Org google calendar integration. Not actively using atm."
+  (setq package-check-signature nil)
 
-  ;; TODO setup dropbox daemon on linux, try calfw, bind stuff
-  (require 'org-gcal)
-  (require 'org-contacts)
-  (load (if-linux "~/Dropbox/secrets.el"
-                  "c:/~/Dropbox/secrets.el") t)
-  (setq org-gcal-file-alist
-        `(("ekaschalk@gmail.com" .
-           ,(if-linux "~/Dropbox/schedule.org" "c:/~/Dropbox/schedule.org"))))
-  (setq org-contacts-files
-        `(,(if-linux "~/Dropbox/contacts.org" "c:/~/Dropbox/contacts.org")))
+  (use-package org-gcal
+    :ensure t
+    :config
+    (setq org-gcal-client-id (car (auth-source-user-and-password "apps.googleusercontent.com"))
+          org-gcal-client-secret (car (cdr (auth-source-user-and-password "apps.googleusercontent.com")))
+          org-gcal-file-alist '(("ramanathan.nit@gmail.com" .  "~/projects/sw/repos/personal/journal/journals/gcal.org")))
+    (add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync) ))
+    (add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-sync) ))
+    )
+
+  (use-package calfw
+    :ensure ;TODO:
+    :config
+    (require 'calfw)
+    (require 'calfw-org)
+    ;;(require 'calfw-ical)
+
+    ;; (defun mycalendar ()
+    ;;   (interactive)
+    ;;   (cfw:open-calendar-buffer
+    ;;    :contents-sources
+    ;;    (list
+    ;;     ;; (cfw:org-create-source "Green")  ; orgmode source
+    ;;     ;;(cfw:ical-create-source "gcal" "https://somecalnedaraddress" "IndianRed") ; devorah calender
+    ;;     ;;(cfw:ical-create-source "gcal" "https://anothercalendaraddress" "IndianRed") ; google calendar ICS
+    ;;     )))
+    (setq cfw:org-overwrite-default-keybinding t))
+
+  ;; (use-package calfw-gcal
+  ;;   :ensure t
+  ;;   :config
+  ;;   (require 'calfw-gcal))
+
   )
 
 ;;;; Misc
@@ -1342,6 +1370,8 @@ more-helpful local prompt."
                                  "* %?\n")
                                 ("j" "Daily Journal" entry (file+olp+datetree "~/projects/sw/repos/personal/journal/journals/mind.org")
                                  "* %?\n")
+                                ("c" "Calendar" entry (file "~/projects/sw/repos/personal/journal/journals/gcal.org")
+                                 "* %?\n\n%^T\n\n:PROPERTIES:\n\n:END:\n\n")
                                 ("D" "Daily Plan" entry (file+olp+datetree "~/projects/sw/repos/personal/journal/journals/dailyplan.org")
                                  "* %?\n")
                                 ))
@@ -1640,13 +1670,13 @@ more-helpful local prompt."
     (interactive)
     (setq url-proxy-services
           '(("no_proxy" . "^\\(localhost\\)")
-            ("http" . "proxy:3128")
-            ("https" . "proxy:3128")))
+            ("http" . "localhost:3128")
+            ("https" . "localhost:3128")))
     (setenv "no_proxy" "^\\(localhost\\)")
-    (setenv "http_proxy" "proxy:3128")
-    (setenv "https_proxy" "proxy:3128")
+    (setenv "http_proxy" "localhost:3128")
+    (setenv "https_proxy" "localhost:3128")
 
-    (setq magit-git-global-arguments '("--no-pager" "--literal-pathspecs" "-c" "core.preloadindex=true" "-c" "log.showSignature=false" "-c" "http.proxy=proxy:3128"))
+    (setq magit-git-global-arguments '("--no-pager" "--literal-pathspecs" "-c" "core.preloadindex=true" "-c" "log.showSignature=false" "-c" "http.proxy=localhost:3128"))
     )
 
   (defun unset-work-proxy ()
