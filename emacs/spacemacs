@@ -1059,6 +1059,8 @@ more-helpful local prompt."
         :cwd "~/projects/sw/sandbox/python"
         :command "/Users/sivagura/.pyenv/shims/jupyter"
         :args '("notebook")
+        :stop-signal 'sigterm
+        :kill-process-buffer-on-stop t
         :tags '(python jupyter)
         )))
   )
