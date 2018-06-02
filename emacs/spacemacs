@@ -1178,7 +1178,7 @@ more-helpful local prompt."
   "Setup org mode agenda"
   (with-eval-after-load 'org
     (add-to-list 'org-modules 'org-habit))
-  (setq org-agenda-files (list (concat (getenv "HOME") "/projects/sw/repos/personal/journal/journals/habit.org") (concat (getenv "HOME") "/projects/sw/repos/personal/journal/journals/gcal.org") (concat (getenv "HOME") "/projects/sw/repos/personal/journal/journals/dailyplan.org")))
+  (setq org-agenda-files (list (concat (getenv "HOME") "/projects/sw/repos/personal/journal/journals/habit.org") (concat (getenv "HOME") "/projects/sw/repos/personal/journal/journals/gcal.org") (concat (getenv "HOME") "/projects/sw/repos/personal/journal/journals/dailyplan.org") (concat (getenv "HOME") "/projects/sw/repos/personal/journal/journals/birthday.org")))
   (setq org-habit-graph-column 80)
   (setq org-habit-show-habits-only-for-today nil))
 
@@ -1242,7 +1242,9 @@ more-helpful local prompt."
     :config
     (setq org-gcal-client-id (car (auth-source-user-and-password "apps.googleusercontent.com"))
           org-gcal-client-secret (car (cdr (auth-source-user-and-password "apps.googleusercontent.com")))
-          org-gcal-file-alist '(("ramanathan.nit@gmail.com" .  "~/projects/sw/repos/personal/journal/journals/gcal.org")))
+          org-gcal-file-alist '(("ramanathan.nit@gmail.com" .  "~/projects/sw/repos/personal/journal/journals/gcal.org")
+                                ("um3s4v3kehgrichubhneb3dtsk31d8pe@import.calendar.google.com" . "~/projects/sw/repos/personal/journal/journals/birthday.org")
+                                ))
     (add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync) ))
     (add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-sync) ))
     )
