@@ -18,6 +18,7 @@
 
 (setq dotspacemacs/layers/core
       '(better-defaults
+        dash
         fasd
         git
         github
@@ -77,10 +78,12 @@
 
 (setq dotspacemacs/additional/packages
       '(
+        direnv
         ;; Evil Cursor changer
         evil-terminal-cursor-changer
         ;; helpful
         helpful
+        ipcalc
         ;; Outline mode base package enhancements
         outshine                 ; Required for navi-mode
         navi-mode                ; Navbar on buffer outlines
@@ -715,6 +718,7 @@ FONT-LOCK-HOOKS-ALIST is an alist of a font-lock-alist and its desired hooks."
 
 ;;; Eshell
 (defun module/eshell ()
+  (direnv-mode)
   (setenv "PYTHONIOENCODING" "utf-8")
   (setenv "LANG" "en_US.UTF-8")
   (defun my-spacemacs/shell-pop-eshell ()
@@ -871,7 +875,7 @@ more-helpful local prompt."
   (module/misc/windows)
   (module/misc/yassnippet)
   (module/misc/kubernetes)
-  (module/misc/magithub)
+  (module/misc/git)
   (module/misc/hydra)
   (module/misc/prodigy))
 
@@ -966,8 +970,8 @@ more-helpful local prompt."
     :ensure t
     :after kubernetes))
 
-;;;; Magithub
-(defun module/misc/magithub ()
+;;;; Git
+(defun module/misc/git ()
   (use-package magithub
     :after magit
     :config
@@ -1168,6 +1172,7 @@ more-helpful local prompt."
     (module/org/agenda)
     (module/org/babel)
     (module/org/capture)
+    (module/org/crypt)
     (module/org/exports)
     (module/org/gcal)
     (module/org/misc)
@@ -1209,8 +1214,21 @@ more-helpful local prompt."
                                (clojure . t)
                                (dot .     t)  ; Graphviz
                                (http .    t)  ; Requests
+                               (js . t)
+                               (shell . t)
+                               (sql . t)
                                )))
-
+;;;; crypt
+(defun module/org/crypt ()
+  (use-package org
+    :ensure nil
+	  :after org
+    :init (org-crypt-use-before-save-magic)
+    :config
+    (org-crypt-use-before-save-magic)
+    (setq org-tags-exclude-from-inheritance (quote ("crypt")))
+    :custom (org-crypt-key "D13D93DEC8D36E11C871CF2FB94B060D25FFA652"))
+  )
 ;;;; Exports
 
 (defun module/org/exports ()
