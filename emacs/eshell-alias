@@ -1,3 +1,8 @@
+alias 'gc!' git commit -v --amend
+alias 'gca!' git commit -v -a --amend
+alias 'gcan!' git commit -v -a --no-edit --amend
+alias 'gcans!' git commit -v -a -s --no-edit --amend
+alias 'gcn!' git commit -v --no-edit --amend
 alias - cd -
 alias ... ../..
 alias .... ../../..
@@ -15,6 +20,7 @@ alias 9 cd -9
 alias _ sudo
 alias a fasd -a
 alias afind ack -il
+alias curl gpg --batch -q -d ~/.authinfo.gpg | curl --netrc-file /dev/stdin $*
 alias d fasd -d
 alias df df -H
 alias doi docker images
@@ -45,12 +51,8 @@ alias gbsg git bisect good
 alias gbsr git bisect reset
 alias gbss git bisect start
 alias gc git commit -v
-alias 'gc!' git commit -v --amend
 alias gca git commit -v -a
-alias 'gca!' git commit -v -a --amend
 alias gcam git commit -a -m
-alias 'gcan!' git commit -v -a --no-edit --amend
-alias 'gcans!' git commit -v -a -s --no-edit --amend
 alias gcb git checkout -b
 alias gcd git checkout develop
 alias gcf git config --list
@@ -58,7 +60,6 @@ alias gcl git clone --recursive
 alias gclean git clean -fd
 alias gcm git checkout master
 alias gcmsg git commit -m
-alias 'gcn!' git commit -v --no-edit --amend
 alias gco git checkout
 alias gcount git shortlog -sn
 alias gcp git cherry-pick
@@ -158,7 +159,7 @@ alias gwip git add -A; git rm $(git ls-files --deleted) 2> /dev/null; git commit
 alias history omz_history
 alias j fasd_cd -d
 alias killemacs emacsclient -e '(kill-emacs)'
-alias l ls -lah
+alias l exa -lah
 alias la ls -lAh
 alias ll ls -lh
 alias ls exa
@@ -180,4 +181,3 @@ alias wget aria2c
 alias which-command whence
 alias z fasd_cd -d
 alias zz fasd_cd -d -i
-alias curl gpg --batch -q -d ~/.authinfo.gpg | curl --netrc-file /dev/stdin $*
