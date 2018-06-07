@@ -942,6 +942,10 @@ more-helpful local prompt."
 
 (defun module/misc/windows ()
   "Additional window management bindings."
+  (evil-define-key 'normal outline-minor-mode-map (kbd "<C-tab>")  ; M-tab
+    'spacemacs/alternate-window)
+
+  (global-set-key (kbd "<C-tab>") 'spacemacs/alternate-window)
 
   (evil-define-key 'normal outline-minor-mode-map (kbd "C-M-i")  ; M-tab
     'spacemacs/alternate-buffer)
