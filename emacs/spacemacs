@@ -19,6 +19,7 @@
 (setq dotspacemacs/layers/core
       '(better-defaults
         dash
+        docker
         fasd
         git
         github
