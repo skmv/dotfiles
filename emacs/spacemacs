@@ -18,6 +18,7 @@
 
 (setq dotspacemacs/layers/core
       '(better-defaults
+        csv
         dash
         docker
         fasd
