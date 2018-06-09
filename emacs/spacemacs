@@ -879,7 +879,8 @@ more-helpful local prompt."
   (module/misc/kubernetes)
   (module/misc/git)
   (module/misc/hydra)
-  (module/misc/prodigy))
+  (module/misc/prodigy)
+  (module/misc/smartparens))
 
 ;;;; Aspell
 
@@ -1097,6 +1098,17 @@ more-helpful local prompt."
         :tags '(python jupyter)
         )))
   )
+
+;;;; Paredit
+(defun module/misc/smartparens ()
+  (use-package smartparens
+    :defer t
+    :diminish ""
+    :bind (("C-)" . sp-forward-slurp-sexp)
+           ("C-}" . sp-forward-barf-sexp))
+    :config
+    (progn (add-to-list 'sp-sexp-suffix '(json-mode regex "")))
+    ))
 
 ;;; Navigation
 
