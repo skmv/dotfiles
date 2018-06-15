@@ -14,8 +14,6 @@
 
 ;;; Spacemacs-Layers
 ;;;; Layers
-
-
 (setq dotspacemacs/layers/core
       '(better-defaults
         csv
@@ -155,7 +153,7 @@ values."
    ;; If non-nil layers with lazy install support are lazy installed.
    ;; List of additional paths where to look for configuration layers.
    ;; Paths must have a trailing slash (i.e. `~/.mycontribs/')
-   dotspacemacs-configuration-layer-path '()
+   dotspacemacs-configuration-layer-path '("~/projects/sw/repos/personal/dotfiles/emacs/layers/")
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    (append dotspacemacs/layers/core
@@ -182,7 +180,7 @@ values."
    ;; Spacemacs and never uninstall them. (default is `used-only')
    dotspacemacs-install-packages 'used-but-keep-unused))
 
-(defun dotspacemacs/init ()
+  (defun dotspacemacs/init ()
   "Initialization function.
 This function is called at the very startup of Spacemacs initialization
 before layers configuration.
@@ -242,6 +240,14 @@ values."
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(spacemacs-dark
                          solarized-dark)
+   ;; Set the theme for the Spaceline. Supported themes are `spacemacs',
+   ;; `all-the-icons', `custom', `vim-powerline' and `vanilla'. The first three
+   ;; are spaceline themes. `vanilla' is default Emacs mode-line. `custom' is a
+   ;; user defined themes, refer to the DOCUMENTATION.org for more info on how
+   ;; to create your own spaceline theme. Value can be a symbol or list with\
+   ;; additional properties.
+   ;; (default '(spacemacs :separator wave :separator-scale 1.5))
+   dotspacemacs-mode-line-theme '(spacemacs :separator wave :separator-scale 1.5)
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
@@ -371,7 +377,7 @@ values."
    dotspacemacs-folding-method 'evil
    ;; If non-nil smartparens-strict-mode will be enabled in programming modes.
    ;; (default nil)
-   dotspacemacs-smartparens-strict-mode nil
+   dotspacemacs-smartparens-strict-mode t
    ;; If non-nil pressing the closing parenthesis `)' key in insert mode passes
    ;; over any automatically added closing parenthesis, bracket, quote, etc…
    ;; This can be temporary disabled by pressing `C-q' before `)'. (default nil)
@@ -1791,34 +1797,8 @@ more-helpful local prompt."
 
 (defun module/python ()
   (require 'python)
-  (unless-linux-call 'module/python/windows-pytest)
   (module/python/fixes)
-  (module/python/mypy)
   (module/python/venvs))
-
-;;;; Windows-pytest
-
-(defun module/python/windows-pytest ()
-  "Pytest is broken on Windows. Basic functionality is provided for Windows."
-
-  (defun ek-pytest-module ()
-    (interactive)
-    (shell-command (format "py.test -x -s %s&" buffer-file-name)))
-
-  (defun ek-pytest-one ()
-    (interactive)
-    (save-excursion
-      (let ((test-name
-             (progn
-               (re-search-backward "^[ ]*def \\(test_[a-zA-Z0-9_]*\\)")
-               (match-string 1))))
-        (shell-command
-         (format "py.test -x -s %s::%s&" buffer-file-name test-name)))))
-
-  (spacemacs/set-leader-keys-for-major-mode
-    'python-mode (kbd "t m") 'ek-pytest-module)
-  (spacemacs/set-leader-keys-for-major-mode
-    'python-mode (kbd "t t") 'ek-pytest-one))
 
 ;;;; Fixes
 
@@ -1842,24 +1822,6 @@ more-helpful local prompt."
   ;; Remove flyspell from python buffers
   (dolist (hook '(python-mode-hook))
     (add-hook hook (lambda () (flyspell-mode -1)))))
-
-;;;; Mypy
-
-(defun module/python/mypy ()
-  "Enable mypy flycheck integration in-tandem with pylint."
-
-  (flycheck-define-checker
-      python-mypy ""
-      :command ("mypy"
-                "--ignore-missing-imports" "--fast-parser"
-                "--python-version" "3.6"
-                source-original)
-      :error-patterns
-      ((error line-start (file-name) ":" line ": error:" (message) line-end))
-      :modes python-mode)
-
-  (add-to-list 'flycheck-checkers 'python-mypy t)
-  (flycheck-add-next-checker 'python-pylint 'python-mypy t))
 
 ;;;; Venvs
 
