@@ -1732,10 +1732,11 @@ more-helpful local prompt."
     "Kill current buffer unconditionally."
     (interactive)
     (setq url-proxy-services
-          '(("no_proxy" . "^\\(localhost\\)")
+          '(("no_proxy" . "^\\(localhost\\|127.0.0.1\\)")
             ("http" . "localhost:3128")
             ("https" . "localhost:3128")))
-    (setenv "no_proxy" "^\\(localhost\\)")
+    (setenv "no_proxy" "^\\(localhost\\|127.0.0.1\\)")
+    (setenv "NO_PROXY" "127.0.0.1")
     (setenv "http_proxy" "localhost:3128")
     (setenv "https_proxy" "localhost:3128")
 
