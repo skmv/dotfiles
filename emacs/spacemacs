@@ -20,6 +20,7 @@
         dash
         docker
         fasd
+        finance
         git
         github
         gnus
@@ -35,7 +36,9 @@
         (auto-completion :variables
                          auto-completion-return-key-behavior 'complete
                          auto-completion-tab-key-behavior 'complete
-                         auto-completion-enable-snippets-in-popup t)
+                         auto-completion-enable-snippets-in-popup t
+                         auto-completion-enable-sort-by-usage t
+                         auto-completion-private-snippets-directory "/Users/sivagura/projects/sw/repos/personal/dotfiles/emacs/yasnippet")
         (evil-snipe :variables
                     evil-snipe-enable-alternate-f-and-t-behaviors t)
         ;; (ivy :variables
@@ -417,6 +420,7 @@ executes.
  This function is mostly useful for variables that need to be set
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
+
   (setq custom-file (concat (getenv "HOME") "/projects/sw/repos/personal/dotfiles/emacs/elisp/.custom-settings.el")))
 
 (defun dotspacemacs/user-config ()
@@ -426,12 +430,19 @@ layers configuration .
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
-  (spacemacs/set-leader-keys "SPC" 'avy-goto-char-timer)
-  (key-chord-define-global "JJ" 'switch-window)
-  (key-chord-define-global "jb" 'helm-mini)
-  (key-chord-define-global "jl" 'avy-goto-line)
-  (key-chord-define-global "YY" 'helm-show-kill-ring)
-  (key-chord-mode 1)
+
+  (use-package key-chord
+    :ensure t
+    :config
+    (progn
+      (spacemacs/set-leader-keys "SPC" 'avy-goto-char-timer)
+      (key-chord-define-global "JJ" 'switch-window)
+      (key-chord-define-global "jb" 'helm-mini)
+      (key-chord-define-global "jl" 'avy-goto-line)
+      (key-chord-define-global "YY" 'helm-show-kill-ring)
+      (key-chord-mode 1)
+      )
+    )
 
   (global-evil-mc-mode)
   (global-set-key (kbd "C-=") 'er/expand-region)
@@ -477,6 +488,8 @@ you should place your code here."
   (module/proxy)
   (module/znc-tunnel)
   (module/emacs-server)
+  (module/finance)
+
   )
 
 ;;; Configuration
@@ -726,17 +739,16 @@ FONT-LOCK-HOOKS-ALIST is an alist of a font-lock-alist and its desired hooks."
 
 ;;; Eshell
 (defun module/eshell ()
+
+  (evil-global-set-key 'normal (kbd "SPC '") 'spacemacs/projectile-shell-pop)
+  (evil-global-set-key 'normal (kbd "SPC c '") 'spacemacs/shell-pop-eshell)
+  (global-set-key (kbd "C-x c '") 'spacemacs/shell-pop-eshell)
+  (global-set-key (kbd "M-e") 'spacemacs/projectile-shell-pop)
+
   (direnv-mode)
   (setenv "PYTHONIOENCODING" "utf-8")
   (setenv "LANG" "en_US.UTF-8")
-  (defun my-spacemacs/shell-pop-eshell ()
-    (interactive)
-    (spacemacs/shell-pop-eshell nil)
-    (if (string= major-mode "eshell-mode")
-        (evil-insert 1)
-      (evil-escape)))
 
-  (global-set-key (kbd "M-e") 'my-spacemacs/shell-pop-eshell)
   (setq eshell-aliases-file (concat (getenv "HOME") "/projects/sw/repos/personal/dotfiles/emacs/eshell-alias"))
 
   ;; Few eshell alias functions
@@ -967,9 +979,26 @@ more-helpful local prompt."
   "Yassnippet bindings and config."
 
   (use-package auto-yasnippet
-    :ensure t)
+    :ensure t
+    )
 
-  (global-set-key (kbd "M-/") 'hippie-expand))
+  (defun smart-tab ()
+    "This smart tab is minibuffer compliant: it acts as usual in
+    the minibuffer. Else, if mark is active, indents region. Else if
+    point is at the end of a symbol, expands it. Else indents the
+    current line."
+    (interactive)
+    (if (minibufferp)
+        (unless (minibuffer-complete)
+          (hippie-expand nil))
+      (if mark-active
+          (indent-region (region-beginning)
+                         (region-end))
+        (if (looking-at "\\_>")
+            (hippie-expand nil)
+          (indent-for-tab-command)))))
+  (global-set-key (kbd "M-/") 'hippie-expand)
+  (global-set-key (kbd "TAB") 'smart-tab))
 
 ;;;; Kubernetes
 (defun module/misc/kubernetes ()
@@ -1265,7 +1294,7 @@ more-helpful local prompt."
 (defun module/org/crypt ()
   (use-package org
     :ensure nil
-	  :after org
+    :after org
     :init (org-crypt-use-before-save-magic)
     :config
     (org-crypt-use-before-save-magic)
@@ -1736,7 +1765,6 @@ more-helpful local prompt."
             ("http" . "localhost:3128")
             ("https" . "localhost:3128")))
     (setenv "no_proxy" "^\\(localhost\\|127.0.0.1\\)")
-    (setenv "NO_PROXY" "127.0.0.1")
     (setenv "http_proxy" "localhost:3128")
     (setenv "https_proxy" "localhost:3128")
 
@@ -1877,4 +1905,8 @@ This function is called at the very end of Spacemacs initialization."
    ;; Your init file should contain only one such instance.
    ;; If there is more than one, they won't work right.
    )
+;;; finance
+(defun module/finance ()
+  (use-package ledger-mode
+    :mode "\\.ledger$" )
   )

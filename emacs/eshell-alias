@@ -21,63 +21,63 @@ alias _ sudo
 alias a fasd -a
 alias afind ack -il
 alias curl gpg --batch -q -d ~/.authinfo.gpg | curl --netrc-file /dev/stdin $*
-alias d fasd -d
-alias df df -H
-alias doi docker images
-alias dops docker ps
-alias dorm docker rm -f
-alias dormi docker rmi -f
+alias d fasd -d $*
+alias df df -H $*
+alias doi docker images $*
+alias dops docker ps $*
+alias dorm docker rm -f $*
+alias dormi docker rmi -f $*
 alias ec emacsclient -t
 alias ec2 aws ec2 describe-instances --output table --query 'Reservations[*].Instances[*].{ID:InstanceId,Type:InstanceType,State:State.Name,PrivateIp:NetworkInterfaces[0].PrivateIpAddress,PublicIp:NetworkInterfaces[0].Association.PublicIp,Tags:Tags[?Key==`Name`].Value | [0]}'
 alias ec2-start aws ec2 start-instances --instance-ids
 alias ed emacs --daemon
-alias f fasd -f
-alias g git
-alias ga git add
-alias gaa git add --all
-alias gap git apply
-alias gapa git add --patch
-alias gau git add --update
-alias gb git branch
-alias gba git branch -a
-alias gbd git branch -d
-alias gbda git branch --no-color --merged | command grep -vE "^(\*|\s*(master|develop|dev)\s*$)" | command xargs -n 1 git branch -d
-alias gbl git blame -b -w
-alias gbnm git branch --no-merged
-alias gbr git branch --remote
-alias gbs git bisect
-alias gbsb git bisect bad
-alias gbsg git bisect good
-alias gbsr git bisect reset
-alias gbss git bisect start
-alias gc git commit -v
-alias gca git commit -v -a
-alias gcam git commit -a -m
-alias gcb git checkout -b
-alias gcd git checkout develop
-alias gcf git config --list
-alias gcl git clone --recursive
-alias gclean git clean -fd
+alias f fasd -f $*
+alias g git $*
+alias ga git add $*
+alias gaa git add --all $*
+alias gap git apply $*
+alias gapa git add --patch $*
+alias gau git add --update $*
+alias gb git branch $*
+alias gba git branch -a $*
+alias gbd git branch -d $*
+alias gbda git branch --no-color --merged | command grep -vE "^(\*|\s*(master|develop|dev)\s*$)" | command xargs -n 1 git branch -d $*
+alias gbl git blame -b -w $*
+alias gbnm git branch --no-merged $*
+alias gbr git branch --remote $*
+alias gbs git bisect $*
+alias gbsb git bisect bad $*
+alias gbsg git bisect good $*
+alias gbsr git bisect reset $*
+alias gbss git bisect start $*
+alias gc git commit -v $*
+alias gca git commit -v -a $*
+alias gcam git commit -a -m $*
+alias gcb git checkout -b $*
+alias gcd git checkout develop $*
+alias gcf git config --list $*
+alias gcl git clone --recursive $*
+alias gclean git clean -fd $*
 alias gcm git checkout master
 alias gcmsg git commit -m
-alias gco git checkout
-alias gcount git shortlog -sn
-alias gcp git cherry-pick
-alias gcpa git cherry-pick --abort
-alias gcpc git cherry-pick --continue
-alias gcs git commit -S
-alias gcsm git commit -s -m
-alias gd git diff
-alias gdca git diff --cached
-alias gdct git describe --tags `git rev-list --tags --max-count=1`
-alias gdcw git diff --cached --word-diff
-alias gdt git diff-tree --no-commit-id --name-only -r
-alias gdw git diff --word-diff
-alias gf git fetch
-alias gfa git fetch --all --prune
-alias gfo git fetch origin
-alias gg git gui citool
-alias gga git gui citool --amend
+alias gco git checkout $*
+alias gcount git shortlog -sn $*
+alias gcp git cherry-pick $*
+alias gcpa git cherry-pick --abort $*
+alias gcpc git cherry-pick --continue $*
+alias gcs git commit -S $*
+alias gcsm git commit -s -m $*
+alias gd git diff $*
+alias gdca git diff --cached $*
+alias gdct git describe --tags `git rev-list --tags --max-count=1` $*
+alias gdcw git diff --cached --word-diff $*
+alias gdt git diff-tree --no-commit-id --name-only -r $*
+alias gdw git diff --word-diff $*
+alias gf git fetch $*
+alias gfa git fetch --all --prune $*
+alias gfo git fetch origin $*
+alias gg git gui citool $*
+alias gga git gui citool --amend $*
 alias ggpull git pull origin $(git_current_branch)
 alias ggpur ggu
 alias ggpush git push origin $(git_current_branch)
@@ -162,9 +162,9 @@ alias killemacs emacsclient -e '(kill-emacs)'
 alias l exa -lah
 alias la ls -lAh
 alias ll ls -lh
-alias ls exa
-alias lsa ls -lah
-alias md mkdir -p
+alias ls exa $*
+alias lsa ls -lah $*
+alias md mkdir -p $*
 alias mux tmuxinator
 alias please sudo
 alias po popd
@@ -177,7 +177,8 @@ alias sd fasd -sid
 alias sf fasd -sif
 alias vi fasd -f -e "emacsclient -t"
 alias vim emacsclient -t
-alias wget aria2c
+alias wget aria2c $*
 alias which-command whence
 alias z fasd_cd -d
 alias zz fasd_cd -d -i
+alias k kubectl $*
