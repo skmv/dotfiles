@@ -176,11 +176,9 @@ project/plugins/project/
 # Ruby #
 coverage
 rdoc
-pkg
 test/tmp
 test/version_tmp
 tmp
-pkg
 *.gem
 *.rbc
 lib/bundler/man
