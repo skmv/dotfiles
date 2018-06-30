@@ -41,9 +41,7 @@ ifeq ($(OS),Darwin)
 endif
 	@make ssh-setup
 	@make python-setup
-	@make node-setup
 	@make tmux-setup
-	@make nvm-setup
 	@echo "Remember to import your gpg keys"
 	@echo "Load the iterm settings from the file iterm/com.googlecode.iterm2.plist"
 	@echo "Install Intellij Idea
@@ -61,7 +59,7 @@ endif
 	@brew bundle --file=brew/Brewfile
 
 linux:: ## Configure Linux Settings
-	@sudo apt install -y build-essential
+	@sudo apt install -y build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev python-pip tmux
 
 controlplane:: ## Configure control plane
 	@echo "Setting up controlplane"
