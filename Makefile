@@ -27,19 +27,19 @@ endif
 	@git submodule update
 
 	@make git
-	ifeq ($(OS),Darwin)
+ifeq ($(OS),Darwin)
 		@make brew
-	endif
-	@make brew
+endif
 	@make zsh-setup
 	@make zsh
 	@make emacs-setup
 	@make emacs
+ifeq ($(OS),Darwin)
 	@make hammerspoon
 	@make controlplane
 	@make osx
+endif
 	@make ssh-setup
-	@make ruby-setup
 	@make python-setup
 	@make node-setup
 	@make tmux-setup
@@ -60,6 +60,9 @@ endif
 	@brew tap homebrew/bundle
 	@brew bundle --file=brew/Brewfile
 
+linux:: ## Configure Linux Settings
+	@sudo apt install -y build-essential
+
 controlplane:: ## Configure control plane
 	@echo "Setting up controlplane"
 	@cp controlplane/com.dustinrue.ControlPlane.plist ~/Library/Preferences/com.dustinrue.ControlPlane.plist
@@ -67,12 +70,15 @@ controlplane:: ## Configure control plane
 
 emacs-setup:: ## Configure emacs for fresh laptop
 	@echo "Setting up emacs"
+ifeq ($(OS),Linux)
+	@sudo apt install -y emacs
+endif
 ifneq ("$(wildcard $(HOME)/.emacs.d)","")
 	@echo "Backing up existing emacs configs"
 	@mv $(HOME)/.emacs.d $(HOME)/.emacs.d_bkup
 endif
 	@echo "Installing spacemacs"
-	@git clone https://github.com/syl20bnr/spacemacs ~/.emacs.d
+	@git clone -b develop https://github.com/syl20bnr/spacemacs ~/.emacs.d
 
 emacs:: ## Configure emacs Settings
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/emacs/spacemacs ${HOME}/.spacemacs
@@ -84,6 +90,10 @@ gcloud:: ## Install gcloud
 	@curl https://sdk.cloud.google.com | bash
 
 git:: ## Configure git Settings
+
+ifeq ($(OS),Linux)
+		sudo apt install git
+endif
 	@echo "Setting up git"
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/git/gitignore ${HOME}/.gitignore
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/git/gitconfig ${HOME}/.gitconfig
@@ -115,6 +125,11 @@ osx:: ## Configure osx settings
 	@echo "osx configuration is completed"
 
 python-setup:: ##Setting up python in a fresh laptop
+ifeq ($(OS),Linux)
+ifeq ("$(wildcard $(HOME)/.pyenv)","")
+	git clone https://github.com/pyenv/pyenv.git ~/.pyenv
+endif
+endif
 	@echo "Configuring python"
 	@pyenv install 3.6.3
 	@pyenv global 3.6.3
@@ -183,7 +198,12 @@ endif
 
 zsh-setup:: ## Configure zsh for the fresh laptop
 	@echo "Setting zsh as your default shell"
+ifeq ($(OS),Darwin)
 	@sudo dscl . -create /Users/$(USER) UserShell /usr/local/bin/zsh
+endif
+ifeq ($(OS),Linux)
+	@sudo apt install -y zsh
+endif
 	@echo "Installing oh my zsh"
 	@curl -fsSL -o /tmp/install_zsh.sh https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh
 	@sh /tmp/install_zsh.sh
@@ -194,6 +214,7 @@ zsh-setup:: ## Configure zsh for the fresh laptop
 	@curl -L -o $(HOME)/.iterm2_shell_integration.zsh https://iterm2.com/shell_integration/zsh
 
 zsh:: ## Configure zsh Settings
+	@ln $(LN_FLAGS) $(CONFIG_ROOT)/zsh/zshenv ${HOME}/.zshenv
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/zsh/zshrc ${HOME}/.zshrc
 
 # Help text
