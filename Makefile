@@ -59,7 +59,17 @@ endif
 	@brew bundle --file=brew/Brewfile
 
 linux:: ## Configure Linux Settings
-	@sudo apt install -y build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev python-pip tmux
+	@sudo apt install -y build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev python-pip tmux unzip
+	@sudo snap install --classic go
+	@wget https://github.com/ogham/exa/releases/download/v0.8.0/exa-linux-x86_64-0.8.0.zip
+	@unzip exa-linux-x86_64-0.8.0.zip
+	@sudo mv exa-linux-x86_64 /usr/local/bin/exa
+	@rm -Rf exa-linux-x86_64-0.8.0.zip
+	@wget https://github.com/clvv/fasd/archive/1.0.1.zip
+	@unzip 1.0.1.zip
+	@rm -Rf 1.0.1.zip
+	@sudo mv fasd-1.0.1/fasd /usr/local/bin/fasd
+
 
 controlplane:: ## Configure control plane
 	@echo "Setting up controlplane"
@@ -99,6 +109,10 @@ endif
 	@git config user.name "ageekymonk"
 	@git config user.email "ramzthecoder@gmail.com"
 	@echo git configuration completed
+
+go:: ## Configure Golang Setttings
+	@sudo apt install -y golang
+	@go get -u github.com/alecthomas/gometalinter
 
 hammerspoon:: ## Configure hammerspoon
 	@echo "Setting up Hammerspoon"
