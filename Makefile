@@ -4,7 +4,7 @@ GIT					  := $(shell which git)
 CONFIG_ROOT   := $(shell pwd)
 PRIVATE_CONFIG_ROOT := $(shell pwd)/private
 LN_FLAGS 			= -sfn
-
+OS := $(shell uname -s)
 .PHONY: help brew emacs git ssh zsh zsh-setup
 
 setup:: ## Configure the laptop for fresh installation
@@ -27,6 +27,9 @@ endif
 	@git submodule update
 
 	@make git
+	ifeq ($(OS),Darwin)
+		@make brew
+	endif
 	@make brew
 	@make zsh-setup
 	@make zsh
