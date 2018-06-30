@@ -1,4 +1,10 @@
 hosts=($(grep "Host \+[^*]" ~/.ssh/config | cut -d' ' -f 2 | sort -u))
 zstyle ':completion:*' hosts $hosts
+if [[ "$(uname)" == "Linux" ]]
+then
+	export PATH="/snap/bin:$PATH"
+fi
+
+export GOPATH="$HOME/projects/sw/gospace"
 export PYENV_ROOT="$HOME/.pyenv"
-export PATH="$PYENV_ROOT/bin:$PATH"
+export PATH="$GOPATH/bin:$PYENV_ROOT/bin:$PATH"

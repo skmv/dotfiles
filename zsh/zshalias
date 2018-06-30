@@ -42,8 +42,10 @@ alias ec2-start="aws ec2 start-instances --instance-ids "
 
 # Changing Default programs
 alias cat=ccat
+if [[ "$(uname)" == "Darwin" ]]
+then
 alias wget=aria2c
-
+fi
 # fasd
 alias j='fasd_cd -d'
 alias vi='fasd -f -e "emacsclient -t"'

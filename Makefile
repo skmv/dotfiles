@@ -44,9 +44,15 @@ endif
 	@make tmux-setup
 	@echo "Remember to import your gpg keys"
 	@echo "Load the iterm settings from the file iterm/com.googlecode.iterm2.plist"
-	@echo "Install Intellij Idea
+	@echo "Install Intellij Idea"
 	@echo "Updated the Alfred license manually"
 	@echo "Install docker for mac manually"
+
+azure:: ## Configure azure
+	@echo "Installing Azure cli"
+	@echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $(shell lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/azure-cli.list
+	@curl -L https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
+	@sudo apt-get install -y apt-transport-https && sudo apt-get update && sudo apt-get install azure-cli
 
 brew:: ## Configure brew Settings
 ifeq ("$(wildcard /usr/local/bin/brew)","")
