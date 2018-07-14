@@ -261,3 +261,12 @@
 
 [interactive]
 	diffFilter = diff-highlight
+
+[gerrit]
+  defaultremote = origin
+
+[gitreview]
+  username = ageekymonk
+  scheme = https
+  port = 443
+  remote = origin
