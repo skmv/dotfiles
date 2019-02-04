@@ -108,21 +108,6 @@ fi
 # Do not record duplicate in your history
 export HISTCONTROL=ignoreboth:erasedups
 
-# # Set the path
-# export PATH=$PATH:${HOME}/.local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/TeX/texbin
-
-# # Set golang path and add to path
-# export GOPATH="$HOME/projects/sw/gospace"
-# export PATH="$PATH:$GOPATH/bin"
-
-# export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
-# export PATH="$PATH:/usr/local/opt/llvm/bin"
-
-
-export NVM_DIR="$HOME/.nvm"
-[[ $- == *i* ]] && echo 'Interactive' || source "/usr/local/opt/nvm/nvm.sh"
-
-
 eval "$(direnv hook zsh)"
 
 #export LIQUIBASE_HOME=$(find /usr/local/homebrew/Cellar/liquibase -name libexec)
@@ -161,3 +146,12 @@ if [ -f '/Users/ramz/.gcloud/google-cloud-sdk/completion.zsh.inc' ]; then source
 # tabtab source for sls package
 # uninstall by removing these lines or running `tabtab uninstall sls`
 [[ -f /Users/ramz/.nvm/versions/node/v8.9.1/lib/node_modules/serverless/node_modules/tabtab/.completions/sls.zsh ]] && . /Users/ramz/.nvm/versions/node/v8.9.1/lib/node_modules/serverless/node_modules/tabtab/.completions/sls.zsh
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+export PATH="/usr/local/opt/qt/bin:$PATH"
+export LDFLAGS="-L/usr/local/opt/qt/lib"
+export CPPFLAGS="-I/usr/local/opt/qt/include"
+export PKG_CONFIG_PATH="/usr/local/opt/qt/lib/pkgconfig"

@@ -26,11 +26,13 @@
         gnus
         helm
         (ibuffer :variables ibuffer-group-buffers-by 'projects)
+        octave
         (org :variables org-enable-reveal-js-support t)
         org-trello
         osx
         prodigy
         ranger
+        ruby
         spell-checking
         syntax-checking
         (auto-completion :variables
@@ -51,7 +53,9 @@
 
       dotspacemacs/layers/langs
       '(emacs-lisp
-        (go :variables go-use-gometalinter t
+        (go :variables go-use-gometalinter nil
+            :variables gofmt-command "goimports"
+            :variables go-tab-width 4
             go-packages-function 'go-find-external)
         html
         lua
@@ -99,7 +103,6 @@
         calfw-gcal
         org-vcard                ; Import/export google contacts
         org-trello               ; org trello
-
         key-chord                ; Key chord
         switch-window            ; Switch window faster
         virtualenvwrapper        ; Python environment management
@@ -129,6 +132,11 @@
         ztree
         kubernetes
         kubernetes-evil
+
+        ;; Libraries
+        s
+        (asoc :location (recipe :repo troyp/asoc.el :fetcher github))
+        (ecloud :location (recipe :repo techniumlabs/ecloud :fetcher github))
         ))
 
 (defun dotspacemacs/layers ()
@@ -1765,8 +1773,8 @@ more-helpful local prompt."
             ("http" . "localhost:3128")
             ("https" . "localhost:3128")))
     (setenv "no_proxy" "^\\(localhost\\|127.0.0.1\\)")
-    (setenv "http_proxy" "localhost:3128")
-    (setenv "https_proxy" "localhost:3128")
+    (setenv "http_proxy" "http://localhost:3128")
+    (setenv "https_proxy" "http://localhost:3128")
 
     (setq magit-git-global-arguments '("--no-pager" "--literal-pathspecs" "-c" "core.preloadindex=true" "-c" "log.showSignature=false" "-c" "http.proxy=localhost:3128"))
     )
@@ -1865,48 +1873,37 @@ more-helpful local prompt."
   (venv-initialize-interactive-shells)
   (venv-initialize-eshell))
 
-;;; Auto custom settings
-(defun dotspacemacs/emacs-custom-settings ()
-  "Emacs custom settings.
-This is an auto-generated function, do not modify its content directly, use
-Emacs customize menu instead.
-This function is called at the very end of Spacemacs initialization."
-  (custom-set-variables
-   ;; custom-set-variables was added by Custom.
-   ;; If you edit it by hand, you could mess it up, so be careful.
-   ;; Your init file should contain only one such instance.
-   ;; If there is more than one, they won't work right.
-   '(package-selected-packages
-     (quote
-      (define-word yapfify yaml-mode xterm-color ws-butler winum which-key web-mode web-beautify volatile-highlights virtualenvwrapper vi-tilde-fringe uuidgen use-package unfill toml-mode toc-org terraform-mode tagedit symon switch-window string-inflection spaceline-all-the-icons solarized-theme smeargle slim-mode slack shell-pop scss-mode sass-mode reveal-in-osx-finder restclient-helm restart-emacs ranger rainbow-delimiters racer pyvenv pytest pyenv-mode py-isort pug-mode pretty-mode prettify-utils popwin pip-requirements persp-mode pcre2el pbcopy password-generator paradox osx-trash osx-dictionary orgit org-vcard org-trello org-projectile org-present org-pomodoro org-gcal org-download org-bullets org-brain open-junk-file ob-restclient ob-http neotree navi-mode mwim multi-term move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum livid-mode live-py-mode linum-relative link-hint less-css-mode launchctl key-chord json-mode js2-refactor js-doc info+ indent-guide impatient-mode hy-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-pydoc helm-purpose helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag google-translate golden-ratio godoctor go-rename go-guru go-eldoc gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md fuzzy flyspell-correct-helm flycheck-rust flycheck-pos-tip flx-ido fill-column-indicator fasd fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-terminal-cursor-changer evil-surround evil-snipe evil-search-highlight-persist evil-org evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help emoji-cheat-sheet-plus emmet-mode elisp-slime-nav editorconfig dumb-jump dracula-theme diff-hl cython-mode company-web company-tern company-statistics company-restclient company-lua company-go company-emoji company-anaconda column-enforce-mode coffee-mode clean-aindent-mode cargo browse-at-remote auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile all-the-icons-ivy aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell))))
-  (custom-set-faces
-   ;; custom-set-faces was added by Custom.
-   ;; If you edit it by hand, you could mess it up, so be careful.
-   ;; Your init file should contain only one such instance.
-   ;; If there is more than one, they won't work right.
-   )
-  )
-(defun dotspacemacs/emacs-custom-settings ()
-  "Emacs custom settings.
-This is an auto-generated function, do not modify its content directly, use
-Emacs customize menu instead.
-This function is called at the very end of Spacemacs initialization."
-  (custom-set-variables
-   ;; custom-set-variables was added by Custom.
-   ;; If you edit it by hand, you could mess it up, so be careful.
-   ;; Your init file should contain only one such instance.
-   ;; If there is more than one, they won't work right.
-   '(package-selected-packages
-     (quote
-      (define-word yapfify yaml-mode xterm-color ws-butler winum which-key web-mode web-beautify volatile-highlights virtualenvwrapper vi-tilde-fringe uuidgen use-package unfill toml-mode toc-org terraform-mode tagedit symon switch-window string-inflection spaceline-all-the-icons solarized-theme smeargle slim-mode slack shell-pop scss-mode sass-mode reveal-in-osx-finder restclient-helm restart-emacs ranger rainbow-delimiters racer pyvenv pytest pyenv-mode py-isort pug-mode pretty-mode prettify-utils popwin pip-requirements persp-mode pcre2el pbcopy password-generator paradox osx-trash osx-dictionary orgit org-vcard org-trello org-projectile org-present org-pomodoro org-gcal org-download org-bullets org-brain open-junk-file ob-restclient ob-http neotree navi-mode mwim multi-term move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum livid-mode live-py-mode linum-relative link-hint less-css-mode launchctl key-chord json-mode js2-refactor js-doc info+ indent-guide impatient-mode hy-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-pydoc helm-purpose helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag google-translate golden-ratio godoctor go-rename go-guru go-eldoc gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md fuzzy flyspell-correct-helm flycheck-rust flycheck-pos-tip flx-ido fill-column-indicator fasd fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-terminal-cursor-changer evil-surround evil-snipe evil-search-highlight-persist evil-org evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help emoji-cheat-sheet-plus emmet-mode elisp-slime-nav editorconfig dumb-jump dracula-theme diff-hl cython-mode company-web company-tern company-statistics company-restclient company-lua company-go company-emoji company-anaconda column-enforce-mode coffee-mode clean-aindent-mode cargo browse-at-remote auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile all-the-icons-ivy aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell))))
-  (custom-set-faces
-   ;; custom-set-faces was added by Custom.
-   ;; If you edit it by hand, you could mess it up, so be careful.
-   ;; Your init file should contain only one such instance.
-   ;; If there is more than one, they won't work right.
-   )
 ;;; finance
 (defun module/finance ()
   (use-package ledger-mode
     :mode "\\.ledger$" )
+  )
+
+;;; ecloud
+;; (add-to-list 'load-path "~/projects/sw/repos/techniumlabs/ecloud/")
+
+;; (use-package ecloud
+;;   :quelpa (ecloud :fetcher github :repo "techniumlabs/ecloud"))
+
+;; (quelpa '(ecloud :fetcher git :url "https://github.com/techniumlabs/ecloud.git"))
+;;(require 'ecloud)
+
+(defun dotspacemacs/emacs-custom-settings ()
+  "Emacs custom settings.
+This is an auto-generated function, do not modify its content directly, use
+Emacs customize menu instead.
+This function is called at the very end of Spacemacs initialization."
+  (custom-set-variables
+   ;; custom-set-variables was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   '(package-selected-packages
+     '(ws-butler winum volatile-highlights vi-tilde-fringe uuidgen toc-org symon string-inflection spaceline-all-the-icons all-the-icons memoize spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode password-generator paradox spinner overseer org-bullets open-junk-file neotree nameless move-text macrostep lorem-ipsum link-hint indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-xref helm-themes helm-swoop helm-purpose window-purpose imenu-list helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state iedit evil-goggles evil-exchange evil-escape evil-cleverparens smartparens paredit evil-args evil-anzu anzu eval-sexp-fu highlight elisp-slime-nav editorconfig dumb-jump f dash s define-word counsel-projectile projectile counsel swiper ivy pkg-info epl column-enforce-mode clean-aindent-mode centered-cursor-mode auto-highlight-symbol auto-compile packed aggressive-indent ace-window ace-link ace-jump-helm-line helm avy helm-core popup which-key use-package pcre2el org-plus-contrib hydra font-lock+ evil goto-chg undo-tree dotenv-mode diminish bind-map bind-key async)))
+  (custom-set-faces
+   ;; custom-set-faces was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   )
   )

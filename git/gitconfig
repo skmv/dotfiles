@@ -3,7 +3,7 @@
   signingkey = 25FFA652
 
 [core]
- 	excludesfile = ~/.gitignore
+	excludesfile = /Users/sivagura/.gitignore
 	whitespace = trailing-space,space-before-tab
 	quotepath = false
 	pager = less -FXR
@@ -13,9 +13,10 @@
 [http]
   sslverify = true
   postBuffer = 524288000
+	cookiefile = /Users/sivagura/.gitcookies
 
 [commit]
-	gpgsign = true
+	gpgsign = false
 
 [gpg]
 	program = /usr/local/MacGPG2/bin/gpg2
@@ -270,3 +271,15 @@
   scheme = https
   port = 443
   remote = origin
+[magithub]
+	online = false
+[magithub "status"]
+	includeStatusHeader = false
+	includePullRequestsSection = false
+	includeIssuesSection = false
+[difftool "sourcetree"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
+[mergetool "sourcetree"]
+	cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true
