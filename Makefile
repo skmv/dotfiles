@@ -1,9 +1,9 @@
 .DEFAULT_GOAL := help
-SHELL				  :=	/bin/bash
-GIT					  := $(shell which git)
+SHELL					:=	/bin/bash
+GIT						:= $(shell which git)
 CONFIG_ROOT   := $(shell pwd)
 PRIVATE_CONFIG_ROOT := $(shell pwd)/private
-LN_FLAGS 			= -sfn
+LN_FLAGS			= -sfn
 OS := $(shell uname -s)
 .PHONY: help brew emacs git ssh zsh zsh-setup
 
@@ -16,9 +16,9 @@ setup:: ## Configure the laptop for fresh installation
 
 ifeq ("$(wildcard $(HOME)/projects/sw/repos/personal/dotfiles)","")
 	@echo "Downloading the config repository"
-	@git clone git@github.com:ageekymonk/dotfiles.git $(HOME)/projects/sw/repos/personal/dotfiles
-
+	@git clone https://github.com/ageekymonk/dotfiles.git $(HOME)/projects/sw/repos/personal/dotfiles
 	@echo "Jump to $(HOME)/projects/sw/repos/personal/dotfile and run make all"
+	@exit
 endif
 
 	@cd $(HOME)/projects/sw/repos/personal/dotfiles
