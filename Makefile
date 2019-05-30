@@ -7,7 +7,7 @@ LN_FLAGS			= -sfn
 OS := $(shell uname -s)
 .PHONY: help brew emacs git ssh zsh zsh-setup
 
-setup:: ## Configure the laptop for fresh installation
+setup-common:: ## Setup common configs
 	@echo "Setting up directory structure"
 	@mkdir -p ~/projects/sw/repos/opensource
 	@mkdir -p ~/projects/sw/repos/personal
@@ -18,27 +18,26 @@ ifeq ("$(wildcard $(HOME)/projects/sw/repos/personal/dotfiles)","")
 	@echo "Downloading the config repository"
 	@git clone https://github.com/ageekymonk/dotfiles.git $(HOME)/projects/sw/repos/personal/dotfiles
 	@echo "Jump to $(HOME)/projects/sw/repos/personal/dotfile and run make all"
-	@exit
 endif
 
+setup-mac:: ## Setup mac
 	@cd $(HOME)/projects/sw/repos/personal/dotfiles
+ifeq ($(OS),Darwin)
+	@make brew
+	@make hammerspoon
+	@make osx
+endif
+
+setup:: setup-mac setup-common ## Configure the laptop for fresh installation
 	@echo "Pulling in other submodules"
 	@git submodule init
 	@git submodule update
 
 	@make git
-ifeq ($(OS),Darwin)
-		@make brew
-endif
 	@make zsh-setup
 	@make zsh
 	@make emacs-setup
 	@make emacs
-ifeq ($(OS),Darwin)
-	@make hammerspoon
-	@make controlplane
-	@make osx
-endif
 	@make ssh-setup
 	@make python-setup
 	@make tmux-setup
@@ -47,6 +46,7 @@ endif
 	@echo "Install Intellij Idea"
 	@echo "Updated the Alfred license manually"
 	@echo "Install docker for mac manually"
+endif
 
 azure:: ## Configure azure
 	@echo "Installing Azure cli"
@@ -75,12 +75,6 @@ linux:: ## Configure Linux Settings
 	@unzip 1.0.1.zip
 	@rm -Rf 1.0.1.zip
 	@sudo mv fasd-1.0.1/fasd /usr/local/bin/fasd
-
-
-controlplane:: ## Configure control plane
-	@echo "Setting up controlplane"
-	@cp controlplane/com.dustinrue.ControlPlane.plist ~/Library/Preferences/com.dustinrue.ControlPlane.plist
-	@echo "Controlplane setup is done"
 
 emacs-setup:: ## Configure emacs for fresh laptop
 	@echo "Setting up emacs"
