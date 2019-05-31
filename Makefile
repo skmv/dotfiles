@@ -1,10 +1,11 @@
 .DEFAULT_GOAL := help
 SHELL					:=	/bin/bash
 GIT						:= $(shell which git)
-CONFIG_ROOT   := $(shell pwd)
-PRIVATE_CONFIG_ROOT := $(shell pwd)/private
+CONFIG_ROOT   := $(HOME)/projects/sw/repos/person/dotfiles
+PRIVATE_CONFIG_ROOT := $(CONFIG_ROOT)/private
 LN_FLAGS			= -sfn
 OS := $(shell uname -s)
+
 .PHONY: help brew emacs git ssh zsh zsh-setup
 
 setup-common:: ## Setup common configs
@@ -21,14 +22,14 @@ ifeq ("$(wildcard $(HOME)/projects/sw/repos/personal/dotfiles)","")
 endif
 
 setup-mac:: ## Setup mac
-	@cd $(HOME)/projects/sw/repos/personal/dotfiles
+	@cd $(CONFIG_ROOT)
 ifeq ($(OS),Darwin)
 	@make brew
 	@make hammerspoon
 	@make osx
 endif
 
-setup:: setup-mac setup-common ## Configure the laptop for fresh installation
+setup:: setup-common setup-mac ## Configure the laptop for fresh installation
 	@echo "Pulling in other submodules"
 	@git submodule init
 	@git submodule update
@@ -46,7 +47,6 @@ setup:: setup-mac setup-common ## Configure the laptop for fresh installation
 	@echo "Install Intellij Idea"
 	@echo "Updated the Alfred license manually"
 	@echo "Install docker for mac manually"
-endif
 
 azure:: ## Configure azure
 	@echo "Installing Azure cli"
@@ -129,11 +129,7 @@ node-setup:: ## Setting up node in a fresh laptop
 	@echo "Configuring node"
 
 osx:: ## Configure osx settings
-	@echo "Configure osx dock settings"
-	@cp osx/com.apple.dock.plist $(HOME)/Library/Preferences/com.apple.dock.plist
-	@echo "Configuring finder to quit"
-	@defaults write com.apple.finder QuitMenuItem -bool YES
-	@killall Finder
+	@bash scripts/osx-setup.sh
 	@echo "osx configuration is completed"
 
 python-setup:: ##Setting up python in a fresh laptop
@@ -195,18 +191,6 @@ update:: ## Update the config repository
 	$(GIT) pull && $(GIT) submodule foreach git checkout master && $(GIT) submodule foreach git pull
 	@wget https://raw.githubusercontent.com/wee-slack/wee-slack/master/wee_slack.py
 	@mv wee_slack.py $(CONFIG_ROOT)/weechat/plugins/autoload/wee_slack.py
-
-weechat:: ## Configure weechat settings
-	@ln $(LN_FLAGS) $(CONFIG_ROOT)/weechat ${HOME}/.weechat
-ifneq ("$(wildcard $(PRIVATE_CONFIG_ROOT))","")
-	@ln $(LN_FLAGS) $(PRIVATE_CONFIG_ROOT)/weechat/irc.conf ${HOME}/.weechat/irc.conf
-	@ln $(LN_FLAGS) $(PRIVATE_CONFIG_ROOT)/weechat/plugins.conf ${HOME}/.weechat/plugins.conf
-	@ln $(LN_FLAGS) $(PRIVATE_CONFIG_ROOT)/weechat/weechat.conf ${HOME}/.weechat/weechat.conf
-
-else
-	@echo "TODO Need to copy the default file."
-endif
-	@echo weechat configuration completed
 
 zsh-setup:: ## Configure zsh for the fresh laptop
 	@echo "Setting zsh as your default shell"

@@ -1,9 +1,7 @@
-;; -*- mode: emacs-lisp -*-
+;; -*- mode: emacs-lisp; lexical-binding: t -*-
 ;; This file is loaded by Spacemacs at startup.
 ;; It must be stored in your home directory.
-;;; OS-Config
 
-;; Utilities for integrating Windows and Linux.
 (setq is-linuxp (eq system-type 'gnu/linux))
 (defun if-linux (x y) (if is-linuxp x y))
 (defun if-linux-call (x y) (if is-linuxp (funcall x) (funcall y)))
