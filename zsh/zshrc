@@ -107,6 +107,7 @@ fi
 
 # Do not record duplicate in your history
 export HISTCONTROL=ignoreboth:erasedups
+export HISTIGNORE=" *:ls:cd:cd -:pwd:exit:date:* --help:* -h:pony:pony add *:pony update *:pony save *:pony ls:pony ls *";
 
 eval "$(direnv hook zsh)"
 
@@ -134,12 +135,6 @@ _fzf_compgen_path() {
 
 source ${HOME}/.rvm/scripts/rvm
 
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/ramz/.gcloud/google-cloud-sdk/path.zsh.inc' ]; then source '/Users/ramz/.gcloud/google-cloud-sdk/path.zsh.inc'; fi
-
-# The next line enables shell command completion for gcloud.
-if [ -f '/Users/ramz/.gcloud/google-cloud-sdk/completion.zsh.inc' ]; then source '/Users/ramz/.gcloud/google-cloud-sdk/completion.zsh.inc'; fi
-
 # tabtab source for serverless package
 # uninstall by removing these lines or running `tabtab uninstall serverless`
 # [[ -f /Users/ramz/.nvm/versions/node/v8.9.1/lib/node_modules/serverless/node_modules/tabtab/.completions/serverless.zsh ]] && . /Users/ramz/.nvm/versions/node/v8.9.1/lib/node_modules/serverless/node_modules/tabtab/.completions/serverless.zsh
@@ -155,3 +150,4 @@ export PATH="/usr/local/opt/qt/bin:$PATH"
 export LDFLAGS="-L/usr/local/opt/qt/lib"
 export CPPFLAGS="-I/usr/local/opt/qt/include"
 export PKG_CONFIG_PATH="/usr/local/opt/qt/lib/pkgconfig"
+
