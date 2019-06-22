@@ -533,6 +533,14 @@ before packages are loaded."
                         ("@errands" . ?e)
                         ("@phone" . ?p)
                         ("quantified" . ?q)))
+
+  (setq org-todo-keywords
+        '((sequence
+           "TODO(t)"  ; next action
+           "STARTED(s)"
+           "WAITING(w@/!)"
+           "POSTPONED(p)" "SOMEDAY(s@/!)" "|" "DONE(x!)" "CANCELLED(c@)")
+          (sequence "TODELEGATE(-)" "DELEGATED(d)" "COMPLETE(x)")))
   )
 
 ;;;; Org habits
