@@ -151,3 +151,8 @@ export LDFLAGS="-L/usr/local/opt/qt/lib"
 export CPPFLAGS="-I/usr/local/opt/qt/include"
 export PKG_CONFIG_PATH="/usr/local/opt/qt/lib/pkgconfig"
 
+
+# kubernetes aliases
+[ -f ~/.kubectl_aliases ] && source ~/.kubectl_aliases
+
+function kubectl() { echo "+ kubectl $@"; command kubectl $@; }
