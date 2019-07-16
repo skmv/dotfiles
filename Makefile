@@ -208,9 +208,9 @@ endif
 	@git clone https://github.com/bhilburn/powerlevel9k.git ~/.oh-my-zsh/themes/powerlevel9k
 	@echo "Setting up iterm2 Shell Integrations"
 	@curl -L -o $(HOME)/.iterm2_shell_integration.zsh https://iterm2.com/shell_integration/zsh
-	@curl -L -o $(HOME)/.kubectl_aliases https://rawgit.com/ahmetb/kubectl-alias/master/.kubectl_aliases
 
 zsh:: ## Configure zsh Settings
+	@curl -L -o $(HOME)/.kubectl_aliases https://raw.githubusercontent.com/ageekymonk/kubectl-aliases/ageekymonk/.kubectl_aliases
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/zsh/zshenv ${HOME}/.zshenv
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/zsh/zshrc ${HOME}/.zshrc
 	@mkdir -p $(HOME)/.aws/cli
