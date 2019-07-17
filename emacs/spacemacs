@@ -751,11 +751,16 @@ SCHEDULED: %^t
   (setq-default evil-escape-key-sequence "jk"
                 evil-escape-unordered-key-sequence "true")
 
+  (evil-define-key 'visual evil-mc-key-map
+    "A" #'evil-mc-make-cursor-in-visual-selection-end
+    "I" #'evil-mc-make-cursor-in-visual-selection-beg)
+
   )
 
 ;;;; go lang
 (defun module/lang/go ()
   (require 'dap-go))
+
 ;;;; Smart Parentheses
 (defun module/misc/smartparens ()
   (use-package smartparens
