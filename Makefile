@@ -2,7 +2,6 @@
 SHELL					:=	/bin/bash
 GIT						:= $(shell which git)
 CONFIG_ROOT   := $(HOME)/projects/sw/repos/personal/dotfiles
-PRIVATE_CONFIG_ROOT := $(CONFIG_ROOT)/private
 LN_FLAGS			= -sfn
 OS := $(shell uname -s)
 
@@ -160,12 +159,7 @@ ssh-setup:: ## Setting up ssh for the first time
 	@chmod 700 ${HOME}/.ssh
 	@touch ${HOME}/.ssh/authorized_keys
 	@chmod 600 ${HOME}/.ssh/authorized_keys
-
-ifneq ("$(wildcard $(PRIVATE_CONFIG_ROOT))","")
-	@ln $(LN_FLAGS) $(PRIVATE_CONFIG_ROOT)/ssh/config ${HOME}/.ssh/config
-else
-	@ln $(LN_FLAGS) $(CONFIG_ROOT)/ssh/default/config ${HOME}/.ssh/config
-endif
+	@ln $(LN_FLAGS) $(CONFIG_ROOT)/ssh/config ${HOME}/.ssh/config
 	@echo "ssh configuration completed"
 
 tmux-setup:: ## Setting up tmux for th first time
