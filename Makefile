@@ -1,7 +1,7 @@
 .DEFAULT_GOAL := help
 SHELL					:=	/bin/bash
 GIT						:= $(shell which git)
-CONFIG_ROOT   := $(HOME)/projects/sw/repos/person/dotfiles
+CONFIG_ROOT   := $(HOME)/projects/sw/repos/personal/dotfiles
 PRIVATE_CONFIG_ROOT := $(CONFIG_ROOT)/private
 LN_FLAGS			= -sfn
 OS := $(shell uname -s)
