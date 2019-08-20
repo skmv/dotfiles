@@ -58,6 +58,14 @@ ifeq ("$(wildcard /usr/local/bin/brew)","")
 	@echo "Installing brew"
 	@curl -fsSL -o /tmp/install https://raw.githubusercontent.com/Homebrew/install/master/install
 	@/usr/bin/ruby /tmp/install
+	@echo "Setup groups"
+	@sudo dscl . create /Groups/brew
+	@sudo dscl . create /Groups/brew RealName "brew"
+	@sudo dscl . create /Groups/brew passwd "*"
+	@sudo dscl . create /Groups/brew gid "2511"
+	@sudo chgrp -R brew $(brew --prefix)/*
+	@sudo chmod -R g+w $(brew --prefix)/*
+	@sudo dscl . create /Groups/brew GroupMembership `whoami`
 endif
 	@echo "Installing all sw via brew"
 	@brew tap homebrew/bundle
