@@ -206,8 +206,8 @@ endif
 	@curl -fsSL -o /tmp/install_zsh.sh https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh
 	@sh /tmp/install_zsh.sh
 	@rm /tmp/install_zsh.sh
-	@echo "Installing powerlevel9 theme"
-	@git clone https://github.com/bhilburn/powerlevel9k.git ~/.oh-my-zsh/themes/powerlevel9k
+	@echo "Installing powerlevel10k theme"
+	@git clone https://github.com/romkatv/powerlevel10k.git $ZSH_CUSTOM/themes/powerlevel10k
 	@echo "Setting up iterm2 Shell Integrations"
 	@curl -L -o $(HOME)/.iterm2_shell_integration.zsh https://iterm2.com/shell_integration/zsh
 
