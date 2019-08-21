@@ -20,7 +20,7 @@ function require_util() {
     type "$1" > /dev/null 2>&1 || command -v "$1" > /dev/null 2>&1 ||
         oops "you do not have '$1' installed, which I need to $2"
 }
-if [[ `xcode-select -p1` ]]; 
+if [[ `xcode-select -p` ]]; 
 then 
     echo "xcode cli already installed"; 
 else
