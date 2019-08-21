@@ -20,7 +20,12 @@ function require_util() {
     type "$1" > /dev/null 2>&1 || command -v "$1" > /dev/null 2>&1 ||
         oops "you do not have '$1' installed, which I need to $2"
 }
-
+if [[ `xcode-select -p1` ]]; 
+then 
+    echo "xcode cli already installed"; 
+else
+    xcode-select --install
+fi
 require_util git "install git"
 
 mkdir -p ~/projects/sw/repos/personal && cd "$_"
