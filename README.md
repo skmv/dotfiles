@@ -7,7 +7,7 @@ These are my configurations for all the tools i use.
 To bootstrap the new mac, 
 
 ```
-url https://raw.githubusercontent.com/ageekymonk/dotfiles/master/install | bash
+curl https://raw.githubusercontent.com/ageekymonk/dotfiles/master/install | bash
 ```
 
 
