@@ -2,7 +2,8 @@
 
 
 echo "Configure osx dock settings"
-cp osx/com.apple.dock.plist $(HOME)/Library/Preferences/com.apple.dock.plist
+sudo cp osx/com.apple.dock.plist ${HOME}/Library/Preferences/com.apple.dock.plist
+killall Dock
 
 echo "Configuring finder to quit"
 defaults write com.apple.finder QuitMenuItem -bool YES
