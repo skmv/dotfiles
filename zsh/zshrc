@@ -27,11 +27,7 @@ fi
 # time that oh-my-zsh is loaded.
 
 ZSH_THEME="powerlevel10k/powerlevel10k"
-POWERLEVEL9K_MODE='awesome-patched'
-POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=()
-POWERLEVEL9K_PROMPT_ON_NEWLINE=true
-POWERLEVEL9K_PROMPT_ADD_NEWLINE=true
-POWERLEVEL9K_RPROMPT_ON_NEWLINE=true
+[[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
 DEFAULT_USER=${USER}
 
 # Uncomment the following line to use case-sensitive completion.
@@ -152,3 +148,6 @@ export PKG_CONFIG_PATH="/usr/local/opt/qt/lib/pkgconfig"
 [ -f ~/.kubectl_aliases ] && source ~/.kubectl_aliases
 
 function kubectl() { echo "+ kubectl $@"; command kubectl $@; }
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh

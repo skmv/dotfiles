@@ -192,6 +192,7 @@ zsh:: ## Configure zsh Settings
 	@curl -L -o $(HOME)/.kubectl_aliases https://raw.githubusercontent.com/ageekymonk/kubectl-aliases/ageekymonk/.kubectl_aliases
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/zsh/zshenv ${HOME}/.zshenv
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/zsh/zshrc ${HOME}/.zshrc
+	@ln $(LN_FLAGS) $(CONFIG_ROOT)/zsh/p10k.zsh ${HOME}/.p10k.zsh
 	@mkdir -p $(HOME)/.aws/cli
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/aws/alias ${HOME}/.aws/cli/alias
 
