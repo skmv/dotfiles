@@ -168,6 +168,7 @@ tmux-setup:: ## Setting up tmux for th first time
 	@echo "Setting up powerline"
 	@pip install powerline-status
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/tmux/tmux.conf ${HOME}/.tmux.conf
+	@ln $(LN_FLAGS) $(CONFIG_ROOT)/tmux/tmux.conf.local ${HOME}/.tmux.conf.local
 	@mkdir -p ${HOME}/.tmux/plugins
 	@git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 	@echo "tmux configuration completed"
