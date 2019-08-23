@@ -124,16 +124,12 @@ if which pyenv-virtualenv-init > /dev/null; then
     eval "$(pyenv virtualenv-init -)";
 fi
 
-source ~/.tmuxinator/bin/tmuxinator.zsh
-
 eval "$(fasd --init auto)"
 
 _fzf_compgen_path() {
   ag -g "" "$1"
 }
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
-source ${HOME}/.rvm/scripts/rvm
 
 # tabtab source for serverless package
 # uninstall by removing these lines or running `tabtab uninstall serverless`

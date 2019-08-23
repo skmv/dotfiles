@@ -23,9 +23,9 @@ endif
 setup-mac:: ## Setup mac
 	@cd $(CONFIG_ROOT)
 ifeq ($(OS),Darwin)
+	@make osx
 	@make brew
 	@make hammerspoon
-	@make osx
 endif
 
 setup:: setup-common setup-mac ## Configure the laptop for fresh installation
@@ -34,15 +34,14 @@ setup:: setup-common setup-mac ## Configure the laptop for fresh installation
 	@git submodule update
 
 	@make git
-	@make zsh-setup
-	@make zsh
+	@make ssh-setup
 	@make emacs-setup
 	@make emacs
-	@make ssh-setup
 	@make python-setup
 	@make tmux-setup
+	@make zsh
+
 	@echo "Remember to import your gpg keys"
-	@echo "Load the iterm settings from the file iterm/com.googlecode.iterm2.plist"
 	@echo "Install Intellij Idea"
 	@echo "Updated the Alfred license manually"
 	@echo "Install docker for mac manually"
@@ -58,14 +57,6 @@ ifeq ("$(wildcard /usr/local/bin/brew)","")
 	@echo "Installing brew"
 	@curl -fsSL -o /tmp/install https://raw.githubusercontent.com/Homebrew/install/master/install
 	@/usr/bin/ruby /tmp/install
-	@echo "Setup groups"
-	@sudo dscl . create /Groups/brew
-	@sudo dscl . create /Groups/brew RealName "brew"
-	@sudo dscl . create /Groups/brew passwd "*"
-	@sudo dscl . create /Groups/brew gid "2511"
-	@sudo chgrp -R brew $(brew --prefix)/*
-	@sudo chmod -R g+w $(brew --prefix)/*
-	@sudo dscl . create /Groups/brew GroupMembership `whoami`
 endif
 	@echo "Installing all sw via brew"
 	@brew tap homebrew/bundle
@@ -125,6 +116,10 @@ hammerspoon:: ## Configure hammerspoon
 	@echo "Setting up Hammerspoon"
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/hammerspoon ${HOME}/.hammerspoon
 
+iterm:: ## Configure iterm
+	@echo "setting up iterm"
+	@cp iterm2/com.googlecode.iterm2.plist $(HOME)/Library/Preferences/com.googlecode.iterm2.plist
+
 karabiner:: ## Install karabiner configs
 	@echo "You might need to install karabiner manually. Since brew for karabiner is broken"
 	@echo "Setting up karabiner"
@@ -161,13 +156,11 @@ ruby-setup:: ## Setting up ruby in a fresh laptop
 
 ssh-setup:: ## Setting up ssh for the first time
 	@echo "Setting up ssh"
-	@cp $(HOME)/.ssh/* $(CONFIG_ROOT)/ssh/
-	@rm -Rf ${HOME}/.ssh
-	@ln $(LN_FLAGS) $(CONFIG_ROOT)/ssh ${HOME}/.ssh
+	@mkdir -p $(HOME)/.ssh
 	@chmod 700 ${HOME}/.ssh
 	@touch ${HOME}/.ssh/authorized_keys
 	@chmod 600 ${HOME}/.ssh/authorized_keys
-	@ln $(LN_FLAGS) $(CONFIG_ROOT)/ssh/config ${HOME}/.ssh/config
+	@ln $(LN_FLAGS) $(CONFIG_ROOT)/ssh/default/config ${HOME}/.ssh/config
 	@echo "ssh configuration completed"
 
 tmux-setup:: ## Setting up tmux for th first time
@@ -194,22 +187,6 @@ update:: ## Update the config repository
 	@wget https://raw.githubusercontent.com/wee-slack/wee-slack/master/wee_slack.py
 	@mv wee_slack.py $(CONFIG_ROOT)/weechat/plugins/autoload/wee_slack.py
 
-zsh-setup:: ## Configure zsh for the fresh laptop
-	@echo "Setting zsh as your default shell"
-ifeq ($(OS),Darwin)
-	@sudo dscl . -create /Users/$(USER) UserShell /usr/local/bin/zsh
-endif
-ifeq ($(OS),Linux)
-	@sudo apt install -y zsh
-endif
-	@echo "Installing oh my zsh"
-	@curl -fsSL -o /tmp/install_zsh.sh https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh
-	@sh /tmp/install_zsh.sh
-	@rm /tmp/install_zsh.sh
-	@echo "Installing powerlevel10k theme"
-	@git clone https://github.com/romkatv/powerlevel10k.git $ZSH_CUSTOM/themes/powerlevel10k
-	@echo "Setting up iterm2 Shell Integrations"
-	@curl -L -o $(HOME)/.iterm2_shell_integration.zsh https://iterm2.com/shell_integration/zsh
 
 zsh:: ## Configure zsh Settings
 	@curl -L -o $(HOME)/.kubectl_aliases https://raw.githubusercontent.com/ageekymonk/kubectl-aliases/ageekymonk/.kubectl_aliases
@@ -217,6 +194,23 @@ zsh:: ## Configure zsh Settings
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/zsh/zshrc ${HOME}/.zshrc
 	@mkdir -p $(HOME)/.aws/cli
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/aws/alias ${HOME}/.aws/cli/alias
+
+ifeq ($(OS),Linux)
+	@sudo apt install -y zsh
+endif
+ifeq ("$(wildcard $(CONFIG_ROOT)/zsh/themes/powerlevel10k)","")
+	@echo "Installing powerlevel10k theme"
+	@git clone https://github.com/romkatv/powerlevel10k.git $(CONFIG_ROOT)/zsh/themes/powerlevel10k
+endif
+	@echo "Setting up iterm2 Shell Integrations"
+	@curl -L -o $(HOME)/.iterm2_shell_integration.zsh https://iterm2.com/shell_integration/zsh
+	@echo "Changing the default shell to zsh"
+	@sudo dscl . -create /Users/$(USER) UserShell /usr/local/bin/zsh
+
+	@echo "Installing oh my zsh"
+	@curl -fsSL -o /tmp/install_zsh.sh https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh
+	@sh /tmp/install_zsh.sh
+	@rm /tmp/install_zsh.sh
 
 # Help text
 define HELP_TEXT

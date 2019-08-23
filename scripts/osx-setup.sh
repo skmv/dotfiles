@@ -1,6 +1,15 @@
 #!/bin/env bash
 
 
+echo "Setup groups"
+sudo dscl . create /Groups/brew
+sudo dscl . create /Groups/brew RealName "brew"
+sudo dscl . create /Groups/brew passwd "*"
+sudo dscl . create /Groups/brew gid "2511"
+sudo chgrp -R brew $(brew --prefix)/*
+sudo chmod -R g+w $(brew --prefix)/*
+sudo dscl . create /Groups/brew GroupMembership `whoami`
+
 echo "Configure osx dock settings"
 sudo cp osx/com.apple.dock.plist ${HOME}/Library/Preferences/com.apple.dock.plist
 killall Dock

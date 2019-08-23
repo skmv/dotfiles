@@ -20,21 +20,22 @@ function require_util() {
     type "$1" > /dev/null 2>&1 || command -v "$1" > /dev/null 2>&1 ||
         oops "you do not have '$1' installed, which I need to $2"
 }
-if [[ `xcode-select -p` ]]; 
-then 
-    echo "xcode cli already installed"; 
+if [[ `xcode-select -p` ]];
+then
+    echo "xcode cli already installed";
 else
     xcode-select --install
 fi
+
 require_util git "install git"
 
 mkdir -p ~/projects/sw/repos/personal && cd "$_"
 if ! [[ -d "${HOME}/projects/sw/repos/personal/dotfiles" ]];
-then 
+then
     git clone https://github.com/ageekymonk/dotfiles.git
 fi
 
 cd dotfiles
-make setup-common setup-mac
+make setup
 
 } # this ensures the entire script is downloaded #
