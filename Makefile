@@ -165,11 +165,6 @@ ssh-setup:: ## Setting up ssh for the first time
 
 tmux-setup:: ## Setting up tmux for th first time
 	@echo "Setting up tmux"
-	@echo "Setting up tmuxinator"
-	@gem install tmuxinator
-	@ln $(LN_FLAGS) $(CONFIG_ROOT)/tmux/tmuxinator ${HOME}/.tmuxinator
-	@mkdir -p $(HOME)/.tmuxinator/bin
-	@curl -sSL -o $(HOME)/.tmuxinator/bin/tmuxinator.zsh https://raw.githubusercontent.com/tmuxinator/tmuxinator/master/completion/tmuxinator.zsh
 	@echo "Setting up powerline"
 	@pip install powerline-status
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/tmux/tmux.conf ${HOME}/.tmux.conf
