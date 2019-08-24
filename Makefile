@@ -127,6 +127,18 @@ karabiner:: ## Install karabiner configs
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/karabiner/private.xml "${HOME}/Library/Application Support/Karabiner/private.xml"
 	@echo "karabiner configuration completed"
 
+nix:: ## Install nix pkg mgr
+	@echo "Installing nix"
+	@sh <(curl https://nixos.org/nix/install) --no-daemon
+	@. /Users/ramz/.nix-profile/etc/profile.d/nix.sh
+ifeq ($(OS),Darwin)
+		@nix-build https://github.com/LnL7/nix-darwin/archive/master.tar.gz -A installer
+		@./result/bin/darwin-installer
+		@find /nix/store -name "*-set-environment" -exec echo ". {}" \; >> ${CONFIG_ROOT}/zsh/zshrc
+		@echo "export SHELL=zsh" >> ${CONFIG_ROOT}/zsh/zshrc
+		@echo "export EDITOR=vim" >> ${CONFIG_ROOT}/zsh/zshrc
+endif
+
 node-setup:: ## Setting up node in a fresh laptop
 	@echo "Configuring node"
 
