@@ -39,13 +39,6 @@ alias dops="docker ps"
 alias dormi="docker rmi -f"
 alias dorm="docker rm -f"
 
-# Emacs aliases
-alias ec="emacsclient -t"
-alias vi="emacsclient -t"
-alias vim="emacsclient -t"
-alias ed="emacs --daemon"
-alias killemacs="emacsclient -e '(kill-emacs)'"
-
 # system commands
 alias df="df -H"
 alias curl="gpg --batch -q -d ~/.authinfo.gpg | curl --netrc-file /dev/stdin"
@@ -64,7 +57,6 @@ alias wget=aria2c
 fi
 # fasd
 alias j='fasd_cd -d'
-alias vi='fasd -f -e "emacsclient -t"'
 
 # exa
 alias ls='exa'

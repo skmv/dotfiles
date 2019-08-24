@@ -87,8 +87,6 @@ bindkey -M emacs '^N' history-substring-search-down
 
 source $ZSH_CUSTOM/zshalias
 
-export EDITOR="emacsclient -nw"
-
 if [[ "$(uname)" == "Darwin" ]]
 then
     # Enable autojump
@@ -103,12 +101,20 @@ fi
 
 # Do not record duplicate in your history
 export HISTCONTROL=ignoreboth:erasedups
-export HISTIGNORE=" *:ls:cd:cd -:pwd:exit:date:* --help:* -h:pony:pony add *:pony update *:pony save *:pony ls:pony ls *";
+export HISTORY_IGNORE="(ls|cd|pwd)";
+setopt EXTENDED_HISTORY          # Write the history file in the ":start:elapsed;command" format.
+setopt INC_APPEND_HISTORY        # Write to the history file immediately, not when the shell exits.
+setopt SHARE_HISTORY             # Share history between all sessions.
+setopt EXTENDED_HISTORY
+setopt HIST_EXPIRE_DUPS_FIRST
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_IGNORE_SPACE
+setopt HIST_FIND_NO_DUPS
+setopt HIST_SAVE_NO_DUPS
+setopt HIST_BEEP
 
 eval "$(direnv hook zsh)"
-
-#export LIQUIBASE_HOME=$(find /usr/local/homebrew/Cellar/liquibase -name libexec)
-# export JAVA_HOME=$(/usr/libexec/java_home -v 1.7)
 
 # Configure virtualenv and pyenv
 if which pyenv > /dev/null;
@@ -127,17 +133,6 @@ _fzf_compgen_path() {
 }
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-# tabtab source for serverless package
-# uninstall by removing these lines or running `tabtab uninstall serverless`
-# [[ -f /Users/ramz/.nvm/versions/node/v8.9.1/lib/node_modules/serverless/node_modules/tabtab/.completions/serverless.zsh ]] && . /Users/ramz/.nvm/versions/node/v8.9.1/lib/node_modules/serverless/node_modules/tabtab/.completions/serverless.zsh
-# tabtab source for sls package
-# uninstall by removing these lines or running `tabtab uninstall sls`
-# [[ -f /Users/ramz/.nvm/versions/node/v8.9.1/lib/node_modules/serverless/node_modules/tabtab/.completions/sls.zsh ]] && . /Users/ramz/.nvm/versions/node/v8.9.1/lib/node_modules/serverless/node_modules/tabtab/.completions/sls.zsh
-
-# export NVM_DIR="$HOME/.nvm"
-# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
 export PATH="/usr/local/opt/qt/bin:$PATH"
 export LDFLAGS="-L/usr/local/opt/qt/lib"
 export CPPFLAGS="-I/usr/local/opt/qt/include"
@@ -151,3 +146,6 @@ function kubectl() { echo "+ kubectl $@"; command kubectl $@; }
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
+
+[[ -d /nix ]] &&  . /Users/ramz/.nix-profile/etc/profile.d/nix.sh
+
