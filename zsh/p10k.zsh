@@ -73,7 +73,7 @@ fi
       # public_ip             # public IP address
       # battery               # internal battery
       # time                  # current time
-      # example               # example user-defined segment (see prompt_example function below)
+      awscontext # aws context
   )
 
   # To disable default icons for all segments, set POWERLEVEL9K_VISUAL_IDENTIFIER_EXPANSION=''.
@@ -669,13 +669,15 @@ fi
   # POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS. It displays an icon and orange text greeting the user.
   #
   # Type `p10k help segment` for documentation and a more sophisticated example.
-  function prompt_example() {
-    p10k segment -f 208 -i '⭐' -t 'hello, %n'
+  function prompt_awscontext() {
+      local profile="${AWS_PROFILE:=default}"
+
+      p10k segment -f 208 -t "%{$fg_bold[blue]%}aws:(%{$fg[yellow]%}${profile}%{$fg_bold[blue]%})%{$reset_color%}"
   }
 
   # User-defined prompt segments can be customized the same way as built-in segments.
-  typeset -g POWERLEVEL9K_EXAMPLE_FOREGROUND=208
-  typeset -g POWERLEVEL9K_EXAMPLE_VISUAL_IDENTIFIER_EXPANSION='${P9K_VISUAL_IDENTIFIER}'
+  typeset -g POWERLEVEL9K_AWSCONTEXT_FOREGROUND=208
+  typeset -g POWERLEVEL9K_AWSCONTEXT_VISUAL_IDENTIFIER_EXPANSION='${P9K_VISUAL_IDENTIFIER}'
 }
 
 (( ! p9k_classic_restore_aliases )) || setopt aliases

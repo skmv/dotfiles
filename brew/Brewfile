@@ -99,7 +99,6 @@ brew "youtube-dl"
 brew "yq"
 brew "zsh"
 brew "azure/draft/draft"
-brew "d12frosted/emacs-plus/emacs-plus", args: ["HEAD"], link: false
 brew "azure/functions/azure-functions-core-tools"
 brew "solo-io/tap/squashctl"
 brew "solo-io/tap/supergloo"

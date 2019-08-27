@@ -39,6 +39,11 @@ alias dops="docker ps"
 alias dormi="docker rmi -f"
 alias dorm="docker rm -f"
 
+# Terraform
+alias ti="terraform init"
+alias tp="terraform plan"
+alias tapp="terraform apply"
+
 # system commands
 alias df="df -H"
 alias curl="gpg --batch -q -d ~/.authinfo.gpg | curl --netrc-file /dev/stdin"
@@ -48,6 +53,9 @@ alias ec2="aws ec2 describe-instances --output table --query 'Reservations[*].In
 
 # aws start ec2 instances
 alias ec2-start="aws ec2 start-instances --instance-ids "
+
+# aws vpc
+alias vpc="aws ec2 describe-vpcs --output table --query='Vpcs[*].{ID:VpcId,Name:Tags[?Key==\`Name\`].Value | [0],CidrBlock:CidrBlock}'"
 
 # Changing Default programs
 alias cat=ccat
