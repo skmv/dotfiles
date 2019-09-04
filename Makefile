@@ -109,8 +109,11 @@ endif
 	@echo git configuration completed
 
 go:: ## Configure Golang Setttings
+ifeq ($(OS),Linux)
 	@sudo apt install -y golang
+endif
 	@go get -u github.com/alecthomas/gometalinter
+	@go get golang.org/x/tools/gopls
 
 hammerspoon:: ## Configure hammerspoon
 	@echo "Setting up Hammerspoon"
