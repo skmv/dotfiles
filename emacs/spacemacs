@@ -44,7 +44,7 @@ This function should only modify configuration layer settings."
    '(ansible
      ;; Basics
      (auto-completion :variables
-                      auto-completion-private-snippets-directory "/Users/sivagura/projects/sw/repos/personal/dotfiles/emacs/yasnippet"
+                      auto-completion-private-snippets-directory (concat (getenv "HOME") "/projects/sw/repos/personal/dotfiles/emacs/yasnippet")
                       auto-completion-enable-sort-by-usage t
                       auto-completion-enable-snippets-in-popup t)
      better-defaults
