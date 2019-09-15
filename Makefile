@@ -223,6 +223,7 @@ endif
 	@curl -fsSL -o /tmp/install_zsh.sh https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh
 	@sh /tmp/install_zsh.sh
 	@rm /tmp/install_zsh.sh
+	@git clone https://github.com/chmouel/oh-my-zsh-openshift ~/.oh-my-zsh/custom/plugins/oc
 
 # Help text
 define HELP_TEXT

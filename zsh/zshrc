@@ -66,7 +66,7 @@ export UPDATE_ZSH_DAYS=15
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git docker zsh-autosuggestions zsh-history-substring-search zsh-completions zsh-syntax-highlighting)
+plugins=(git docker oc zsh-autosuggestions zsh-history-substring-search zsh-completions zsh-syntax-highlighting)
 # User configuration
 
 source $ZSH/oh-my-zsh.sh
@@ -75,6 +75,7 @@ source $ZSH/oh-my-zsh.sh
 export LANG=en_AU.UTF-8
 
 # Enable Ctrl-x-e to edit command line
+fpath=(~/.oh-my-zsh/custom/plugins/oc $fpath)
 autoload -U edit-command-line
 autoload -U compinit && compinit
 
@@ -84,6 +85,8 @@ bindkey '^xe' edit-command-line
 bindkey '^x^e' edit-command-line
 bindkey -M emacs '^P' history-substring-search-up
 bindkey -M emacs '^N' history-substring-search-down
+bindkey -s '^o' ' $(fzf)\n'
+bindkey -s '^v' ' |peco\n'
 
 source $ZSH_CUSTOM/zshalias
 
