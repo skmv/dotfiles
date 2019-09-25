@@ -297,5 +297,9 @@ tmux_conf_copy_to_os_clipboard=false
 
 unbind C-l
 unbind C-h
+unbind b
 bind -r p previous-window # select previous window
 bind -r n next-window     # select next window
+bind -r b choose-buffer
+bind -r { swap-pane -D
+bind -r } swap-pane -U
