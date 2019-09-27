@@ -701,6 +701,7 @@ SCHEDULED: %^t
       (key-chord-define-global "jb" 'helm-mini)
       (key-chord-define-global "jl" 'avy-goto-line)
       (key-chord-define-global "YY" 'helm-show-kill-ring)
+      (key-chord-define-global "KK" 'spacemacs/jump-to-last-layout)
       (key-chord-mode 1)
       )
     ))
