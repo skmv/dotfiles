@@ -8,5 +8,8 @@ ServerAliveCountMax=30
 ServerAliveInterval=5
 
 # Personal Hosts
+Host github.com
+    IdentitiesOnly yes
+    IdentityFile ~/.ssh/id_rsa_yubikey.pub
 
 # Work Hosts
