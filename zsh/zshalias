@@ -22,17 +22,22 @@ then
 fi
 
 dobash() {
-    docker run -i -t $1 /bin/bash
+    docker exec -i -t $1 /bin/bash
 }
 
 dosh() {
-    docker run -i -t $1 /bin/sh
+    docker exec -i -t $1 /bin/sh
 }
 
 doclean() {
     docker images | awk '/none/ { print $3 }' | xargs docker rmi -f
     docker ps -a | awk '/Exited/ { print $1 }' | xargs docker rm -f
 }
+
+# compdef
+_docker 2>/dev/null
+compdef __docker_complete_running_containers dosh
+compdef __docker_complete_running_containers dobash
 
 alias doi="docker images"
 alias dops="docker ps"
