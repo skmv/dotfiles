@@ -1,6 +1,6 @@
 [user]
   useConfigOnly = true
-  signingkey = 25FFA652
+  signingkey = A2F44E199F6956A2
 
 [core]
   excludesfile = ~/.gitignore
@@ -16,7 +16,7 @@
   cookiefile = ~/.gitcookies
 
 [commit]
-  gpgsign = false
+  gpgsign = true
 
 [gpg]
   program = /usr/local/MacGPG2/bin/gpg2
