@@ -1,0 +1,19 @@
+# -*- mode: snippet -*-
+# name: vars
+# key: vars
+# --
+variable "region" {
+  type        = string
+  default     = "ap-southeast-2"
+  description = "The region to deploy the cluster in"
+}
+
+variable "env" {
+  type        = string
+  description = "Environment name"
+}
+
+variable "vpc" {
+  type        = string
+  description = "VPC ID to be used for deploying openshift"
+}
