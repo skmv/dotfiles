@@ -21,6 +21,9 @@ then
     source $ZSH_PRIVATE_CONFIG_DIR/workalias
 fi
 
+alias doi="docker images"
+alias dops="docker ps"
+
 dobash() {
     docker exec -i -t $1 /bin/bash
 }
@@ -29,20 +32,24 @@ dosh() {
     docker exec -i -t $1 /bin/sh
 }
 
+drsh() {
+    docker run -i -t $1 /bin/sh
+}
+
 doclean() {
     docker images | awk '/none/ { print $3 }' | xargs docker rmi -f
     docker ps -a | awk '/Exited/ { print $1 }' | xargs docker rm -f
 }
 
+alias dormi="docker images --format '{{ .Repository }}:{{ .Tag }}' | peco | xargs docker rmi -f"
+alias dorm="docker ps --format '{{ .Name }}' | peco | xargs docker rm -f"
+
 # compdef
 _docker 2>/dev/null
 compdef __docker_complete_running_containers dosh
 compdef __docker_complete_running_containers dobash
+compdef __docker_complete_images drsh
 
-alias doi="docker images"
-alias dops="docker ps"
-alias dormi="docker rmi -f"
-alias dorm="docker rm -f"
 
 # Terraform
 alias ti="terraform init"

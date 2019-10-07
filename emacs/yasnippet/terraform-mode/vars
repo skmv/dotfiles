@@ -15,5 +15,5 @@ variable "env" {
 
 variable "vpc" {
   type        = string
-  description = "VPC ID to be used for deploying openshift"
+  description = "VPC ID to be used"
 }
