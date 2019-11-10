@@ -225,6 +225,11 @@ endif
 	@rm /tmp/install_zsh.sh
 	@git clone https://github.com/chmouel/oh-my-zsh-openshift ~/.oh-my-zsh/custom/plugins/oc
 
+rest:: ## Other misc softwares
+	@curl -L -s https://kevinschoon.github.io/pomo/install.sh | bash /dev/stdin
+	@mv pomo /usr/local/bin/pomo
+	@chmod +x /usr/local/bin/pomo
+
 # Help text
 define HELP_TEXT
 Usage: make [TARGET]... [MAKEVAR1=SOMETHING]...
