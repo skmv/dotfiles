@@ -40,7 +40,7 @@ doclean() {
     docker ps -a | awk '/Exited/ { print $1 }' | xargs docker rm -f
 }
 
-alias dormi="docker images --format '{{ .Repository }}:{{ .Tag }}' | peco | xargs docker rmi -f"
+alias dormi="docker images --format '{{ .Repository }}:{{ .Tag }}' | peco --exec docker rmi -f"
 alias dorm="docker ps --format '{{ .Name }}' | peco | xargs docker rm -f"
 alias doi="docker images --format '{{ .Repository }}:{{ .Tag }}' | peco | pbcopy"
 
@@ -50,6 +50,11 @@ compdef __docker_complete_running_containers dosh
 compdef __docker_complete_running_containers dobash
 compdef __docker_complete_images drsh
 
+# kubernetes
+alias ka="kustomize build | kubectl apply -f -"
+alias kdel="kustomize build | kubectl delete -f -"
+alias ke="kubectl get events"
+alias kgsecreg='kgsec registry -o yaml | yq r - "data.[.dockerconfigjson]" | base64 -D'
 
 # Terraform
 alias ti="terraform init"
