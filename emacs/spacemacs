@@ -53,7 +53,6 @@ This function should only modify configuration layer settings."
      github
      helm
      multiple-cursors
-     org
      osx
      treemacs
 
@@ -103,8 +102,6 @@ This function should only modify configuration layer settings."
                                       evil-smartparens
                                       evil-terminal-cursor-changer
                                       key-chord
-                                      (org-books :location (recipe :fetcher github
-                                                                   :repo "lepisma/org-books"))
                                       switch-window
                                       )
 
@@ -504,7 +501,6 @@ before packages are loaded."
 
   (module/spacemacs)
   (module/emacs-server)
-  (module/org)
   (module/configuration/keychord)
   (module/configuration/evil)
   (module/lang/go)
@@ -521,180 +517,6 @@ before packages are loaded."
 ;;;; Server Mode
 (defun module/emacs-server()
   (server-start)
-  )
-
-;;;; Org mode
-(defun module/org ()
-  "org mode configuration"
-  (module/org/agenda)
-  (module/org/tasks)
-  (module/org/habits)
-  (module/org/capture)
-  )
-
-;;;; Org books
-(defun module/org/books ()
-  "org books"
-  (setq org-books-file "~/projects/sw/repos/personal/journal/todo/books.org"))
-
-;;;; Org tasks
-(defun module/org/tasks ()
-  "org tasks"
-  (setq org-tag-alist '(("@work" . ?b)
-                        ("@home" . ?h)
-                        ("@writing" . ?w)
-                        ("@reading" . ?r)
-                        ("@coding" . ?c)
-                        ("@errands" . ?e)
-                        ("@phone" . ?p)
-                        ("quantified" . ?q)))
-
-  (setq org-todo-keywords
-        '((sequence
-           "TODO(t)"  ; next action
-           "STARTED(s)"
-           "WAITING(w@/!)"
-           "POSTPONED(p)" "SOMEDAY(s@/!)" "|" "DONE(x!)" "CANCELLED(c@)")
-          (sequence "TODELEGATE(-)" "DELEGATED(d)" "COMPLETE(x)")))
-  )
-
-;;;; Org habits
-(defun module/org/habits ()
-  "org habits"
-  (with-eval-after-load 'org
-    (add-to-list 'org-modules 'org-habit))
-  (setq org-habit-graph-column 80)
-  (setq org-habit-show-habits-only-for-today nil)
-  )
-
-;;;; Org capture
-(defun module/org/capture ()
-  "org protocol"
-  (require 'org-protocol)
-  (with-eval-after-load 'org
-    (add-to-list 'org-modules 'org-protocol))
-  (defvar kk/delete-frame-after-capture 0 "Whether to delete the last frame after the current capture")
-
-  (defun kk/delete-frame-if-neccessary (&rest r)
-    (cond
-     ((= kk/delete-frame-after-capture 0) nil)
-     ((> kk/delete-frame-after-capture 1)
-      (setq kk/delete-frame-after-capture (- kk/delete-frame-after-capture 1)))
-     (t
-      (setq kk/delete-frame-after-capture 0)
-      (delete-frame))))
-
-  (advice-add 'org-capture-finalize :after 'kk/delete-frame-if-neccessary)
-  (advice-add 'org-capture-kill :after 'kk/delete-frame-if-neccessary)
-  (advice-add 'org-capture-refile :after 'kk/delete-frame-if-neccessary)
-
-  (setq org-directory "~/projects/sw/repos/personal/notes/")
-  (defvar ramz/org-basic-task-template "* TODO %^{Task}
-SCHEDULED: %^t
-%?
-:PROPERTIES:
-:Effort: %^{effort|0:05|0:15|0:30|1:00|2:00|4:00|8.00}
-:QUANTIFIED: %^{Quantified Awesome category}
-:END:" "Basic task data")
-
-  (setq org-capture-templates `(
-                                ("L" "Protocol Link" entry (file+headline ,(concat org-directory "notes.org") "Inbox")
-                                 "* %? [[%:link][%:description]] %(progn (setq kk/delete-frame-after-capture 2) \"\")\nCaptured On: %U"
-                                 :empty-lines 1)
-                                ("w" "Work Tasks" entry (file+headline "~/projects/sw/repos/personal/journal/todo/work.org" "Tasks") ,ramz/org-basic-task-template)
-                                ("p" "Personal Tasks" entry (file+headline "~/projects/sw/repos/personal/journal/todo/personal.org" "Tasks") ,ramz/org-basic-task-template)
-                                ))
-  )
-
-;;;; Org agenda
-;;;; org agenda
-(defun module/org/agenda ()
-  "Setup org mode agenda"
-  (setq org-agenda-files (list (concat (getenv "HOME") "/projects/sw/repos/personal/journal/todo/personal.org")
-                               (concat (getenv "HOME") "/projects/sw/repos/personal/journal/todo/work.org")))
-
-  (setq org-agenda-span 2)
-  (setq org-agenda-sticky nil)
-  (setq org-agenda-show-log t)
-  (setq org-agenda-skip-scheduled-if-done t)
-  (setq org-agenda-skip-deadline-if-done t)
-  (setq org-agenda-time-grid
-        '((daily today require-timed)
-          "----------------"
-          (800 1000 1200 1400 1600 1800)))
-  (setq org-columns-default-format "%50ITEM %12SCHEDULED %TODO %3PRIORITY %Effort{:} %TAGS")
-
-  (setq org-agenda-custom-commands
-      `(("T" todo-tree "TODO")
-        ("w" todo ""
-         ((org-agenda-files '("~/projects/sw/repos/personal/journal/todo/work.org"))))
-        ("p" todo ""
-         ((org-agenda-files '("~/projects/sw/repos/personal/journal/todo/personal.org"))))
-        ;; ("t" todo ""
-        ;;  ((org-agenda-prefix-format "")
-        ;;   (org-agenda-cmp-user-defined 'sacha/org-sort-agenda-items-todo)
-        ;;   (org-agenda-view-columns-initially t)
-        ;;   ))
-        ;; Weekly review
-        ("W" "Weekly review" agenda "" ((org-agenda-span 7) (org-agenda-log-mode 1)))
-        ("2" "Bi-weekly review" agenda "" ((org-agenda-span 14) (org-agenda-log-mode 1)))
-        ("gw" "Work" todo ""
-         ((org-agenda-files '("~/projects/sw/repos/personal/journal/todo/work.org"))
-          (org-agenda-view-columns-initially t)))
-        ("gc" "Coding" tags-todo "@coding"
-         ((org-agenda-view-columns-initially t)))
-        ("gW" "Writing" tags-todo "@writing"
-         ((org-agenda-view-columns-initially t)))
-        ("gr" "Reading" tags-todo "@reading"
-         ((org-agenda-view-columns-initially t)))
-        ("gp" "Phone" tags-todo "@phone"
-         ((org-agenda-view-columns-initially t)))
-        ("gh" "Home" tags-todo "@home"
-         ((org-agenda-view-columns-initially t)))
-        ("ge" "Errands" tags-todo "@errands"
-         ((org-agenda-view-columns-initially t)))
-        ;; ("0" "Top 3 by context"
-        ;;  ,sacha/org-agenda-contexts
-        ;;  ((org-agenda-sorting-strategy '(priority-up effort-down))
-        ;;   (sacha/org-agenda-limit-items 3)))
-        ;; (")" "All by context"
-        ;;  ,sacha/org-agenda-contexts
-        ;;  ((org-agenda-sorting-strategy '(priority-down effort-down))
-        ;;   (sacha/org-agenda-limit-items nil)))
-        ;; ("9" "Unscheduled top 3 by context"
-        ;;  ,sacha/org-agenda-contexts
-        ;;  ((org-agenda-skip-function 'sacha/org-agenda-skip-scheduled)
-        ;;   (org-agenda-sorting-strategy '(priority-down effort-down))
-        ;;   (sacha/org-agenda-limit-items 3)))
-        ;; ("(" "All unscheduled by context"
-        ;;  ,sacha/org-agenda-contexts
-        ;;  ((org-agenda-skip-function 'sacha/org-agenda-skip-scheduled)
-        ;;   (org-agenda-sorting-strategy '(priority-down effort-down))
-        ;;   ))
-        ("d" "Timeline for today" ((agenda "" ))
-         ((org-agenda-ndays 1)
-          (org-agenda-show-log t)
-          (org-agenda-log-mode-items '(clock closed))
-          (org-agenda-clockreport-mode t)
-          (org-agenda-entry-types '())))
-        ("w" "Waiting for" todo "WAITING")
-        ;; ("u" "Unscheduled tasks" alltodo ""
-        ;;  ((org-agenda-skip-function 'sacha/org-agenda-skip-scheduled)
-        ;;   (org-agenda-overriding-header "Unscheduled TODO entries: ")))
-        ("P" "By priority"
-         ((tags-todo "+PRIORITY=\"A\"")
-          (tags-todo "+PRIORITY=\"B\"")
-          (tags-todo "+PRIORITY=\"\"")
-          (tags-todo "+PRIORITY=\"C\""))
-         ((org-agenda-prefix-format "%-10c %-10T %e ")
-          (org-agenda-sorting-strategy '(priority-down tag-up category-keep effort-down))))
-        ("p" tags "+PROJECT"
-         ((org-agenda-sorting-strategy '(priority-down tag-up category-keep effort-down))) )
-        ("S" tags-todo "TODO=\"STARTED\"")
-        ;; ("2" "List projects with tasks" sacha/org-agenda-projects-and-tasks
-        ;;  "+PROJECT"
-        ;;    ((sacha/org-agenda-limit-items 3)))
-        ))
   )
 
 ;;;; key chord
@@ -766,12 +588,12 @@ SCHEDULED: %^t
 
   (unless (display-graphic-p)
     (evil-terminal-cursor-changer-activate)
-    (setq evil-emacs-state-cursor 'hbar))
-)
+    (setq evil-emacs-state-cursor 'hbar)))
+
 
 ;;;; go lang
-(defun module/lang/go ()
-  )
+(defun module/lang/go ())
+
 
 ;;;; Smart Parentheses
 (defun module/misc/smartparens ()
@@ -781,10 +603,11 @@ SCHEDULED: %^t
     :bind (("C-)" . sp-forward-slurp-sexp)
            ("C-}" . sp-forward-barf-sexp)
            ("C-(" . sp-splice-sexp))
+
     :config
     (progn
-      (add-hook 'smartparens-enabled-hook #'evil-smartparens-mode))
-    ))
+      (turn-on-smartparens-strict-mode)
+      (add-hook 'smartparens-enabled-hook #'evil-smartparens-mode))))
 
 ;;;; Yasnippet
 (defun module/misc/yasnippet ()
@@ -792,9 +615,8 @@ SCHEDULED: %^t
   (use-package yasnippet-snippet
     :defer t
     :config
-    (push 'yas-installed-snippets-dir yas-snippet-dirs)
-    )
-  )
+    (push 'yas-installed-snippets-dir yas-snippet-dirs)))
+
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
