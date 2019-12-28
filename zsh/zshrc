@@ -148,3 +148,5 @@ source $(brew --prefix nvm)/nvm.sh
 
 # Start gpg-agent
 gpgconf --launch gpg-agent
+
+export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
