@@ -510,9 +510,23 @@ before packages are loaded."
 
 ;;;; Spacemacs configs
 (defun module/spacemacs ()
+
+  (progn
+    (let ((map (if (boundp 'input-decode-map)
+                   input-decode-map
+                 function-key-map)))
+      (define-key map "\e[1;P8"  (kbd "C-)"))
+      (define-key map "\e[1;P7"  (kbd "C-("))
+      (define-key map "\e[1;P6"  (kbd "C-}"))
+      (define-key map "\e[1;P5"  (kbd "C-{"))
+
+      (define-key map "\e[1;P9"  (kbd "H-a"))
+      ))
+
   (setq persp-autokill-buffer-on-remove 'kill-weak)
   (setq dimmer-fraction 0.4)
-  (dimmer-mode))
+  (dimmer-mode)
+  )
 
 ;;;; Server Mode
 (defun module/emacs-server()
@@ -593,7 +607,6 @@ before packages are loaded."
 
 ;;;; go lang
 (defun module/lang/go ())
-
 
 ;;;; Smart Parentheses
 (defun module/misc/smartparens ()
