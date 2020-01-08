@@ -131,10 +131,13 @@ fi
 # autojump
 eval "$(fasd --init auto)"
 
+# fzf
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
 _fzf_compgen_path() {
   ag -g "" "$1"
 }
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # nvm
 export NVM_DIR=~/.nvm

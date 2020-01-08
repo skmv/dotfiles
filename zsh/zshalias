@@ -52,8 +52,12 @@ compdef __docker_complete_images drsh
 
 # kubernetes
 alias ka="kustomize build | kubectl apply -f -"
+alias kb="kustomize build | less"
 alias kdel="kustomize build | kubectl delete -f -"
 alias ke="kubectl get events"
+alias ns="kubens"
+alias kx="kubectx"
+alias kdiff="kustomize build | kubectl diff -f -"
 alias kgsecreg='kgsec registry -o yaml | yq r - "data.[.dockerconfigjson]" | base64 -D'
 
 # Terraform
@@ -85,6 +89,9 @@ alias j='fasd_cd -d'
 
 # exa
 alias ls='exa'
+
+# find
+alias find='fd'
 
 # Rest
 function extract () {
