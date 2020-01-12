@@ -153,3 +153,4 @@ source $(brew --prefix nvm)/nvm.sh
 gpgconf --launch gpg-agent
 
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+source /Users/ramz/Library/Preferences/org.dystroy.broot/launcher/bash/br

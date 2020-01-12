@@ -16,6 +16,8 @@
 	<integer>1</integer>
 	<key>AppleWindowTabbingMode</key>
 	<string>manual</string>
+	<key>BootstrapDaemon</key>
+	<false/>
 	<key>CGFontRenderingFontSmoothingDisabled</key>
 	<false/>
 	<key>Default Bookmark Guid</key>
@@ -94,7 +96,7 @@
 	<key>NSWindow Frame UKCrashReporter</key>
 	<string>127 443 592 584 0 0 1680 1027 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>20 27 793 981 0 0 1680 1027 </string>
+	<string>943 21 953 1017 0 0 1920 1057 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
 	<string>209 66 650 477 0 0 1680 1027 </string>
 	<key>New Bookmarks</key>
@@ -1367,14 +1369,14 @@
 		<key>screenFrame</key>
 		<string>{{0, 0}, {1920, 1080}}</string>
 		<key>topLeft</key>
-		<string>{253, 800}</string>
+		<string>{991, 840}</string>
 	</dict>
 	<key>NoSyncHaveUsedCopyMode</key>
 	<true/>
 	<key>NoSyncInstallationId</key>
 	<string>F2A52835-8134-44CD-BF60-63D37D180AEA</string>
 	<key>NoSyncLaunchExperienceControllerRunCount</key>
-	<integer>42</integer>
+	<integer>44</integer>
 	<key>NoSyncNextAnnoyanceTime</key>
 	<real>588198583.45532894</real>
 	<key>NoSyncOnboardingWindowHasBeenShown</key>
@@ -2151,7 +2153,7 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2020-01-06T00:36:35Z</date>
+	<date>2020-01-11T13:00:32Z</date>
 	<key>SUSendProfileInfo</key>
 	<false/>
 	<key>SUUpdateRelaunchingMarker</key>
