@@ -59,6 +59,7 @@ alias ns="kubens"
 alias kx="kubectx"
 alias kdiff="kustomize build | kubectl diff -f -"
 alias kgsecreg='kgsec registry -o yaml | yq r - "data.[.dockerconfigjson]" | base64 -D'
+alias kubeclean="kubectl config get-contexts | peco | awk '{ print \$1 }' | xargs -I _ kubectl config delete-context _"
 
 # Terraform
 alias ti="terraform init"

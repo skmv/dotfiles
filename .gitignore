@@ -14,13 +14,9 @@ ssh/known_hosts
 
 # Ignore symlinks
 ssh/config
-weechat/irc.conf
-weechat/weechat.conf
-weechat/plugins.conf
-
-wee_slack.py
-passwords
 
 tmux/tmuxinator/bin
 
 zsh/workalias
+zsh/plugins
+zsh/themes

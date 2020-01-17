@@ -2,6 +2,7 @@
 SHELL					:=	/bin/bash
 GIT						:= $(shell which git)
 CONFIG_ROOT   := $(HOME)/projects/sw/repos/personal/dotfiles
+REPO_ROOT     := $(HOME)/projects/sw/repos/personal
 LN_FLAGS			= -sfn
 OS := $(shell uname -s)
 
@@ -122,6 +123,7 @@ hammerspoon:: ## Configure hammerspoon
 iterm:: ## Configure iterm
 	@echo "setting up iterm"
 	@cp iterm2/com.googlecode.iterm2.plist $(HOME)/Library/Preferences/com.googlecode.iterm2.plist
+	@git clone https://github.com/dracula/iterm.git iterm2/themes/dracula
 
 karabiner:: ## Install karabiner configs
 	@echo "You might need to install karabiner manually. Since brew for karabiner is broken"
@@ -210,6 +212,8 @@ zsh:: ## Configure zsh Settings
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/zsh/p10k.zsh ${HOME}/.p10k.zsh
 	@mkdir -p $(HOME)/.aws/cli
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/aws/alias ${HOME}/.aws/cli/alias
+	@git clone https://github.com/ageekymonk/bash-my-aws.git ${REPO_ROOT}/bash-my-aws
+	@ln $(LN_FLAGS) ${REPO_ROOT}/bash-my-aws ${HOME}/.bash-my-aws
 
 ifeq ($(OS),Linux)
 	@sudo apt install -y zsh

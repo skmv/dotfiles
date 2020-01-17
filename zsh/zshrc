@@ -154,3 +154,10 @@ gpgconf --launch gpg-agent
 
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 source /Users/ramz/Library/Preferences/org.dystroy.broot/launcher/bash/br
+
+export PATH="$PATH:$HOME/.bash-my-aws/bin"
+source ~/.bash-my-aws/aliases
+autoload -U +X compinit && compinit
+autoload -U +X bashcompinit && bashcompinit
+
+source ~/.bash-my-aws/bash_completion.sh
