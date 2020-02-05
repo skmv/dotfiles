@@ -153,6 +153,7 @@ source $(brew --prefix nvm)/nvm.sh
 gpgconf --launch gpg-agent
 
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+export PATH="/usr/local/opt/mysql-client/bin:$PATH"
 source /Users/ramz/Library/Preferences/org.dystroy.broot/launcher/bash/br
 
 export PATH="$PATH:$HOME/.bash-my-aws/bin"

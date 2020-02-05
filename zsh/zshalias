@@ -7,7 +7,7 @@ alias localip="sudo ifconfig | grep -Eo 'inet (addr:)?([0-9]*\\.){3}[0-9]*' | gr
 alias ips="sudo ifconfig -a | grep -o 'inet6\\? \\(addr:\\)\\?\\s\\?\\(\\(\\([0-9]\\+\\.\\)\\{3\\}[0-9]\\+\\)\\|[a-fA-F0-9:]\\+\\)' | awk '{ sub(/inet6? (addr:)? ?/, \"\"); print }'"
 
 # Flush Directory Service cache
-alias flush="dscacheutil -flushcache && killall -HUP mDNSResponder"
+alias flush="sudo killall -HUP mDNSResponder;sudo killall mDNSResponderHelper;sudo dscacheutil -flushcache"
 
 # Merge PDF files
 # Usage: `mergepdf -o output.pdf input{1,2,3}.pdf`
@@ -49,17 +49,22 @@ _docker 2>/dev/null
 compdef __docker_complete_running_containers dosh
 compdef __docker_complete_running_containers dobash
 compdef __docker_complete_images drsh
+compdef __kubectl_complete_
 
 # kubernetes
 alias ka="kustomize build | kubectl apply -f -"
 alias kb="kustomize build | less"
 alias kdel="kustomize build | kubectl delete -f -"
-alias ke="kubectl get events"
+alias ke="kubectl get events --sort-by=.metadata.creationTimestamp"
 alias ns="kubens"
 alias kx="kubectx"
 alias kdiff="kustomize build | kubectl diff -f -"
 alias kgsecreg='kgsec registry -o yaml | yq r - "data.[.dockerconfigjson]" | base64 -D'
 alias kubeclean="kubectl config get-contexts | peco | awk '{ print \$1 }' | xargs -I _ kubectl config delete-context _"
+
+kcrsecreg() {
+   kubectl create secret docker-registry registry --docker-server=$1 --docker-username=$2 --docker-password="$3"
+}
 
 # Terraform
 alias ti="terraform init"
@@ -69,15 +74,6 @@ alias tapp="terraform apply"
 # system commands
 alias df="df -H"
 alias curl="gpg --batch -q -d ~/.authinfo.gpg | curl --netrc-file /dev/stdin"
-
-# aws show all ec2 instances
-alias ec2="aws ec2 describe-instances --output table --query 'Reservations[*].Instances[*].{ID:InstanceId,Type:InstanceType,State:State.Name,PrivateIp:NetworkInterfaces[0].PrivateIpAddress,PublicIp:NetworkInterfaces[0].Association.PublicIp,Tags:Tags[?Key==\`Name\`].Value | [0]}'"
-
-# aws start ec2 instances
-alias ec2-start="aws ec2 start-instances --instance-ids "
-
-# aws vpc
-alias vpc="aws ec2 describe-vpcs --output table --query='Vpcs[*].{ID:VpcId,Name:Tags[?Key==\`Name\`].Value | [0],CidrBlock:CidrBlock}'"
 
 # Changing Default programs
 alias cat=ccat
@@ -93,6 +89,10 @@ alias ls='exa'
 
 # find
 alias find='fd'
+
+# cd
+alias ....='cd ../../../'
+alias .....='cd ../../../../'
 
 # Rest
 function extract () {
@@ -122,14 +122,7 @@ function my-accept-line() {
     # put newline so that the output does not start next
     # to the prompt
     echo
-    # check if inside git repository
-    if git rev-parse --git-dir > /dev/null 2>&1 ; then
-      # if so, execute `git status'
-      git status
-    else
-      # else run `ls'
       ls -l
-    fi
   fi
   # in any case run the `accept-line' widget
   zle .accept-line
