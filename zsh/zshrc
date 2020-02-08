@@ -162,3 +162,5 @@ autoload -U +X compinit && compinit
 autoload -U +X bashcompinit && bashcompinit
 
 source ~/.bash-my-aws/bash_completion.sh
+
+[[ -f ~/.forgit.plugin.zsh ]] && source ~/.forgit.plugin.zsh

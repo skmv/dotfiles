@@ -232,6 +232,7 @@ endif
 	@sh /tmp/install_zsh.sh
 	@rm /tmp/install_zsh.sh
 	@git clone https://github.com/chmouel/oh-my-zsh-openshift ~/.oh-my-zsh/custom/plugins/oc
+	@curl -fsSL -o $(HOME)/.forgit.plugin.zsh https://raw.githubusercontent.com/wfxr/forgit/master/forgit.plugin.zsh
 
 rest:: ## Other misc softwares
 	@curl -L -s https://kevinschoon.github.io/pomo/install.sh | bash /dev/stdin
