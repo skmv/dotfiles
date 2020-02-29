@@ -1,3 +1,9 @@
+if [ -f $ZSH_CONFIG_DIR/workalias ]
+then
+    source $ZSH_CONFIG_DIR/workalias
+fi
+
+
 # Enable aliases to be sudo’ed
 alias sudo='sudo '
 
@@ -13,13 +19,140 @@ alias flush="sudo killall -HUP mDNSResponder;sudo killall mDNSResponderHelper;su
 # Usage: `mergepdf -o output.pdf input{1,2,3}.pdf`
 alias mergepdf='/System/Library/Automator/Combine\ PDF\ Pages.action/Contents/Resources/join.py'
 
+# Brew aliases
+bip() {
+  local inst=$(brew search | fzf -m)
+
+  if [[ $inst ]]; then
+    for prog in $(echo $inst);
+    do; brew install $prog; done;
+  fi
+}
+
+bup() {
+  local upd=$(brew leaves | fzf -m)
+
+  if [[ $upd ]]; then
+    for prog in $(echo $upd);
+    do; brew upgrade $prog; done;
+  fi
+}
+
+bcp() {
+  local uninst=$(brew leaves | fzf -m)
+
+  if [[ $uninst ]]; then
+    for prog in $(echo $uninst);
+    do; brew uninstall $prog; done;
+  fi
+}
+
+install() {
+    local token
+    token=$(brew search --casks | fzf-tmux --query="$1" +m --preview 'brew cask info {}')
+
+    if [ "x$token" != "x" ]
+    then
+        echo "(I)nstall or open the (h)omepage of $token"
+        read input
+        if [ $input = "i" ] || [ $input = "I" ]; then
+            brew cask install $token
+        fi
+        if [ $input = "h" ] || [ $input = "H" ]; then
+            brew cask home $token
+        fi
+    fi
+}
+
+uninstall() {
+    local token
+    token=$(brew cask list | fzf-tmux --query="$1" +m --preview 'brew cask info {}')
+
+    if [ "x$token" != "x" ]
+    then
+        echo "(U)ninstall or open the (h)omepage of $token"
+        read input
+        if [ $input = "u" ] || [ $input = "U" ]; then
+            brew cask uninstall $token
+        fi
+        if [ $input = "h" ] || [ $token = "h" ]; then
+            brew cask home $token
+        fi
+    fi
+}
+
+# Tmux
+# zsh; needs setopt re_match_pcre. You can, of course, adapt it to your own shell easily.
+tmuxkillf () {
+    local sessions
+    sessions="$(tmux ls|fzf --exit-0 --multi)"  || return $?
+    local i
+    for i in "${(f@)sessions}"
+    do
+        [[ $i =~ '([^:]*):.*' ]] && {
+            echo "Killing $match[1]"
+            tmux kill-session -t "$match[1]"
+        }
+    done
+}
+
+# tm - create new tmux session, or switch to existing one. Works from within tmux too. (@bag-man)
+# `tm` will allow you to select your tmux session via fzf.
+# `tm irc` will attach to the irc session (if it exists), else it will create it.
+
+tm() {
+  [[ -n "$TMUX" ]] && change="switch-client" || change="attach-session"
+  if [ $1 ]; then
+    tmux $change -t "$1" 2>/dev/null || (tmux new-session -d -s $1 && tmux $change -t "$1"); return
+  fi
+  session=$(tmux list-sessions -F "#{session_name}" 2>/dev/null | fzf --exit-0) &&  tmux $change -t "$session" || echo "No sessions found."
+}
+
+# fs [FUZZY PATTERN] - Select selected tmux session
+#   - Bypass fuzzy finder if there's only one match (--select-1)
+#   - Exit if there's no match (--exit-0)
+fs() {
+  local session
+  session=$(tmux list-sessions -F "#{session_name}" | \
+    fzf --query="$1" --select-1 --exit-0) &&
+  tmux switch-client -t "$session"
+}
+
+# ftpane - switch pane (@george-b)
+ftpane() {
+  local panes current_window current_pane target target_window target_pane
+  panes=$(tmux list-panes -s -F '#I:#P - #{pane_current_path} #{pane_current_command}')
+  current_pane=$(tmux display-message -p '#I:#P')
+  current_window=$(tmux display-message -p '#I')
+
+  target=$(echo "$panes" | grep -v "$current_pane" | fzf +m --reverse) || return
+
+  target_window=$(echo $target | awk 'BEGIN{FS=":|-"} {print$1}')
+  target_pane=$(echo $target | awk 'BEGIN{FS=":|-"} {print$2}' | cut -c 1)
+
+  if [[ $current_window -eq $target_window ]]; then
+    tmux select-pane -t ${target_window}.${target_pane}
+  else
+    tmux select-pane -t ${target_window}.${target_pane} &&
+    tmux select-window -t $target_window
+  fi
+}
+
+# AWS Aliases
+function elbv2-target-group-register-ip() {
+    tg=$(elbv2-target-groups | peco | awk '{ print $1 }')
+    instances | peco | instance-ip | awk '{ print $2 }' | xargs -I {} aws elbv2 register-targets --target-group-arn=${tg} --targets Id={}
+}
 
 # Docker aliases
 
-if [ -f $ZSH_CONFIG_DIR/workalias ]
-then
-    source $ZSH_CONFIG_DIR/workalias
-fi
+# Select a running docker container to stop
+function ds() {
+  local cid
+  cid=$(docker ps | sed 1d | fzf -q "$1" | awk '{print $1}')
+
+  [ -n "$cid" ] && docker stop "$cid"
+}
 
 alias dops="docker ps"
 
@@ -62,8 +195,25 @@ alias kdiff="kustomize build | kubectl diff -f -"
 alias kgsecreg='kgsec registry -o yaml | yq r - "data.[.dockerconfigjson]" | base64 -D'
 alias kubeclean="kubectl config get-contexts | peco | awk '{ print \$1 }' | xargs -I _ kubectl config delete-context _"
 
+ks() {
+    local cluster=$(kubectl config get-contexts -o name | fzf -q "$1")
+
+    if [[ $cluster ]]; then
+        k9s --cluster $cluster
+    fi
+}
+
 kcrsecreg() {
-   kubectl create secret docker-registry registry --docker-server=$1 --docker-username=$2 --docker-password="$3"
+   local namespace=$(kubectl get namespace | peco | awk '{ print $1 }')
+   kubectl create secret docker-registry registry --docker-server=$1 --docker-username=$2 --docker-password="$3" -n ${namespace}
+}
+
+ktoken() {
+  local namespace=$(kubectl get namespace | peco | awk '{ print $1 }')
+  local secret_name=$(kubectl get secret -n ${namespace} | peco | awk '{ print $1 }')
+
+  token=$(kubectl view-secret ${secret_name} -n ${namespace} token)
+  export K8S_TOKEN=${token}
 }
 
 # Terraform
@@ -79,8 +229,9 @@ alias curl="gpg --batch -q -d ~/.authinfo.gpg | curl --netrc-file /dev/stdin"
 alias cat=ccat
 if [[ "$(uname)" == "Darwin" ]]
 then
-alias wget=aria2c
+    alias wget=aria2c
 fi
+
 # fasd
 alias j='fasd_cd -d'
 
@@ -133,3 +284,29 @@ zle -N accept-line my-accept-line
 bindkey '^M' accept-line
 
 alias getmp3="youtube-dl -x --audio-format mp3 "
+
+# fkill - kill processes - list only the ones you can kill. Modified the earlier script.
+fkill() {
+    local pid
+    if [ "$UID" != "0" ]; then
+        pid=$(ps -f -u $UID | sed 1d | fzf -m | awk '{print $2}')
+    else
+        pid=$(ps -ef | sed 1d | fzf -m | awk '{print $2}')
+    fi
+
+    if [ "x$pid" != "x" ]
+    then
+        echo $pid | xargs kill -${1:-9}
+    fi
+}
+
+fe() {
+  local files
+  IFS=$'\n' files=($(fzf-tmux --query="$1" --multi --select-1 --exit-0))
+  [[ -n "$files" ]] && ${EDITOR:-emacsclient} "${files[@]}"
+}
+
+# Weather
+weather() {
+  curl http://v2.wttr.in/Toongabbie
+}

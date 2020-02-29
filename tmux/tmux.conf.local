@@ -301,3 +301,6 @@ unbind b
 bind -r p previous-window # select previous window
 bind -r n next-window     # select next window
 bind -r b choose-buffer
+
+# In tmux.conf
+bind-key 0 run "tmux split-window -l 12 'zsh -ci ftpane'"
