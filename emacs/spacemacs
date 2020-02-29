@@ -41,12 +41,14 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(     ;; Basics
+   '(
+     ;; Basics
      (auto-completion :variables
                       auto-completion-private-snippets-directory (concat (getenv "HOME") "/projects/sw/repos/personal/dotfiles/emacs/yasnippet")
                       auto-completion-enable-sort-by-usage t
                       auto-completion-enable-snippets-in-popup t)
      better-defaults
+     command-log dash
      emacs-lisp
      (evil-snipe :variables evil-snipe-enable-alternate-f-and-t-behaviors t)
      git
@@ -54,6 +56,7 @@ This function should only modify configuration layer settings."
      helm
      multiple-cursors
      osx
+     prodigy
      treemacs
 
      ;; Languages
@@ -64,13 +67,17 @@ This function should only modify configuration layer settings."
          gofmt-command "goimports"
          go-tab-width 4
          go-backend 'lsp)
+     haskell
      (javascript :variables
                  javascript-backend 'lsp)
+     lua
      markdown
      php
      (python :variables
              python-sort-imports-on-save t
+             python-enable-yapf-format-on-save t
              python-backend 'lsp)
+     shell-scripts
      (terraform :variables
                 terraform-auto-format-on-save t)
      windows-scripts
@@ -277,7 +284,7 @@ It should only modify the values of Spacemacs settings."
    ;; and TAB or `C-m' and `RET'.
    ;; In the terminal, these pairs are generally indistinguishable, so this only
    ;; works in the GUI. (default nil)
-   dotspacemacs-distinguish-gui-tab nil
+   dotspacemacs-distinguish-gui-tab t
 
    ;; Name of the default layoutgo-tab-width 4 (default "Default")
    dotspacemacs-default-layout-name "Default"
@@ -501,11 +508,14 @@ before packages are loaded."
 
   (module/spacemacs)
   (module/emacs-server)
+  (module/configuration/visual)
   (module/configuration/keychord)
+  (module/configuration/navigation)
   (module/configuration/evil)
   (module/lang/go)
   (module/misc/smartparens)
   (module/misc/yasnippet)
+  (module/misc/term)
   )
 
 ;;;; Spacemacs configs
@@ -533,6 +543,35 @@ before packages are loaded."
   (server-start)
   )
 
+;;;; Visual
+(defun module/configuration/visual()
+  (use-package dired-rainbow
+    :ensure t
+    :config
+    (progn
+      (dired-rainbow-define-chmod directory "#6cb2eb" "d.*")
+      (dired-rainbow-define html "#eb5286" ("css" "less" "sass" "scss" "htm" "html" "jhtm" "mht" "eml" "mustache" "xhtml"))
+      (dired-rainbow-define xml "#f2d024" ("xml" "xsd" "xsl" "xslt" "wsdl" "bib" "json" "msg" "pgn" "rss" "yaml" "yml" "rdata"))
+      (dired-rainbow-define document "#9561e2" ("docm" "doc" "docx" "odb" "odt" "pdb" "pdf" "ps" "rtf" "djvu" "epub" "odp" "ppt" "pptx"))
+      (dired-rainbow-define markdown "#ffed4a" ("org" "etx" "info" "markdown" "md" "mkd" "nfo" "pod" "rst" "tex" "textfile" "txt"))
+      (dired-rainbow-define database "#6574cd" ("xlsx" "xls" "csv" "accdb" "db" "mdb" "sqlite" "nc"))
+      (dired-rainbow-define media "#de751f" ("mp3" "mp4" "MP3" "MP4" "avi" "mpeg" "mpg" "flv" "ogg" "mov" "mid" "midi" "wav" "aiff" "flac"))
+      (dired-rainbow-define image "#f66d9b" ("tiff" "tif" "cdr" "gif" "ico" "jpeg" "jpg" "png" "psd" "eps" "svg"))
+      (dired-rainbow-define log "#c17d11" ("log"))
+      (dired-rainbow-define shell "#f6993f" ("awk" "bash" "bat" "sed" "sh" "zsh" "vim"))
+      (dired-rainbow-define interpreted "#38c172" ("py" "ipynb" "rb" "pl" "t" "msql" "mysql" "pgsql" "sql" "r" "clj" "cljs" "scala" "js"))
+      (dired-rainbow-define compiled "#4dc0b5" ("asm" "cl" "lisp" "el" "c" "h" "c++" "h++" "hpp" "hxx" "m" "cc" "cs" "cp" "cpp" "go" "f" "for" "ftn" "f90" "f95" "f03" "f08" "s" "rs" "hi" "hs" "pyc" ".java"))
+      (dired-rainbow-define executable "#8cc4ff" ("exe" "msi"))
+      (dired-rainbow-define compressed "#51d88a" ("7z" "zip" "bz2" "tgz" "txz" "gz" "xz" "z" "Z" "jar" "war" "ear" "rar" "sar" "xpi" "apk" "xz" "tar"))
+      (dired-rainbow-define packaged "#faad63" ("deb" "rpm" "apk" "jad" "jar" "cab" "pak" "pk3" "vdf" "vpk" "bsp"))
+      (dired-rainbow-define encrypted "#ffed4a" ("gpg" "pgp" "asc" "bfe" "enc" "signature" "sig" "p12" "pem"))
+      (dired-rainbow-define fonts "#6cb2eb" ("afm" "fon" "fnt" "pfb" "pfm" "ttf" "otf"))
+      (dired-rainbow-define partition "#e3342f" ("dmg" "iso" "bin" "nrg" "qcow" "toast" "vcd" "vmdk" "bak"))
+      (dired-rainbow-define vc "#0074d9" ("git" "gitignore" "gitattributes" "gitmodules"))
+      (dired-rainbow-define-chmod executable-unix "#38c172" "-.*x.*")
+      ))
+  )
+
 ;;;; key chord
 (defun module/configuration/keychord ()
   "Keychord shortcuts"
@@ -545,12 +584,39 @@ before packages are loaded."
       (key-chord-define-global "jb" 'helm-mini)
       (key-chord-define-global "jl" 'avy-goto-line)
       (key-chord-define-global "YY" 'helm-show-kill-ring)
-      (key-chord-define-global "KK" 'spacemacs/jump-to-last-layout)
+      (key-chord-define-global "HH" 'spacemacs/jump-to-last-layout)
+      (key-chord-define-global "KK" 'eyebrowse-next-window-config)
       (key-chord-define-global "FF" 'evil-jump-forward)
       (key-chord-define-global "BB" 'evil-jump-backward)
       (key-chord-mode 1)
       )
     ))
+
+;;;; Navigation
+(defun module/configuration/navigation ()
+  (use-package helm-swoop
+    :bind
+    (("C-s" . helm-swoop)
+     ("M-i" . helm-swoop)
+     ("M-s s" . helm-swoop)
+     ("M-s M-s" . helm-swoop)
+     ("M-I" . helm-swoop-back-to-last-point)
+     ("C-c M-i" . helm-multi-swoop)
+     ("C-x M-i" . helm-multi-swoop-all)
+     )
+    :config
+    (progn
+      (define-key isearch-mode-map (kbd "M-i") 'helm-swoop-from-isearch)
+      (define-key helm-swoop-map (kbd "M-i") 'helm-multi-swoop-all-from-helm-swoop))
+    )
+
+  (use-package dired-narrow
+    :ensure t
+    :bind (:map dired-mode-map
+                ("/" . dired-narrow)))
+
+
+  )
 
 ;;;; Proxy
 (defun module/proxy ()
@@ -566,10 +632,9 @@ before packages are loaded."
             ("https" . "localhost:3128")))
 
     ;; Set environment variables for shell to work
-    (setenv "no_proxy" "^\\(localhost\\|127.0.0.1\\)")
-    (setenv "http_proxy" "http://localhost:3128")
-    (setenv "https_proxy" "http://localhost:3128")
-
+    (setenv "no_proxy" (getenv "TRANSPORT_NO_PROXY"))
+    (setenv "http_proxy" (getenv "TRANSPORT_PROXY"))
+    (setenv "https_proxy" (getenv "TRANSPORT_PROXY"))
     ;; Set git configuration to include proxy
     (setq magit-git-global-arguments '("--no-pager" "--literal-pathspecs" "-c" "core.preloadindex=true" "-c" "log.showSignature=false" "-c" "http.proxy=localhost:3128")))
 
@@ -604,7 +669,6 @@ before packages are loaded."
     (evil-terminal-cursor-changer-activate)
     (setq evil-emacs-state-cursor 'hbar)))
 
-
 ;;;; go lang
 (defun module/lang/go ())
 
@@ -627,10 +691,27 @@ before packages are loaded."
   "Yassnippet bindings and config."
   (use-package yasnippet-snippet
     :defer t
-    :config
+    :config                             ;
     (push 'yas-installed-snippets-dir yas-snippet-dirs)))
 
+;;; Terminal
+(defun module/misc/term ()
+  "Open a term buffer at projectile project root."
+  (defun pop-persp-shell ()
+      (interactive)
+    (let ((default-directory (projectile-project-root))
+          (current (spacemacs//current-layout-name))
+          (persp-list (or (persp-names-current-frame-fast-ordered)
+                          (list persp-nil-name)))
 
+          )
+
+      (spacemacs/shell-pop-vterm (+ 1 (position current persp-list)))
+      (message (format "%d" (position current persp-list)))
+      ))
+  (spacemacs/set-leader-keys
+    "'" 'pop-persp-shell)
+)
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
 (defun dotspacemacs/emacs-custom-settings ()
@@ -644,8 +725,8 @@ This function is called at the very end of Spacemacs initialization."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   (quote
-    (dimmer yasnippet-snippets yapfify yaml-mode xterm-color ws-butler writeroom-mode winum which-key web-beautify vterm volatile-highlights vi-tilde-fringe uuidgen use-package unfill treemacs-projectile treemacs-magit treemacs-evil toc-org tide symon symbol-overlay switch-window string-inflection spaceline-all-the-icons smeargle shell-pop reveal-in-osx-finder restart-emacs rainbow-delimiters pytest pyenv-mode py-isort prettier-js powershell popwin pippel pipenv pip-requirements phpunit phpcbf php-extras php-auto-yasnippets persp-mode pcre2el password-generator paradox overseer osx-trash osx-dictionary osx-clipboard orgit org-projectile org-present org-pomodoro org-mime org-download org-cliplink org-bullets org-brain org-books open-junk-file nodejs-repl nameless mwim multi-term move-text mmm-mode markdown-toc magit-svn magit-gitflow macrostep lsp-ui lsp-treemacs lsp-python-ms lorem-ipsum livid-mode live-py-mode link-hint launchctl key-chord json-navigator js2-refactor js-doc jinja2-mode indent-guide importmagic hybrid-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-xref helm-themes helm-swoop helm-pydoc helm-purpose helm-projectile helm-org-rifle helm-org helm-mode-manager helm-make helm-lsp helm-gitignore helm-git-grep helm-flx helm-descbinds helm-company helm-c-yasnippet helm-ag google-translate golden-ratio godoctor go-tag go-rename go-impl go-guru go-gen-test go-fill-struct go-eldoc gnuplot gitignore-templates github-search github-clone gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gist gh-md fuzzy forge font-lock+ flyspell-correct-helm flycheck-pos-tip flycheck-package flx-ido fill-column-indicator fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-line evil-terminal-cursor-changer evil-surround evil-snipe evil-smartparens evil-org evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help elisp-slime-nav editorconfig dumb-jump drupal-mode dotenv-mode doom-modeline dockerfile-mode docker direnv diminish diff-hl devdocs define-word cython-mode csv-mode company-terraform company-tern company-statistics company-php company-lsp company-go company-ansible company-anaconda column-enforce-mode clean-aindent-mode centered-cursor-mode browse-at-remote blacken auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile ansible-doc ansible aggressive-indent ace-link ace-jump-helm-line ac-ispell))))
+   '(dired-rainbow dired-narrow insert-shebang flycheck-bashate fish-mode company-shell helm-gtags ggtags counsel-gtags counsel swiper ivy company-lua lua-mode dimmer yasnippet-snippets yapfify yaml-mode xterm-color ws-butler writeroom-mode winum which-key web-beautify vterm volatile-highlights vi-tilde-fringe uuidgen use-package unfill treemacs-projectile treemacs-magit treemacs-evil toc-org tide symon symbol-overlay switch-window string-inflection spaceline-all-the-icons smeargle shell-pop reveal-in-osx-finder restart-emacs rainbow-delimiters pytest pyenv-mode py-isort prettier-js powershell popwin pippel pipenv pip-requirements phpunit phpcbf php-extras php-auto-yasnippets persp-mode pcre2el password-generator paradox overseer osx-trash osx-dictionary osx-clipboard orgit org-projectile org-present org-pomodoro org-mime org-download org-cliplink org-bullets org-brain org-books open-junk-file nodejs-repl nameless mwim multi-term move-text mmm-mode markdown-toc magit-svn magit-gitflow macrostep lsp-ui lsp-treemacs lsp-python-ms lorem-ipsum livid-mode live-py-mode link-hint launchctl key-chord json-navigator js2-refactor js-doc jinja2-mode indent-guide importmagic hybrid-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-xref helm-themes helm-swoop helm-pydoc helm-purpose helm-projectile helm-org-rifle helm-org helm-mode-manager helm-make helm-lsp helm-gitignore helm-git-grep helm-flx helm-descbinds helm-company helm-c-yasnippet helm-ag google-translate golden-ratio godoctor go-tag go-rename go-impl go-guru go-gen-test go-fill-struct go-eldoc gnuplot gitignore-templates github-search github-clone gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gist gh-md fuzzy forge font-lock+ flyspell-correct-helm flycheck-pos-tip flycheck-package flx-ido fill-column-indicator fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-line evil-terminal-cursor-changer evil-surround evil-snipe evil-smartparens evil-org evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help elisp-slime-nav editorconfig dumb-jump drupal-mode dotenv-mode doom-modeline dockerfile-mode docker direnv diminish diff-hl devdocs define-word cython-mode csv-mode company-terraform company-tern company-statistics company-php company-lsp company-go company-ansible company-anaconda column-enforce-mode clean-aindent-mode centered-cursor-mode browse-at-remote blacken auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile ansible-doc ansible aggressive-indent ace-link ace-jump-helm-line ac-ispell))
+ '(vterm-max-scrollback 10000))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
