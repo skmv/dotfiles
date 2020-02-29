@@ -118,6 +118,15 @@ endif
 
 hammerspoon:: ## Configure hammerspoon
 	@echo "Setting up Hammerspoon"
+	@mkdir -p hammerspoon/Spoons
+	@wget -O hammerspoon/Spoons/Ki.zip https://github.com/andweeb/ki/releases/download/v1.6.3/Ki.spoon.zip
+	@unzip hammerspoon/Spoons/Ki.zip -d hammerspoon/Spoons/
+	@wget -O hammerspoon/Spoons/miro.zip https://github.com/miromannino/miro-windows-manager/archive/1.1.zip
+	@unzip hammerspoon/Spoons/miro.zip -d hammerspoon/Spoons/
+	@mv hammerspoon/Spoons/miro-windows-manager-1.1/MiroWindowsManager.spoon hammerspoon/Spoons/
+	@rm -Rf hammerspoon/Spoons/miro-windows-manager-1.1
+	@wget -O hammerspoon/undocumented.tar.gz https://github.com/asmagill/hammerspoon_asm.undocumented/releases/download/v0.1/undocumented-v0.1.tar.gz
+	@cd hammerspoon && tar -xzvf undocumented.tar.gz && cd ..
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/hammerspoon ${HOME}/.hammerspoon
 
 iterm:: ## Configure iterm
@@ -130,7 +139,7 @@ karabiner:: ## Install karabiner configs
 	@echo "Setting up karabiner"
 	@mkdir -p "${HOME}/Library/Application Support/Karabiner"
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/karabiner/private.xml "${HOME}/Library/Application Support/Karabiner/private.xml"
-	@echo "karabiner configuration completed"
+	@echo "karabiner configuration completed. Add https://github.com/Vonng/Capslock"
 
 nix:: ## Install nix pkg mgr
 	@echo "Installing nix"
@@ -195,18 +204,8 @@ nvm-setup:: ## nvm setup
 	@mkdir -p ${HOME}/.nvm
 	@npm install -g tern js-beautify eslint
 
-update:: ## Update the config repository
-	$(GIT) pull && $(GIT) submodule foreach git checkout master && $(GIT) submodule foreach git pull
-	@wget https://raw.githubusercontent.com/wee-slack/wee-slack/master/wee_slack.py
-	@mv wee_slack.py $(CONFIG_ROOT)/weechat/plugins/autoload/wee_slack.py
-
-
 zsh:: ## Configure zsh Settings
-	@curl -L -o $(HOME)/.kubectl_aliases https://raw.githubusercontent.com/ageekymonk/kubectl-aliases/ageekymonk/.kubectl_aliases
-	@git clone https://github.com/zsh-users/zsh-autosuggestions.git zsh/plugins/zsh-autosuggestions
-	@git clone https://github.com/zsh-users/zsh-syntax-highlighting.git zsh/plugins/zsh-syntax-highlighting
-	@git clone https://github.com/zsh-users/zsh-history-substring-search.git zsh/plugins/zsh-history-substring-search
-	@git clone https://github.com/zsh-users/zsh-completions.git zsh/plugins/zsh-completions
+	@sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma/zinit/master/doc/install.sh)"
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/zsh/zshenv ${HOME}/.zshenv
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/zsh/zshrc ${HOME}/.zshrc
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/zsh/p10k.zsh ${HOME}/.p10k.zsh
@@ -231,8 +230,6 @@ endif
 	@curl -fsSL -o /tmp/install_zsh.sh https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh
 	@sh /tmp/install_zsh.sh
 	@rm /tmp/install_zsh.sh
-	@git clone https://github.com/chmouel/oh-my-zsh-openshift ~/.oh-my-zsh/custom/plugins/oc
-	@curl -fsSL -o $(HOME)/.forgit.plugin.zsh https://raw.githubusercontent.com/wfxr/forgit/master/forgit.plugin.zsh
 
 rest:: ## Other misc softwares
 	@curl -L -s https://kevinschoon.github.io/pomo/install.sh | bash /dev/stdin
