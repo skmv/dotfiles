@@ -168,6 +168,10 @@ drsh() {
     docker run -i -t $1 /bin/sh
 }
 
+drbash() {
+    docker run -i -t $1 /bin/bash
+}
+
 doclean() {
     docker images | awk '/none/ { print $3 }' | xargs docker rmi -f
     docker ps -a | awk '/Exited/ { print $1 }' | xargs docker rm -f
@@ -198,8 +202,9 @@ alias kubeclean="kubectl config get-contexts | peco | awk '{ print \$1 }' | xarg
 ks() {
     local cluster=$(kubectl config get-contexts -o name | fzf -q "$1")
 
+    echo $cluster
     if [[ $cluster ]]; then
-        k9s --cluster $cluster
+        k9s --context $cluster
     fi
 }
 
@@ -214,6 +219,7 @@ ktoken() {
 
   token=$(kubectl view-secret ${secret_name} -n ${namespace} token)
   export K8S_TOKEN=${token}
+  echo $K8S_TOKEN | pbcopy
 }
 
 # Terraform
