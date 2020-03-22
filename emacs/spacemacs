@@ -104,8 +104,10 @@ This function should only modify configuration layer settings."
    ;; '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
    dotspacemacs-additional-packages '(
+                                      buffer-flip
                                       direnv
                                       dimmer
+                                      dired-narrow
                                       evil-smartparens
                                       evil-terminal-cursor-changer
                                       key-chord
@@ -507,7 +509,6 @@ Put your configuration code here, except for variables that should be set
 before packages are loaded."
 
   (module/spacemacs)
-  (module/emacs-server)
   (module/configuration/visual)
   (module/configuration/keychord)
   (module/configuration/navigation)
@@ -536,11 +537,6 @@ before packages are loaded."
   (setq persp-autokill-buffer-on-remove 'kill-weak)
   (setq dimmer-fraction 0.4)
   (dimmer-mode)
-  )
-
-;;;; Server Mode
-(defun module/emacs-server()
-  (server-start)
   )
 
 ;;;; Visual

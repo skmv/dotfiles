@@ -37,6 +37,7 @@ fi
       # os_icon               # os identifier
       dir                     # current directory
       kubecontext             # current kubernetes context (https://kubernetes.io/)
+      kubens
       awscontext
       vcs                     # git status
       # =========================[ Line #2 ]=========================
@@ -53,21 +54,21 @@ fi
       status                  # exit code of the last command
       command_execution_time  # duration of the last command
       background_jobs         # presence of background jobs
-      virtualenv              # python virtual environment (https://docs.python.org/3/library/venv.html)
-      anaconda                # conda environment (https://conda.io/)
+      # virtualenv              # python virtual environment (https://docs.python.org/3/library/venv.html)
+      # anaconda                # conda environment (https://conda.io/)
       pyenv                   # python environment (https://github.com/pyenv/pyenv)
-      nodenv                  # node.js version from nodenv (https://github.com/nodenv/nodenv)
-      nvm                     # node.js version from nvm (https://github.com/nvm-sh/nvm)
-      nodeenv                 # node.js environment (https://github.com/ekalinin/nodeenv)
+      # nodenv                  # node.js version from nodenv (https://github.com/nodenv/nodenv)
+      # nvm                     # node.js version from nvm (https://github.com/nvm-sh/nvm)
+      # nodeenv                 # node.js environment (https://github.com/ekalinin/nodeenv)
       # node_version          # node.js version
       # go_version            # go version (https://golang.org)
       # rust_version          # rustc version (https://www.rust-lang.org)
-      rbenv                   # ruby version from rbenv (https://github.com/rbenv/rbenv)
-      rvm                     # ruby version from rvm (https://rvm.io)
+      # rbenv                   # ruby version from rbenv (https://github.com/rbenv/rbenv)
+      # rvm                     # ruby version from rvm (https://rvm.io)
       terraform               # terraform workspace (https://www.terraform.io)
       context                 # user@host
-      nordvpn                 # nordvpn connection status, linux only (https://nordvpn.com/)
-      ranger                  # ranger shell (https://github.com/ranger/ranger)
+      # nordvpn                 # nordvpn connection status, linux only (https://nordvpn.com/)
+      # ranger                  # ranger shell (https://github.com/ranger/ranger)
       # =========================[ Line #2 ]=========================
       newline
       # public_ip             # public IP address
@@ -659,6 +660,16 @@ fi
   # User-defined prompt segments can be customized the same way as built-in segments.
   typeset -g POWERLEVEL9K_AWSCONTEXT_FOREGROUND=208
   typeset -g POWERLEVEL9K_AWSCONTEXT_VISUAL_IDENTIFIER_EXPANSION='${P9K_VISUAL_IDENTIFIER}'
+
+  function prompt_kubens() {
+      local namespace=$(kubens -c)
+      p10k segment -f 208 -t "%{$fg_bold[blue]%}ns:(%{$fg[yellow]%}${namespace}%{$fg_bold[blue]%})%{$reset_color%}"
+  }
+
+  # User-defined prompt segments can be customized the same way as built-in segments.
+  typeset -g POWERLEVEL9K_KUBENS_FOREGROUND=208
+  typeset -g POWERLEVEL9K_KUBENS_VISUAL_IDENTIFIER_EXPANSION='${P9K_VISUAL_IDENTIFIER}'
+
 }
 
 (( ! p10k_lean_restore_aliases )) || setopt aliases
