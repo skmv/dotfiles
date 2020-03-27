@@ -45,11 +45,6 @@ autoload -Uz _zinit
 (( ${+_comps} )) && _comps[zinit]=_zinit
 ### End of Zinit installer's chunk
 
-# Set name of the theme to load.
-# Look in ~/.oh-my-zsh/themes/
-# Optionally, if you set this to "random", it'll load a random theme each
-# time that oh-my-zsh is loaded.
-
 ZSH_THEME="powerlevel10k/powerlevel10k"
 [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
 DEFAULT_USER=${USER}
