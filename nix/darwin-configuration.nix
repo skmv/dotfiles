@@ -5,17 +5,17 @@
   # $ nix-env -qaP | grep wget
   environment.systemPackages =
     [
+      # ( pkgs.lua.withPackages (ps: with ps; [ luarocks mpack ]) )
+      # ( pkgs.python37.withPackages (ps: with ps; [ pip flake8 black pynvim python-language-server.override { pylint = null; } ]) )
+
       pkgs.ansible
-      pkgs.awscli
       pkgs.bash
       pkgs.cfssl
       pkgs.direnv
       pkgs.exa
-      pkgs.fasd
       pkgs.fzf
       pkgs.git
       pkgs.httpie
-      pkgs.vim
       pkgs.zsh
     ];
 
@@ -38,6 +38,6 @@
 
   # You should generally set this to the total number of logical cores in your system.
   # $ sysctl -n hw.ncpu
-  nix.maxJobs = 1;
+  nix.maxJobs = 4;
   nix.buildCores = 1;
 }
