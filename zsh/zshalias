@@ -312,6 +312,27 @@ fe() {
   [[ -n "$files" ]] && ${EDITOR:-emacsclient} "${files[@]}"
 }
 
+# ALT-C - jump into any directory in git repo
+fzf-cd-widget() {
+  local pth=$(git rev-parse --show-toplevel) 2> /dev/null
+  if [[ -z "$pth" ]]; then
+    pth="."
+  fi
+
+  local dir="$(fd --type d --search-path $pth | fzf )"
+  cd "$dir"
+  if [[ -z "$dir" ]]; then
+    zle redisplay
+    return 0
+  fi
+  unset dir # ensure this doesn't end up appearing in prompt expansion
+  local ret=$?
+  zle fzf-redraw-prompt
+  return $ret
+}
+zle     -N    fzf-cd-widget
+bindkey '\ec' fzf-cd-widget
+
 # Weather
 weather() {
   curl http://v2.wttr.in/Toongabbie
