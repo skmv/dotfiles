@@ -144,6 +144,26 @@ function elbv2-target-group-register-ip() {
     instances | peco | instance-ip | awk '{ print $2 }' | xargs -I {} aws elbv2 register-targets --target-group-arn=${tg} --targets Id={}
 }
 
+function instance-add-tag() {
+    name=$1
+    value=$2
+    instances | peco | awk '{ print $1 } ' | xargs -I {} aws ec2 create-tags --resources {} --tags Key=$name,Value=$value
+}
+
+function iam-policy() {
+    aws iam list-policies \
+        --output text       \
+        --query '
+      Policies[].[
+        PolicyName,
+        Arn,
+        DefaultVersionId
+    ]'                  |
+        LC_ALL=C sort -b -k 3 |
+        column -s$'\t' -t | peco | awk '{ system("aws iam get-policy-version --policy-arn " $2 " --version-id "$3) }'
+
+}
+
 # Docker aliases
 
 # Select a running docker container to stop
