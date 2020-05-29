@@ -76,6 +76,14 @@ zinit as"program" atclone'fasd --init auto > fasd.zsh' \
 zinit wait lucid for \
       hlissner/zsh-autopair
 
+zinit light-mode lucid wait has"kubectl" for \
+      id-as"kubectl_completion" \
+      as"completion" \
+      atclone"kubectl completion zsh > _kubectl" \
+      atpull"%atclone" \
+      run-atpull \
+      zdharma/null
+
 # User configuration
 
 # Do not record duplicate in your history
