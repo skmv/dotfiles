@@ -270,6 +270,7 @@ alias find='fd'
 # cd
 alias ....='cd ../../../'
 alias .....='cd ../../../../'
+alias ......='cd ../../../../../'
 
 # Rest
 function extract () {
