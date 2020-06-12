@@ -19,6 +19,52 @@ alias flush="sudo killall -HUP mDNSResponder;sudo killall mDNSResponderHelper;su
 # Usage: `mergepdf -o output.pdf input{1,2,3}.pdf`
 alias mergepdf='/System/Library/Automator/Combine\ PDF\ Pages.action/Contents/Resources/join.py'
 
+# Emacs Aliases
+function vterm_printf(){
+    if [ -n "$TMUX" ]; then
+        # Tell tmux to pass the escape sequences through
+        # (Source: http://permalink.gmane.org/gmane.comp.terminal-emulators.tmux.user/1324)
+        printf "\ePtmux;\e\e]%s\007\e\\" "$1"
+    elif [ "${TERM%%-*}" = "screen" ]; then
+        # GNU screen (screen, screen-256color, screen-256color-bce)
+        printf "\eP\e]%s\007\e\\" "$1"
+    else
+        printf "\e]%s\e\\" "$1"
+    fi
+}
+
+vterm_cmd() {
+    if [ -n "$TMUX" ]; then
+        # tell tmux to pass the escape sequences through
+        # (Source: http://permalink.gmane.org/gmane.comp.terminal-emulators.tmux.user/1324)
+        printf "\ePtmux;\e\e]51;E"
+    elif [ "${TERM%%-*}" = "screen" ]; then
+        # GNU screen (screen, screen-256color, screen-256color-bce)
+        printf "\eP\e]51;E"
+    else
+        printf "\e]51;E"
+    fi
+
+    printf "\e]51;E"
+    local r
+    while [[ $# -gt 0 ]]; do
+        r="${1//\\/\\\\}"
+        r="${r//\"/\\\"}"
+        printf '"%s" ' "$r"
+        shift
+    done
+    if [ -n "$TMUX" ]; then
+        # tell tmux to pass the escape sequences through
+        # (Source: http://permalink.gmane.org/gmane.comp.terminal-emulators.tmux.user/1324)
+        printf "\007\e\\"
+    elif [ "${TERM%%-*}" = "screen" ]; then
+        # GNU screen (screen, screen-256color, screen-256color-bce)
+        printf "\007\e\\"
+    else
+        printf "\e\\"
+    fi
+}
+
 # Brew aliases
 bip() {
   local inst=$(brew search | fzf -m)
@@ -139,10 +185,8 @@ ftpane() {
 }
 
 # AWS Aliases
-function elbv2-target-group-register-ip() {
-    tg=$(elbv2-target-groups | peco | awk '{ print $1 }')
-    instances | peco | instance-ip | awk '{ print $2 }' | xargs -I {} aws elbv2 register-targets --target-group-arn=${tg} --targets Id={}
-}
+
+# ec2
 
 function instance-add-tag() {
     name=$1
@@ -150,6 +194,28 @@ function instance-add-tag() {
     instances | peco | awk '{ print $1 } ' | xargs -I {} aws ec2 create-tags --resources {} --tags Key=$name,Value=$value
 }
 
+function delete-snapshots() {
+    aws ec2 describe-snapshots \
+        --owner self \
+        --output text \
+        --query "
+        Snapshots[].[
+          SnapshotId,
+          [Tags[?Key=='Name'].Value][0][0],
+          State,
+          Encrypted,
+          Description
+        ]" |
+        sort -k 1 |
+        column -s$'\t' -t | peco | awk '{ print $1 }' | xargs -I {} aws ec2 delete-snapshot --snapshot-id {}
+}
+
+function elbv2-target-group-register-ip() {
+    tg=$(elbv2-target-groups | peco | awk '{ print $1 }')
+    instances | peco | instance-ip | awk '{ print $2 }' | xargs -I {} aws elbv2 register-targets --target-group-arn=${tg} --targets Id={}
+}
+
+# IAM
 function iam-policy() {
     aws iam list-policies \
         --output text       \
@@ -162,6 +228,33 @@ function iam-policy() {
         LC_ALL=C sort -b -k 3 |
         column -s$'\t' -t | peco | awk '{ system("aws iam get-policy-version --policy-arn " $2 " --version-id "$3) }'
 
+}
+
+# Route53
+function disable-health-check() {
+
+    aws route53 list-health-checks \
+        --output text               \
+        --query "
+      HealthChecks[].[
+        Id,
+        HealthCheckConfig.FullyQualifiedDomainName
+      ]"                |
+        sort -k 4             |
+        column -s$'\t' -t | peco | awk '{ print $1 }' | xargs -I {} aws route53 update-health-check --health-check-id {} --disabled
+}
+
+# S3
+function bucket-policy() {
+  aws s3api list-buckets \
+    --output text        \
+    --query "
+      Buckets[${buckets:+?contains(['${buckets// /"','"}'], Name)}].[
+        Name,
+        CreationDate
+      ]"                |
+  grep -E -- "$filters" |
+  column -t | peco | awk '{ print $1 }' | xargs -I {} aws s3api get-bucket-policy --bucket {} | jq -r -c '.Policy' | jq .
 }
 
 # Docker aliases
@@ -358,3 +451,11 @@ bindkey '\ec' fzf-cd-widget
 weather() {
   curl http://v2.wttr.in/Toongabbie
 }
+
+# nix
+alias nixre="darwin-rebuild switch"
+alias nixgc="nix-collect-garbage -d"
+alias nixq="nix-env -qaP"
+alias nixupgrade="sudo -i sh -c 'nix-channel --update && nix-env -iA nixpkgs.nix && launchctl remove org.nixos.nix-daemon && launchctl load /Library/LaunchDaemons/org.nixos.nix-daemon.plist'"
+alias nixup="nix-env -u"
+alias nixcfg="nvim ~/.nixpkgs/darwin-configuration.nix"
