@@ -54,7 +54,9 @@
     pkgs.kotlin
     pkgs.kubectl
     pkgs.kubectx
+    pkgs.kubie
     pkgs.kustomize
+    pkgs.k9s
     pkgs.libxml2
     pkgs.libyaml
     pkgs.maven
@@ -78,7 +80,6 @@
     pkgs.xhyve
     pkgs.yarn
     pkgs.youtube-dl
-    pkgs.yq
     pkgs.yubico-pam
     pkgs.yubico-piv-tool
     pkgs.yubikey-manager
