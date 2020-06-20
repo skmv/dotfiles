@@ -186,6 +186,17 @@ ftpane() {
 
 # AWS Aliases
 
+# account
+function account-id() {
+    aws sts get-caller-identity --query 'Account' --output text
+}
+
+# config
+function aws-noncompliant-resources() {
+    local rtype=$(aws configservice describe-compliance-by-resource --compliance-types NON_COMPLIANT | jq -r -c '.ComplianceByResources[].ResourceType' | uniq | peco)
+    aws configservice describe-compliance-by-resource --compliance-types NON_COMPLIANT --resource-type ${rtype}
+}
+
 # ec2
 
 function instance-add-tag() {
@@ -270,15 +281,21 @@ function ds() {
 alias dops="docker ps"
 
 dobash() {
-    docker exec -i -t $1 /bin/bash
+    dirname=${PWD##*/}
+    cname=$(docker ps --format '{{ .Name }}' | peco )
+    docker exec --rm -it --entrypoint=/bin/bash -v `pwd`:/${dirname} -w /${dirname} ${cname}
 }
 
 dosh() {
-    docker exec -i -t $1 /bin/sh
+    dirname=${PWD##*/}
+    cname=$(docker ps --format '{{ .Name }}' | peco )
+    docker exec --rm -it --entrypoint=/bin/sh -v `pwd`:/${dirname} -w /${dirname} ${cname}
 }
 
 drsh() {
-    docker run -i -t $1 /bin/sh
+    dirname=${PWD##*/}
+    imagename=$(docker images --format '{{ .Repository }}:{{ .Tag }}' | peco)
+    docker run --rm -it --entrypoint=/bin/sh -v `pwd`:/${dirname} -w /${dirname} ${imagename}
 }
 
 drbash() {

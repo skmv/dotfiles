@@ -16,6 +16,7 @@
     pkgs.asciinema
     pkgs.automake
     pkgs.awscli
+    pkgs.aws-vault
     pkgs.azure-cli
     pkgs.bash
     pkgs.bat
@@ -29,6 +30,7 @@
     pkgs.direnv
     pkgs.dive
     pkgs.docker-machine-xhyve
+    pkgs.docker-slim
     pkgs.exa
     pkgs.fd
     pkgs.ffmpeg
@@ -61,6 +63,7 @@
     pkgs.libyaml
     pkgs.maven
     pkgs.minikube
+    pkgs.mutagen
     pkgs.ncdu
     pkgs.noti
     pkgs.openconnect
