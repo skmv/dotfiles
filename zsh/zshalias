@@ -197,12 +197,60 @@ function aws-noncompliant-resources() {
     aws configservice describe-compliance-by-resource --compliance-types NON_COMPLIANT --resource-type ${rtype}
 }
 
+# Cloudfront
+function cloudfronts() {
+    aws cloudfront list-distributions \
+        --output text \
+        --query "
+        DistributionList.Items[].[
+          Aliases.Items[0],
+          Status,
+          ARN
+        ]" |
+        sort -k 1 |
+        column -s$'\t' -t
+
+}
+
+function cloudfront-add-tag() {
+    name=$1
+    value=$2
+    cloudfronts | peco | awk '{ print $3 } ' | xargs -I {} aws cloudfront tag-resource --resource {} --tags "Items=[{Key=$name,Value=$value}]"
+}
+
 # ec2
 
 function instance-add-tag() {
     name=$1
     value=$2
     instances | peco | awk '{ print $1 } ' | xargs -I {} aws ec2 create-tags --resources {} --tags Key=$name,Value=$value
+}
+
+function volumes() {
+    aws ec2 describe-volumes \
+        --output text \
+        --query "
+        Volumes[].[
+          VolumeId,
+          [Tags[?Key=='Name'].Value][0][0],
+          VolumeType,
+          State,
+          Encrypted
+        ]" |
+        sort -k 1 |
+        column -s$'\t' -t
+}
+
+function volume-add-tag() {
+    name=$1
+    value=$2
+    volumes | peco | awk '{ print $1 } ' | xargs -I {} aws ec2 create-tags --resources {} --tags Key=$name,Value=$value
+}
+
+function elbv2-add-tag() {
+    name=$1
+    value=$2
+    elbv2s | peco | awk '{ print $5 }' | xargs -I {} aws elbv2 add-tags --resource-arns {} --tags Key=$name,Value=$value
 }
 
 function delete-snapshots() {
@@ -226,6 +274,28 @@ function elbv2-target-group-register-ip() {
     instances | peco | instance-ip | awk '{ print $2 }' | xargs -I {} aws elbv2 register-targets --target-group-arn=${tg} --targets Id={}
 }
 
+
+function efs() {
+    aws efs describe-file-systems \
+        --output text \
+        --query "
+        FileSystems[].[
+          FileSystemId,
+          Name,
+          PerformanceMode,
+          Encrypted
+        ]" |
+        sort -k 1 |
+        column -s$'\t' -t
+}
+
+function efs-add-tag() {
+    name=$1
+    value=$2
+    efs | peco | awk '{ print $1 }' | xargs -I {} aws efs tag-resource --resource-id {} --tags Key=$1,Value=$2
+}
+
+
 # IAM
 function iam-policy() {
     aws iam list-policies \
@@ -239,6 +309,19 @@ function iam-policy() {
         LC_ALL=C sort -b -k 3 |
         column -s$'\t' -t | peco | awk '{ system("aws iam get-policy-version --policy-arn " $2 " --version-id "$3) }'
 
+}
+
+# RDS
+function rds-instance-add-tag() {
+    name=$1
+    value=$2
+    rds-db-instances | peco | awk '{ print $1 }' | xargs -I {} aws rds add-tags-to-resource --resource-name {} --tags Key=$1,Value=$2
+}
+
+function rds-cluster-add-tag() {
+    name=$1
+    value=$2
+    rds-db-clusters | peco | awk '{ print $5 }' | xargs -I {} aws rds add-tags-to-resource --resource-name {} --tags Key=$1,Value=$2
 }
 
 # Route53
@@ -326,7 +409,7 @@ alias ke="kubectl get events --sort-by=.metadata.creationTimestamp"
 alias ns="kubens"
 alias kx="kubectx"
 alias kdiff="kustomize build | kubectl diff -f -"
-alias kgsecreg='kgsec registry -o yaml | yq r - "data.[.dockerconfigjson]" | base64 -D'
+alias kgsecreg='kgsec registry -o yaml | yq r - "data.[.dockerconfigjson]" | base64 -d'
 alias kubeclean="kubectl config get-contexts | peco | awk '{ print \$1 }' | xargs -I _ kubectl config delete-context _"
 
 ks() {
