@@ -144,7 +144,7 @@ karabiner:: ## Install karabiner configs
 nix:: ## Install nix pkg mgr
 	@echo "Installing nix"
 	@sh <(curl https://nixos.org/nix/install) --no-daemon
-	@. /Users/ramz/.nix-profile/etc/profile.d/nix.sh
+	@. ${HOME}/.nix-profile/etc/profile.d/nix.sh
 ifeq ($(OS),Darwin)
 		@nix-build https://github.com/LnL7/nix-darwin/archive/master.tar.gz -A installer
 		@./result/bin/darwin-installer
