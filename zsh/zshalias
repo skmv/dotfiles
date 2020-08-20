@@ -315,7 +315,7 @@ function iam-policy() {
 function rds-instance-add-tag() {
     name=$1
     value=$2
-    rds-db-instances | peco | awk '{ print $1 }' | xargs -I {} aws rds add-tags-to-resource --resource-name {} --tags Key=$1,Value=$2
+    rds-db-instances | peco | awk '{ print $6 }' | xargs -I {} aws rds add-tags-to-resource --resource-name {} --tags Key=$1,Value=$2
 }
 
 function rds-cluster-add-tag() {
@@ -351,6 +351,33 @@ function bucket-policy() {
   column -t | peco | awk '{ print $1 }' | xargs -I {} aws s3api get-bucket-policy --bucket {} | jq -r -c '.Policy' | jq .
 }
 
+bucket-add-tag() {
+    name=$1
+    value=$2
+    local buckets=($(aws s3api list-buckets \
+                         --output text        \
+                         --query "
+      Buckets[${buckets:+?contains(['${buckets// /"','"}'], Name)}].[
+        Name,
+        CreationDate
+      ]"                |
+                         grep -E -- "$filters" |
+                         column -t | peco | awk '{ print $1 }' ))
+    for element in "${buckets[@]}"; do
+        tempfile=$(mktemp)
+        echo $element
+        if aws s3api get-bucket-tagging --bucket "${element}" 2>&1 > /dev/null; then
+            aws s3api get-bucket-tagging --bucket "${element}" | jq -r --arg KEY "${name}" '.TagSet = [.TagSet[] | select(.Key != $KEY)]' | jq -r --arg KEY "$name" --arg VALUE "$value" '.TagSet[.TagSet | length] |= {"Key":$KEY, "Value":$VALUE}' > $tempfile
+        else
+            jq -r --arg KEY "$name" --arg VALUE "$value" '.TagSet = [{"Key":$KEY, "Value":$VALUE}]' <<<'{}' > $tempfile
+        fi
+        aws s3api put-bucket-tagging --bucket ${element} --tagging "file://${tempfile}"
+    done
+
+}
+
+# Azure
+
 # Docker aliases
 
 # Select a running docker container to stop
@@ -379,6 +406,12 @@ drsh() {
     dirname=${PWD##*/}
     imagename=$(docker images --format '{{ .Repository }}:{{ .Tag }}' | peco)
     docker run --rm -it --entrypoint=/bin/sh -v `pwd`:/${dirname} -w /${dirname} ${imagename}
+}
+
+drcmd() {
+    dirname=${PWD##*/}
+    imagename=$(docker images --format '{{ .Repository }}:{{ .Tag }}' | peco)
+    docker run --rm -it -v `pwd`:/${dirname} -w /${dirname} ${imagename} $*
 }
 
 drbash() {
@@ -411,6 +444,7 @@ alias kx="kubectx"
 alias kdiff="kustomize build | kubectl diff -f -"
 alias kgsecreg='kgsec registry -o yaml | yq r - "data.[.dockerconfigjson]" | base64 -d'
 alias kubeclean="kubectl config get-contexts | peco | awk '{ print \$1 }' | xargs -I _ kubectl config delete-context _"
+alias kdebug="kubectl run tmp-shell --rm -i --tty --image nicolaka/netshoot -- /bin/bash"
 
 ks() {
     local cluster=$(kubectl config get-contexts -o name | fzf -q "$1")

@@ -20,9 +20,9 @@
     pkgs.azure-cli
     pkgs.bash
     pkgs.bat
-    pkgs.bazel
     pkgs.certbot
     pkgs.cfssl
+    pkgs.clang
     pkgs.cmake
     pkgs.cntlm
     pkgs.coreutils-full
@@ -31,6 +31,8 @@
     pkgs.dive
     pkgs.docker-machine-xhyve
     pkgs.docker-slim
+    pkgs.dotnet-sdk_3
+    pkgs.eksctl
     pkgs.exa
     pkgs.fd
     pkgs.ffmpeg
@@ -76,6 +78,7 @@
     pkgs.terraform
     pkgs.texinfo
     pkgs.tldr
+    pkgs.tree
     pkgs.urlview
     pkgs.vault
     pkgs.watchman

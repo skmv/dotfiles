@@ -68,7 +68,6 @@ zinit as"program" make'!' atclone'./direnv hook zsh > zhook.zsh' \
       atpull'%atclone' pick"direnv" src"zhook.zsh" for \
       direnv/direnv
 
-
 zinit as"program" atclone'fasd --init auto > fasd.zsh' \
       atpull'%atclone' pick"fasd" src"fasd.zsh" nocompile'!' for \
       clvv/fasd
@@ -88,7 +87,7 @@ zinit light-mode lucid wait has"kubectl" for \
 
 # Do not record duplicate in your history
 export HISTCONTROL=ignoreboth:erasedups
-export HISTORY_IGNORE="(ls|cd|pwd)";
+export HISTORY_IGNORE="(ls|cd|pwd| *)";
 setopt EXTENDED_HISTORY          # Write the history file in the ":start:elapsed;command" format.
 setopt INC_APPEND_HISTORY        # Write to the history file immediately, not when the shell exits.
 setopt SHARE_HISTORY             # Share history between all sessions.
@@ -157,3 +156,30 @@ select-word-style shell
 
 autoload -Uz url-quote-magic
 zle -N self-insert url-quote-magic
+[ -f "${GHCUP_INSTALL_BASE_PREFIX:=$HOME}/.ghcup/env" ] && source "${GHCUP_INSTALL_BASE_PREFIX:=$HOME}/.ghcup/env"
+
+. /Users/ramz/.nix-profile/etc/profile.d/nix.sh
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
+# export PATH="/usr/local/opt/ruby/bin:$PATH"
+
+_python_argcomplete() {
+    local IFS=$'\013'
+    local SUPPRESS_SPACE=0
+    if compopt +o nospace 2> /dev/null; then
+        SUPPRESS_SPACE=1
+    fi
+    COMPREPLY=( $(IFS="$IFS" \
+                     COMP_LINE="$COMP_LINE" \
+                     COMP_POINT="$COMP_POINT" \
+                     COMP_TYPE="$COMP_TYPE" \
+                     _ARGCOMPLETE_COMP_WORDBREAKS="$COMP_WORDBREAKS" \
+                     _ARGCOMPLETE=1 \
+                     _ARGCOMPLETE_SUPPRESS_SPACE=$SUPPRESS_SPACE \
+                     "$1" 8>&1 9>&2 1>/dev/null 2>/dev/null) )
+    if [[ $? != 0 ]]; then
+        unset COMPREPLY
+    elif [[ $SUPPRESS_SPACE == 1 ]] && [[ "$COMPREPLY" =~ [=/:]$ ]]; then
+        compopt -o nospace
+    fi
+}
+complete -o nospace -o default -o bashdefault -F _python_argcomplete "az"
