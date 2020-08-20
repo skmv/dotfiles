@@ -148,6 +148,8 @@ nix:: ## Install nix pkg mgr
 	@rm -Rf /tmp/nix.sh
 	@source ${HOME}/.nix-profile/etc/profile.d/nix.sh
 ifeq ($(OS),Darwin)
+		@ln $(LN_FLAGS) $(CONFIG_ROOT)/nix/darwin-configuration.nix ${HOME}/.nixpkgs/darwin-configuration.nix
+		@ln $(LN_FLAGS) $(CONFIG_ROOT)/nix/home.nix ${HOME}/.config/nixpkgs/darwin-configuration.nix
 		@nix-build https://github.com/LnL7/nix-darwin/archive/master.tar.gz -A installer
 		@./result/bin/darwin-installer
 		@find /nix/store -name "*-set-environment" -exec echo ". {}" \; >> ${CONFIG_ROOT}/zsh/zshrc
