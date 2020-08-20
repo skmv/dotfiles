@@ -156,6 +156,12 @@ ifeq ($(OS),Darwin)
 		@find /nix/store -name "*-set-environment" -exec echo ". {}" \; >> ${CONFIG_ROOT}/zsh/zshrc
 		@echo "export SHELL=zsh" >> ${CONFIG_ROOT}/zsh/zshrc
 		@echo "export EDITOR=vim" >> ${CONFIG_ROOT}/zsh/zshrc
+		@source ${HOME}/.zshrc
+		@nix-channel --add https://github.com/rycee/home-manager/archive/release-20.03.tar.gz home-manager
+		@nix-channel --update
+		@nix-shell '<home-manager>' -A install
+
+
 endif
 
 node-setup:: ## Setting up node in a fresh laptop
