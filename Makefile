@@ -148,20 +148,20 @@ nix:: ## Install nix pkg mgr
 	@rm -Rf /tmp/nix.sh
 	@source ${HOME}/.nix-profile/etc/profile.d/nix.sh
 ifeq ($(OS),Darwin)
-		@mkdir -p ${HOME}/.config/nixpkgs
-		@ln $(LN_FLAGS) $(CONFIG_ROOT)/nix/darwin-configuration.nix ${HOME}/.nixpkgs/darwin-configuration.nix
-		@ln $(LN_FLAGS) $(CONFIG_ROOT)/nix/home.nix ${HOME}/.config/nixpkgs/darwin-configuration.nix
-		@nix-build https://github.com/LnL7/nix-darwin/archive/master.tar.gz -A installer
-		@./result/bin/darwin-installer
-		@find /nix/store -name "*-set-environment" -exec echo ". {}" \; >> ${CONFIG_ROOT}/zsh/zshrc
-		@echo "export SHELL=zsh" >> ${CONFIG_ROOT}/zsh/zshrc
-		@echo "export EDITOR=vim" >> ${CONFIG_ROOT}/zsh/zshrc
-		@source ${HOME}/.zshrc
-		@nix-channel --add https://github.com/rycee/home-manager/archive/release-20.03.tar.gz home-manager
-		@nix-channel --update
-		@nix-shell '<home-manager>' -A install
-
-
+	@mkdir -p ${HOME}/.config/nixpkgs
+	@ln $(LN_FLAGS) $(CONFIG_ROOT)/nix/darwin-configuration.nix ${HOME}/.nixpkgs/darwin-configuration.nix
+	@ln $(LN_FLAGS) $(CONFIG_ROOT)/nix/home.nix ${HOME}/.config/nixpkgs/home.nix
+	@nix-build https://github.com/LnL7/nix-darwin/archive/master.tar.gz -A installer
+	@./result/bin/darwin-installer
+	@find /nix/store -name "*-set-environment" -exec echo ". {}" \; >> ${CONFIG_ROOT}/zsh/zshrc
+	@echo "export SHELL=zsh" >> ${CONFIG_ROOT}/zsh/zshrc
+	@echo "export EDITOR=vim" >> ${CONFIG_ROOT}/zsh/zshrc
+	@source ${HOME}/.zshrc
+	@nix-channel --add https://github.com/rycee/home-manager/archive/release-20.03.tar.gz home-manager
+	@nix-channel --update
+	@nix-shell '<home-manager>' -A install
+	@source ${HOME}/.zshrc
+	@home-manager switch
 endif
 
 node-setup:: ## Setting up node in a fresh laptop

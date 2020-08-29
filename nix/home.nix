@@ -37,6 +37,7 @@
     pkgs.fd
     pkgs.ffmpeg
     pkgs.fzf
+    pkgs.gawk
     pkgs.gettext
     pkgs.git-crypt
     pkgs.git-lfs

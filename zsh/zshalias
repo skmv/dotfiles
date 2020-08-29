@@ -295,6 +295,29 @@ function efs-add-tag() {
     efs | peco | awk '{ print $1 }' | xargs -I {} aws efs tag-resource --resource-id {} --tags Key=$1,Value=$2
 }
 
+function efs-add-lifecycle() {
+    name=$1
+    value=$2
+    efs | peco | awk '{ print $1 }' | xargs -I {} aws efs put-lifecycle-configuration --file-system-id {} --lifecycle-policies "TransitionToIA=AFTER_7_DAYS"
+}
+
+function efs-recovery-points() {
+    accountid=$(account-id)
+    region=$(aws configure get region)
+    efsid=$(efs | peco | awk '{ print $1 }')
+    aws backup list-recovery-points-by-resource --resource-arn arn:aws:elasticfilesystem:${region}:${accountid}:file-system/${efsid} \
+        --output text \
+        --query "
+        RecoveryPoints[].[
+          RecoveryPointArn,
+          CreationDate,
+          BackupSizeBytes,
+          Status,
+          BackupVaultName
+        ]" |
+        column -s$'\t' -t | gawk '{ $2=strftime("%Y-%m-%d %H:%M:%S", $2); print $0 }' |
+        sort -k 2
+}
 
 # IAM
 function iam-policy() {
@@ -309,6 +332,24 @@ function iam-policy() {
         LC_ALL=C sort -b -k 3 |
         column -s$'\t' -t | peco | awk '{ system("aws iam get-policy-version --policy-arn " $2 " --version-id "$3) }'
 
+}
+
+function iam-instance-profiles() {
+    aws iam list-instance-profiles \
+        --output text       \
+        --query '
+      InstanceProfiles[].[
+        InstanceProfileName,
+        Arn,
+        DefaultVersionId
+    ]'                  |
+        LC_ALL=C sort -b -k 3 |
+        column -s$'\t' -t
+
+}
+
+function delete-instance-profiles() {
+    iam-instance-profiles | peco | awk '{ print $1 }' | xargs -I {} aws iam delete-instance-profile --instance-profile-name {}
 }
 
 # RDS

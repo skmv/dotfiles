@@ -41,7 +41,7 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(
+   '(asciidoc
      ;; Basics
      (auto-completion :variables
                       auto-completion-private-snippets-directory (concat (getenv "HOME") "/projects/sw/repos/personal/dotfiles/emacs/yasnippet")
@@ -67,12 +67,17 @@ This function should only modify configuration layer settings."
          gofmt-command "goimports"
          go-tab-width 4
          go-backend 'lsp)
+     (json :variables
+           json-fmt-tool 'prettier
+           js-indent-level 2
+           json-fmt-on-save t)
      haskell
      (javascript :variables
                  javascript-backend 'lsp)
      lua
      markdown
      php
+     prettier
      (python :variables
              python-sort-imports-on-save t
              python-enable-yapf-format-on-save t
@@ -523,6 +528,7 @@ before packages are loaded."
 ;;;; Spacemacs configs
 (defun module/spacemacs ()
 
+  (setq browse-url 'browse-url-mosaic)
   (progn
     (let ((map (if (boundp 'input-decode-map)
                    input-decode-map
