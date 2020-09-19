@@ -417,6 +417,19 @@ bucket-add-tag() {
 
 }
 
+# SSM
+ssm-connect() {
+    instanceid=$(instances | peco | awk '{ print $1 }')
+    aws ssm start-session --target ${instanceid}
+}
+
+# VPC
+subnet-add-tag() {
+    name=$1
+    value=$2
+    subnets | peco | awk '{ print $1 }' | xargs -I {} aws ec2 create-tags --resources {} --tags Key=$1,Value=$2
+}
+
 # Azure
 
 # Docker aliases
