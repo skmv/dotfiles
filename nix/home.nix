@@ -15,7 +15,7 @@
     pkgs.aria2
     pkgs.asciinema
     pkgs.automake
-    pkgs.awscli
+    pkgs.awscli2
     pkgs.aws-vault
     pkgs.azure-cli
     pkgs.bash
@@ -68,6 +68,7 @@
     pkgs.minikube
     pkgs.mutagen
     pkgs.ncdu
+    pkgs.notary
     pkgs.noti
     pkgs.openconnect
     pkgs.packer
@@ -82,7 +83,7 @@
     pkgs.tree
     pkgs.urlview
     pkgs.vault
-    pkgs.watchman
+    pkgs.watchexec
     pkgs.wget
     pkgs.xhyve
     pkgs.yarn
