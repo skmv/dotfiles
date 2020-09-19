@@ -33,6 +33,13 @@ function install_dependencies_osx() {
 
 function install_dependencies_linux() {
     echo "Installing dependencies for $OSTYPE"
+
+    if [ -f /etc/lsb-release ]; then
+        sudo apt update -y
+        sudo apt install -y git
+    else
+        fail_with_code 1 "Installation is not support for your distribution"
+    fi
 }
 
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
