@@ -20,11 +20,27 @@ function require_util() {
     type "$1" > /dev/null 2>&1 || command -v "$1" > /dev/null 2>&1 ||
         oops "you do not have '$1' installed, which I need to $2"
 }
-if [[ `xcode-select -p` ]];
-then
-    echo "xcode cli already installed";
+
+function install_dependencies_osx() {
+    echo "Installing dependencies for $OSTYPE"
+    if [[ `xcode-select -p` ]];
+    then
+        echo "xcode cli already installed";
+    else
+        xcode-select --install
+    fi
+}
+
+function install_dependencies_linux() {
+    echo "Installing dependencies for $OSTYPE"
+}
+
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
+    install_dependencies_linux
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+    install_dependencies_osx
 else
-    xcode-select --install
+    fail_with_code 1 "Installation is not supported for your platform $OS"
 fi
 
 require_util git "install git"
