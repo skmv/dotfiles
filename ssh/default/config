@@ -12,4 +12,8 @@ Host github.com
     IdentitiesOnly yes
     IdentityFile ~/.ssh/id_rsa_yubikey.pub
 
+# SSH over Session Manager
+Host i-* mi-*
+     ProxyCommand sh -c "aws ssm start-session --target %h --document-name AWS-StartSSHSession --parameters 'portNumber=%p'"
+
 # Work Hosts
