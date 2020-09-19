@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: le
+# key: le
+# --
+log.Error().Err(err).Msg("$1")
