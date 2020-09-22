@@ -533,10 +533,10 @@ alias df="df -H"
 alias curl="gpg --batch -q -d ~/.authinfo.gpg | curl --netrc-file /dev/stdin"
 
 # Changing Default programs
-alias cat=ccat
 if [[ "$(uname)" == "Darwin" ]]
 then
     alias wget=aria2c
+    alias cat=ccat
 fi
 
 # fasd

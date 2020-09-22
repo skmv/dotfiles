@@ -29,6 +29,12 @@ ifeq ($(OS),Darwin)
 	@make hammerspoon
 endif
 
+setup-linux:: ## Setup Linux
+	@cd $(CONFIG_ROOT)
+	@ln $(LN_FLAGS) $(CONFIG_ROOT)/xmodmap/defaults ${HOME}/.xmodmap
+	@ln $(LN_FLAGS) $(CONFIG_ROOT)/xmodmap/xinitrc ${HOME}/.xinitrc
+	@make zsh
+
 setup:: setup-common setup-mac ## Configure the laptop for fresh installation
 	@echo "Pulling in other submodules"
 	@git submodule init
@@ -147,6 +153,17 @@ nix:: ## Install nix pkg mgr
 	@bash /tmp/nix.sh --no-daemon
 	@rm -Rf /tmp/nix.sh
 	@source ${HOME}/.nix-profile/etc/profile.d/nix.sh
+ifeq ($(OS),Linux)
+	@mkdir -p ${HOME}/.config/nixpkgs
+	@ln $(LN_FLAGS) $(CONFIG_ROOT)/nix/home.nix ${HOME}/.config/nixpkgs/home.nix
+	@echo "export SHELL=zsh" >> ~/.bashrc
+	@echo "export EDITOR=vim" >> ~/.bashrc
+	@source ${HOME}/.bashrc
+	@nix-channel --add https://github.com/rycee/home-manager/archive/release-20.03.tar.gz home-manager
+	@nix-channel --update
+	@nix-shell '<home-manager>' -A install
+	@home-manager switch
+endif
 ifeq ($(OS),Darwin)
 	@mkdir -p ${HOME}/.config/nixpkgs
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/nix/darwin-configuration.nix ${HOME}/.nixpkgs/darwin-configuration.nix
@@ -232,11 +249,12 @@ ifeq ("$(wildcard $(CONFIG_ROOT)/zsh/themes/powerlevel10k)","")
 	@echo "Installing powerlevel10k theme"
 	@git clone https://github.com/romkatv/powerlevel10k.git $(CONFIG_ROOT)/zsh/themes/powerlevel10k
 endif
+ifeq ($(OS),Darwin)
 	@echo "Setting up iterm2 Shell Integrations"
 	@curl -L -o $(HOME)/.iterm2_shell_integration.zsh https://iterm2.com/shell_integration/zsh
 	@echo "Changing the default shell to zsh"
 	@sudo dscl . -create /Users/$(USER) UserShell /usr/local/bin/zsh
-
+endif
 	@echo "Installing oh my zsh"
 	@curl -fsSL -o /tmp/install_zsh.sh https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh
 	@sh /tmp/install_zsh.sh
