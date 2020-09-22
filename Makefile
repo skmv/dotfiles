@@ -155,7 +155,7 @@ nix:: ## Install nix pkg mgr
 	@source ${HOME}/.nix-profile/etc/profile.d/nix.sh
 ifeq ($(OS),Linux)
 	@mkdir -p ${HOME}/.config/nixpkgs
-	@ln $(LN_FLAGS) $(CONFIG_ROOT)/nix/home.nix ${HOME}/.config/nixpkgs/home.nix
+	@ln $(LN_FLAGS) $(CONFIG_ROOT)/nix/home.nix.linux ${HOME}/.config/nixpkgs/home.nix
 	@echo "export SHELL=zsh" >> ~/.bashrc
 	@echo "export EDITOR=vim" >> ~/.bashrc
 	@source ${HOME}/.bashrc
