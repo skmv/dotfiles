@@ -109,7 +109,13 @@ ifeq ($(OS),Linux)
 endif
 	@echo "Setting up git"
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/git/gitignore ${HOME}/.gitignore
+ifeq ($(OS),Linux)
+	@ln $(LN_FLAGS) $(CONFIG_ROOT)/git/gitconfig.linux ${HOME}/.gitconfig
+endif
+ifeq ($(OS),Darwin)
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/git/gitconfig ${HOME}/.gitconfig
+endif
+
 	@mkdir -p ~/.git-template
 	@git config user.name "ageekymonk"
 	@git config user.email "ramzthecoder@gmail.com"
@@ -215,6 +221,12 @@ ssh-setup:: ## Setting up ssh for the first time
 	@touch ${HOME}/.ssh/authorized_keys
 	@chmod 600 ${HOME}/.ssh/authorized_keys
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/ssh/default/config ${HOME}/.ssh/config
+ifeq ($(OS),Linux)
+	@ln $(LN_FLAGS) $(CONFIG_ROOT)/ssh/default/config.linux ${HOME}/.ssh/config
+endif
+ifeq ($(OS),Darwin)
+	@ln $(LN_FLAGS) $(CONFIG_ROOT)/ssh/default/config ${HOME}/.ssh/config
+endif
 	@echo "ssh configuration completed"
 
 tmux-setup:: ## Setting up tmux for th first time
