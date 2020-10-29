@@ -39,6 +39,7 @@
     pkgs.fzf
     pkgs.gawk
     pkgs.gettext
+    pkgs.gitAndTools.gh
     pkgs.git-crypt
     pkgs.git-lfs
     pkgs.git-review
@@ -68,9 +69,11 @@
     pkgs.minikube
     pkgs.mutagen
     pkgs.ncdu
+    pkgs.nmap
     pkgs.notary
     pkgs.noti
     pkgs.openconnect
+    pkgs.openvpn
     pkgs.packer
     pkgs.peco
     pkgs.rclone
@@ -86,6 +89,7 @@
     pkgs.watchexec
     pkgs.wget
     pkgs.xhyve
+    pkgs.xsv
     pkgs.yarn
     pkgs.youtube-dl
     pkgs.yubico-pam
