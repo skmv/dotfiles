@@ -31,10 +31,10 @@
     pkgs.dep
     pkgs.direnv
     pkgs.dive
-    pkgs.docker-slim
-    pkgs.dotnet-sdk_3
     pkgs.eksctl
+    pkgs.emacs
     pkgs.exa
+    pkgs.fasd
     pkgs.fd
     pkgs.ffmpeg
     pkgs.fzf
@@ -76,6 +76,7 @@
     pkgs.peco
     pkgs.rclone
     pkgs.rustup
+    pkgs.spark
     pkgs.step-cli
     pkgs.terraform
     pkgs.texinfo
@@ -83,6 +84,7 @@
     pkgs.tree
     pkgs.urlview
     pkgs.vault
+    pkgs.vscode
     pkgs.watchexec
     pkgs.wget
     pkgs.yarn
