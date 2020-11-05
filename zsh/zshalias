@@ -84,7 +84,7 @@ bup() {
   fi
 }
 
-bcp() {
+brp() {
   local uninst=$(brew leaves | fzf -m)
 
   if [[ $uninst ]]; then

@@ -11,6 +11,7 @@
 
   home.packages = [
     pkgs.ag
+    pkgs.ansible
     pkgs.argocd
     pkgs.aria2
     pkgs.asciinema
