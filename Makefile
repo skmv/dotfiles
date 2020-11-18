@@ -26,7 +26,7 @@ setup-mac:: ## Setup mac
 ifeq ($(OS),Darwin)
 	@make osx
 	@make brew
-	@make hammerspoon
+	# @make hammerspoon
 endif
 
 setup-linux:: ## Setup Linux
@@ -42,8 +42,8 @@ setup:: setup-common setup-mac ## Configure the laptop for fresh installation
 
 	@make git
 	@make ssh-setup
-	@make emacs-setup
-	@make emacs
+	# @make emacs-setup
+	# @make emacs
 	@make python-setup
 	@make tmux-setup
 	@make zsh
@@ -116,10 +116,10 @@ ifeq ($(OS),Darwin)
 	@ln $(LN_FLAGS) $(CONFIG_ROOT)/git/gitconfig ${HOME}/.gitconfig
 endif
 
-	@mkdir -p ~/.git-template
-	@git config user.name "ageekymonk"
-	@git config user.email "ramzthecoder@gmail.com"
-	@echo git configuration completed
+	# @mkdir -p ~/.git-template
+	# @git config user.name "ageekymonk"
+	# @git config user.email "ramzthecoder@gmail.com"
+	# @echo git configuration completed
 
 go:: ## Configure Golang Setttings
 ifeq ($(OS),Linux)
